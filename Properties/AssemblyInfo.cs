@@ -2,7 +2,7 @@
 
 // <copyright file="AssemblyInfo.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
 // <author>Chris Doty</author>
-// <email>cdoty@polaropposite.com</email>
+// <email>dotyc@civicinc.com</email>
 // <date>6/4/2013</date>
 // <summary></summary>
 
@@ -25,8 +25,3 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCulture( "" )]
 [assembly: ComVisible( false )]
 [assembly: Guid( "827f70d3-7495-4720-9054-48ad74d8d504" )]
-
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: AssemblyCompany("Civic Engineering & IT")]
-[assembly: AssemblyCopyright("Copyright © 2012 Civic Engineering & IT")]
