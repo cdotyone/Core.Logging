@@ -43,13 +43,15 @@ namespace Civic.Core.Logging
             if (parameterValues.Length > 0 && parameterValues[0] is Type)
             {
                 operation = ((Type)parameterValues[0]).Name;
-
-                if (parameterValues.Length > 1 && parameterValues[1] is string)
-                {
-                    operation += "." + parameterValues[0];
-                }
             }
-            
+            for (var i = 1; i < parameterValues.Length; i++)
+            {
+                if (parameterValues is Type)
+                    operation += "." + ((Type) parameterValues[i]).Name;
+                else
+                    operation += "." + parameterValues[i].ToString();
+            }
+
             _operation = operation;
 
             if (checkTracingAvailable())
