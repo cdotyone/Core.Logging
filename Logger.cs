@@ -137,7 +137,7 @@ namespace Civic.Core.Logging
 
             // load the configuration from the config file
             string configNode = ConfigurationManager.AppSettings["LoggerConfigNode"];
-            if (string.IsNullOrEmpty(configNode)) configNode = @"civicLogging";
+            if (string.IsNullOrEmpty(configNode)) configNode = @"coreLogging";
 
             _config = (LoggerSection)ConfigurationManager.GetSection( configNode );
             if (_config != null) IsTraceOn = _config.Trace;
