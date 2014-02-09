@@ -62,6 +62,7 @@ namespace Civic.Core.Logging.LogWriters
 
         public bool Log(ILogMessage message)
         {
+            if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
             Debug.AutoFlush = true;
 
             switch (message.Type)

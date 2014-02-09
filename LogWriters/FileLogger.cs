@@ -180,6 +180,8 @@ namespace Civic.Core.Logging.LogWriters
         /// <param name="message">the message to write the the log</param>
         public bool Log(ILogMessage message)
         {
+            if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
+
             // Lock for writing
             lock (_eventQueue)
             {

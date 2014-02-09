@@ -72,11 +72,6 @@ namespace Civic.Core.Logging
         public Dictionary<string, object> Extended { get; set; }
 
         /// <summary>
-        /// gets/sets the title text for this message
-        /// </summary>
-        public string Title { get; set; }
-
-        /// <summary>
         /// gets/sets the message text for this message
         /// </summary>
         public string Message { get; set; }
@@ -85,6 +80,11 @@ namespace Civic.Core.Logging
         /// gets/sets the data packet for this message
         /// </summary>
         public LogSeverity Type { get; set; }
+
+        /// <summary>
+        /// gets/sets the name of the application
+        /// </summary>
+        public string ApplicationName { get; set; }
 
         /// <summary>
         /// gets/sets the name of the server

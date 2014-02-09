@@ -29,14 +29,6 @@ namespace Civic.Core.Logging
         #region Properties
 
         /// <summary>
-        /// gets/sets the title text for this message
-        /// </summary>
-        string Title
-        {
-            get; set;
-        }
-
-        /// <summary>
         /// gets/sets the message text for this message
         /// </summary>
         string Message
@@ -50,6 +42,15 @@ namespace Civic.Core.Logging
         LogSeverity Type
         {
             get; set;
+        }
+
+        /// <summary>
+        /// gets/sets the name of the application
+        /// </summary>
+        string ApplicationName
+        {
+            get;
+            set;
         }
 
         /// <summary>

@@ -221,7 +221,7 @@ namespace Civic.Core.Logging
             }
 
             if (message2Log.Extended==null) message2Log.Extended = new Dictionary<string, object>();
-            if (_config!=null) if (!message2Log.Extended.ContainsKey("ApplicationName")) message2Log.Extended.Add("ApplicationName", _config.App);
+            if (_config!=null && string.IsNullOrEmpty(message2Log.ApplicationName)) message2Log.ApplicationName = _config.App;
             if (!message2Log.Extended.ContainsKey("TimeStamp")) message2Log.Extended.Add("TimeStamp", DateTime.UtcNow.ToString(CultureInfo.CurrentCulture));
             if (!message2Log.Extended.ContainsKey("FullName")) message2Log.Extended.Add("FullName", Assembly.GetExecutingAssembly().FullName);
             if (!message2Log.Extended.ContainsKey("AppDomainName")) message2Log.Extended.Add("AppDomainName", AppDomain.CurrentDomain.FriendlyName);
