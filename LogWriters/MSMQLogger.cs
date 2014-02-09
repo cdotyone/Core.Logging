@@ -1,21 +1,10 @@
-#region Copyright / Comments
-
-// <copyright file="MSMQLogger.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
-// <author>Chris Doty</author>
-// <email>dotyc@civicinc.com</email>
-// <date>6/4/2013</date>
-// <summary></summary>
-
-#endregion Copyright / Comments
-
-#region References
-
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Messaging;
-
-#endregion References
+using System.Text;
+using Newtonsoft.Json;
 
 namespace Civic.Core.Logging.LogWriters
 {
@@ -38,6 +27,22 @@ namespace Civic.Core.Logging.LogWriters
         #endregion Constructors
 
         #region Properties
+
+        public bool HasMessage
+        {
+            get { return _mqueue.Peek() != null; }
+        }
+
+        public ILogMessage Receive()
+        {
+            var msg = _mqueue.Receive();
+            if (msg == null) return null;
+            var sr = new StreamReader(msg.BodyStream);
+            var logMessage = sr.ReadToEnd();
+
+            if (string.IsNullOrEmpty(logMessage)) return null;
+            return JsonConvert.DeserializeObject<LogMessage>(logMessage);
+        }
 
         /// <summary>
         /// gets the name given to this log
@@ -127,27 +132,14 @@ namespace Civic.Core.Logging.LogWriters
         {
             try
             {
-                _mqueue.Send(message);
+                var body = JsonConvert.SerializeObject(message);
+                var msg = new Message { BodyStream = new MemoryStream(Encoding.ASCII.GetBytes(body)) };
+                _mqueue.Send(msg);
             }
             catch
             {
                 return false;
             }
-            /*
-            switch (message.Type)
-            {
-                case LogSeverity.Error:
-                    _mqueue.Send(message);
-                    break;
-                case LogSeverity.Warning:
-                    _mqueue.WriteEntry(_applicationname + ": " + message.Message, EventLogEntryType.Warning);
-                    break;
-                case LogSeverity.Information:
-                    _mqueue.WriteEntry(_applicationname + ": " + message.Message, EventLogEntryType.Information);
-                    break;
-                case LogSeverity.Trace:
-                    return false;
-            }*/
 
             return true;
         }

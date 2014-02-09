@@ -12,6 +12,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Security;
 
 #endregion References
 
@@ -26,6 +27,8 @@ namespace Civic.Core.Logging
         {
             Message = "";
             Boundary = LoggingBoundaries.Unknown;
+            Created = DateTime.UtcNow;
+            ServerName = GetMachineName();
         }
 
         public LogMessage(LoggingBoundaries boundary, LogSeverity entrytype, params object[] parameterValues)
@@ -59,6 +62,11 @@ namespace Civic.Core.Logging
         #region Properties
 
         /// <summary>
+        /// gets/sets when the message was created
+        /// </summary>
+        public DateTime Created { get; set; }
+
+        /// <summary>
         /// gets/sets the extended properties
         /// </summary>
         public Dictionary<string, object> Extended { get; set; }
@@ -77,6 +85,11 @@ namespace Civic.Core.Logging
         /// gets/sets the data packet for this message
         /// </summary>
         public LogSeverity Type { get; set; }
+
+        /// <summary>
+        /// gets/sets the name of the server
+        /// </summary>
+        public string ServerName { get; set; }
 
         /// <summary>
         /// Layer Boundary
@@ -170,6 +183,22 @@ namespace Civic.Core.Logging
             return retval;
         }
 
+        public static string GetMachineName()
+        {
+            string machineName;
+            try
+            {
+                machineName = Environment.MachineName;
+            }
+            catch (SecurityException)
+            {
+                machineName = "Permission Denied";
+            }
+
+            return machineName;
+        }
+
         #endregion Methods
+
     }
 }
