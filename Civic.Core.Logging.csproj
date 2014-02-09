@@ -97,6 +97,7 @@
     <Compile Include="Configuration\ExceptionPolicyElement.cs" />
     <Compile Include="Configuration\LoggerSection.cs" />
     <Compile Include="Configuration\LoggerElement.cs" />
+    <Compile Include="ILogReader.cs" />
     <Compile Include="ILogMessage.cs" />
     <Compile Include="ILogWriter.cs" />
     <Compile Include="Log4NetWrapper.cs" />

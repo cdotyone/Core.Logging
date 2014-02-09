@@ -9,7 +9,7 @@ using Newtonsoft.Json;
 namespace Civic.Core.Logging.LogWriters
 {
     [Serializable]
-    public class MSMQLogger : ILogWriter
+    public class MSMQLogger : ILogWriter, ILogReader
     {
         #region Fields
 
