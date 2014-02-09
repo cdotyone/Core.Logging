@@ -112,9 +112,11 @@ namespace Civic.Core.Logging.LogWriters
         {
             try
             {
+                if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
+
                 if ( System.Web.HttpContext.Current != null )
                 {
-                    System.Web.HttpContext.Current.Response.Write( "<!--\r\n\ttitle: " + message.Title + "\r\n\tmessage: " + message.Message.Replace( "<", "&lt;" ).Replace( ">", "&gt;" ) + "\r\n-->\r\n" );
+                    System.Web.HttpContext.Current.Response.Write("<!--\r\n\tcreated: " + message.Created.ToString() + "\r\n\tmessage: " + message.Message.Replace("<", "&lt;").Replace(">", "&gt;") + "\r\n-->\r\n");
                 }
             }
             catch

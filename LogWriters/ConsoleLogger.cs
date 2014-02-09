@@ -60,6 +60,7 @@ namespace Civic.Core.Logging.LogWriters
 
         public bool Log(ILogMessage message)
         {
+            if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
             Console.WriteLine( message.Message );
             return true;
         }

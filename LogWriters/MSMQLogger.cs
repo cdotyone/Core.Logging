@@ -132,6 +132,7 @@ namespace Civic.Core.Logging.LogWriters
         {
             try
             {
+                if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
                 var body = JsonConvert.SerializeObject(message);
                 var msg = new Message { BodyStream = new MemoryStream(Encoding.ASCII.GetBytes(body)) };
                 _mqueue.Send(msg);
