@@ -10,6 +10,7 @@
 
 #region References
 
+using System;
 using System.Collections.Generic;
 
 #endregion References
@@ -48,7 +49,25 @@ namespace Civic.Core.Logging
         /// </summary>
         LogSeverity Type
         {
-            get;set;
+            get; set;
+        }
+
+        /// <summary>
+        /// gets/sets the name of the server
+        /// </summary>
+        string ServerName
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// gets/sets when the message was created
+        /// </summary>
+        DateTime Created
+        {
+            get;
+            set;
         }
 
         /// <summary>
