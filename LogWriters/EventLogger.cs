@@ -103,12 +103,13 @@ namespace Civic.Core.Logging.LogWriters
         /// <param name="logname">Name of the log, this can be interperted the way the class want to, but it must identify a unique logger.</param>
         /// <param name="canThread">should the logger us a thread, generally false is suggested for web sites</param>
         /// <param name="addtionalParameters">any additional configuration parameters found on the configuration node for this logger</param>
-        public ILogWriter Create( string applicationname, string logname, bool canThread, Dictionary<string, string> addtionalParameters )
+        public object Create(string applicationname, string logname, bool canThread, Dictionary<string, string> addtionalParameters)
         {
-            EventLogger ev = new EventLogger();
-
-            ev.LogName = logname;
-            ev.ApplicationName = applicationname;
+            var ev = new EventLogger
+                {
+                    LogName = logname, 
+                    ApplicationName = applicationname
+                };
 
             CreateEventLog(applicationname, logname);
 

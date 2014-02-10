@@ -12,6 +12,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 
 #endregion References
 
@@ -82,12 +83,13 @@ namespace Civic.Core.Logging.LogWriters
         /// <param name="logname">Name of the log, this can be interperted the way the class want to, but it must identify a unique logger.</param>
         /// <param name="canThread">should the logger us a thread, generally false is suggested for web sites</param>
         /// <param name="addtionalParameters">any additional configuration parameters found on the configuration node for this logger</param>
-        public ILogWriter Create( string applicationname, string logname, bool canThread, Dictionary<string, string> addtionalParameters )
+        public object Create( string applicationname, string logname, bool canThread, Dictionary<string, string> addtionalParameters )
         {
-            WebCommentLogger ev = new WebCommentLogger();
-
-            ev._logname = logname;
-            ev._applicationname = applicationname;
+            var ev = new WebCommentLogger
+                {
+                    _logname = logname, 
+                    _applicationname = applicationname
+                };
 
             return ev;
         }
@@ -116,7 +118,7 @@ namespace Civic.Core.Logging.LogWriters
 
                 if ( System.Web.HttpContext.Current != null )
                 {
-                    System.Web.HttpContext.Current.Response.Write("<!--\r\n\tcreated: " + message.Created.ToString() + "\r\n\tmessage: " + message.Message.Replace("<", "&lt;").Replace(">", "&gt;") + "\r\n-->\r\n");
+                    System.Web.HttpContext.Current.Response.Write("<!--\r\n\tcreated: " + message.Created.ToString(CultureInfo.InvariantCulture) + "\r\n\tmessage: " + message.Message.Replace("<", "&lt;").Replace(">", "&gt;") + "\r\n-->\r\n");
                 }
             }
             catch

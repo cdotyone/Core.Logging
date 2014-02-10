@@ -39,12 +39,13 @@ namespace Civic.Core.Logging.LogWriters
 
         #region Methods
 
-        public ILogWriter Create( string applicationname, string logname, bool canThread, Dictionary<string, string> addtionalParameters )
+        public object Create(string applicationname, string logname, bool canThread, Dictionary<string, string> addtionalParameters)
         {
-            ConsoleLogger dl = new ConsoleLogger();
-
-            dl.ApplicationName = applicationname;
-            dl.LogName = logname;
+            var dl = new ConsoleLogger
+                {
+                    ApplicationName = applicationname, 
+                    LogName = logname
+                };
 
             return dl;
         }
