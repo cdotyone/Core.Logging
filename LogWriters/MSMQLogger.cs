@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Messaging;
+using System.Security;
 using System.Text;
 using Newtonsoft.Json;
 
@@ -14,6 +15,7 @@ namespace Civic.Core.Logging.LogWriters
         #region Fields
 
         private MessageQueue _mqueue;
+        private string _path;
 
         #endregion Fields
 
@@ -86,20 +88,15 @@ namespace Civic.Core.Logging.LogWriters
         {
             var ev = new MSMQLogger {LogName = logname, ApplicationName = applicationname};
 
+            var servername = GetMachineName();
+            if (addtionalParameters!=null && addtionalParameters.ContainsKey("serverName")) 
+                servername = addtionalParameters["serverName"];
+
             try
             {
                 // create the log object and reference the now defined source
-                if (ev._mqueue == null)
-                {
-                    if (MessageQueue.Exists(".\\private$\\" + logname))
-                    {
-                        ev._mqueue = new MessageQueue(".\\private$\\" + logname);
-                    }
-                    else
-                    {
-                        ev._mqueue = MessageQueue.Create(".\\private$\\" + logname);
-                    }
-                }
+                ev._path = string.Format("{0}\\private$\\{1}", servername, logname);
+                ev._mqueue = MessageQueue.Exists(ev._path) ? new MessageQueue(ev._path) : MessageQueue.Create(ev._path);
             }
             catch (Exception ee)
             {
@@ -117,7 +114,7 @@ namespace Civic.Core.Logging.LogWriters
         /// </summary>
         public void Delete()
         {
-            MessageQueue.Delete(".\\private$\\" + LogName);
+            MessageQueue.Delete(_path);
         }
 
         public void Flush()
@@ -161,6 +158,21 @@ namespace Civic.Core.Logging.LogWriters
                 }
                 _mqueue = null;
             }
+        }
+
+        public static string GetMachineName()
+        {
+            string machineName;
+            try
+            {
+                machineName = Environment.MachineName;
+            }
+            catch (SecurityException)
+            {
+                machineName = ".";
+            }
+
+            return machineName;
         }
 
         #endregion Methods
