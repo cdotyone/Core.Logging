@@ -55,6 +55,8 @@ namespace Civic.Core.Logging
                     var e = (Exception)parameterValues[0];
                     Message = (string.IsNullOrEmpty(Message) ? string.Empty : Message + "\n") + expandException(e);
                     if (parameterValues.Length - 1 > i) Message = "{" + (i + 1) + "}\n" + Message;
+                    if(Extended==null) Extended = new Dictionary<string, object>();
+                    Extended["StackTrace"] = e.StackTrace;
                     continue;
                 }
 
