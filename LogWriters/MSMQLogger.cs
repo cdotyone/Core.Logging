@@ -35,7 +35,7 @@ namespace Civic.Core.Logging.LogWriters
             get {
                 try
                 {
-                    return _mqueue.Peek() != null;
+                    return _mqueue.Peek(TimeSpan.FromMilliseconds(0)) != null;
                 }
                 catch(Exception ex)
                 {
