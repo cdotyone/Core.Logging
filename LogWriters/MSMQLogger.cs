@@ -104,14 +104,25 @@ namespace Civic.Core.Logging.LogWriters
             var ev = new MSMQLogger {LogName = logname, ApplicationName = applicationname};
 
             var servername = GetMachineName();
-            if (addtionalParameters!=null && addtionalParameters.ContainsKey("serverName")) 
-                servername = addtionalParameters["serverName"];
+            string connectservername;
+            if (addtionalParameters != null && addtionalParameters.ContainsKey("serverName"))
+                connectservername = addtionalParameters["serverName"];
+            else connectservername = servername;
 
             try
             {
                 // create the log object and reference the now defined source
-                ev._path = string.Format("{0}\\private$\\{1}", servername, logname);
-                ev._mqueue = MessageQueue.Exists(ev._path) ? new MessageQueue(ev._path) : MessageQueue.Create(ev._path);
+
+                if (connectservername == servername)
+                {
+                    ev._path = string.Format("{0}\\private$\\{1}", connectservername, logname);
+                    ev._mqueue = MessageQueue.Exists(ev._path) ? new MessageQueue(ev._path) : MessageQueue.Create(ev._path);
+                }
+                else
+                {
+                    ev._path = string.Format("FormatName:DIRECT=OS:{0}\\private$\\{1}", connectservername, logname);
+                    ev._mqueue = new MessageQueue(ev._path);
+                }
             }
             catch (Exception ee)
             {
