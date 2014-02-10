@@ -1,13 +1,3 @@
-#region Copyright / Comments
-
-// <copyright file="Logger.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
-// <author>Chris Doty</author>
-// <email>dotyc@civicinc.com</email>
-// <date>6/4/2013</date>
-// <summary></summary>
-
-#endregion Copyright / Comments
-
 #region References
 
 using System;
@@ -19,6 +9,7 @@ using System.Security;
 using System.Security.Principal;
 using System.Threading;
 using System.Xml;
+using Civic.Core.Configuration;
 using Civic.Core.Logging.Configuration;
 
 #endregion References
@@ -32,7 +23,7 @@ namespace Civic.Core.Logging
     {
         #region Fields
 
-        private static readonly List<ILogWriter> _availLoggers = new List<ILogWriter>();
+        //private static readonly Dictionary<string, ILogWriter> _availLoggers = new Dictionary<string, ILogWriter>();
         private static readonly Queue<ILogMessage> _eventQueue = new Queue<ILogMessage>();
         private static readonly Dictionary<string, bool> _policies = new Dictionary<string, bool>();
 
@@ -121,7 +112,6 @@ namespace Civic.Core.Logging
             }
             catch (Exception)
             {
-
             }
         }
 
@@ -135,49 +125,18 @@ namespace Civic.Core.Logging
         {
             if (!IsShutdown) return;
 
-            // load the configuration from the config file
-            string configNode = ConfigurationManager.AppSettings["LoggerConfigNode"];
-            if (string.IsNullOrEmpty(configNode)) configNode = @"coreLogging";
-
-            _config = (LoggerSection)ConfigurationManager.GetSection( configNode );
-            if (_config != null) IsTraceOn = _config.Trace;
+            _config = LoggerSection.Current;
             LogWriters.Clear();
 
             if ( _config != null )
             {
-                // load avaiable loggers from the current assembly
-                _availLoggers.Clear();
-                RegisterFromAssembly( Assembly.GetExecutingAssembly() );
-                foreach ( LoggerElement logger in _config.Loggers )
-                {
-                    try
-                    {
-                        RegisterFromAssembly(Assembly.Load(logger.Type));
-                    }
-                    catch
-                    {
-                    }
-                }
 
                 // load the loggers
                 foreach (LoggerElement logger in _config.Loggers)
                 {
-                    var atype = logger.Type;
-                    foreach ( var logwriter in _availLoggers )
-                    {
-                        var type = logwriter.GetType();
-                        var typename = type.FullName;
-                        if (typename != atype) continue;
-
-                        var addtionalAttributes = new Dictionary<string, string>();
-                        foreach (var param in logger.Params)
-                        {
-                            addtionalAttributes[param.Name] = param.Value;
-                        }
-
-                        var obj = logwriter.Create( _config.App, _config.LogName, _config.UseThread, addtionalAttributes );
-                        LogWriters.Add((ILogWriter) obj );
-                    }
+                    var logwriter = DynamicInstance.CreateInstance<ILogWriter>(logger.Assembly, logger.Type);
+                    var obj = logwriter.Create( _config.App, _config.LogName, _config.UseThread, logger.Attributes );
+                    LogWriters.Add((ILogWriter) obj );
                 }
             }
 
@@ -212,6 +171,8 @@ namespace Civic.Core.Logging
         /// <returns>true if it was added, false if it was suppressed because of the tracelevel</returns>
         public static bool Log(ILogMessage message2Log)
         {
+            if (_config == null) Init();
+
             if (message2Log.Type == LogSeverity.Trace)
             {
                 if (!IsTraceOn)
@@ -307,39 +268,6 @@ namespace Civic.Core.Logging
         public static bool LogWarning(LoggingBoundaries boundary, params object[] parameterValues)
         {
             return Log(LogMessage.LogWarning(boundary, parameterValues));
-        }
-
-        /// <summary>
-        /// Used add all of the ILogWriters in the assembly to the
-        /// available list of loggers
-        /// </summary>
-        /// <param name="asm"></param>
-        public static void RegisterFromAssembly(Assembly asm)
-        {
-            Type[] types = asm.GetTypes();
-            foreach (Type type in types)
-            {
-                try
-                {
-                    type.GetInterfaceMap(typeof(ILogWriter));
-                    object obj = Activator.CreateInstance(type);
-                    RegisterLogger((ILogWriter)obj);
-                }
-                catch
-                {
-                }
-            }
-        }
-
-        /// <summary>
-        /// Adds a single ILogWriter to the available loggers
-        /// </summary>
-        /// <param name="logger">the ILogWriter that needs to be added to the available log writers</param>
-        /// <returns>the logger that was passed in is return out</returns>
-        public static ILogWriter RegisterLogger(ILogWriter logger)
-        {
-            _availLoggers.Add(logger);
-            return logger;
         }
 
         /// <summary>
