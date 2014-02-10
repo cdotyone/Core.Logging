@@ -32,7 +32,17 @@ namespace Civic.Core.Logging.LogWriters
 
         public bool HasMessage
         {
-            get { return _mqueue.Peek() != null; }
+            get {
+                try
+                {
+                    return _mqueue.Peek() != null;
+                }
+                catch(Exception ex)
+                {
+                    Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex);
+                    return false;
+                }
+            }
         }
 
         public ILogMessage Receive()
