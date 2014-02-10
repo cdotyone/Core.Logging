@@ -97,6 +97,7 @@
     <Compile Include="Configuration\ExceptionPolicyElement.cs" />
     <Compile Include="Configuration\LoggerSection.cs" />
     <Compile Include="Configuration\LoggerElement.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="ILogReader.cs" />
     <Compile Include="ILogMessage.cs" />
     <Compile Include="ILogWriter.cs" />
@@ -121,7 +122,9 @@
     <None Include="..\..\References\civic.snk">
       <Link>civic.snk</Link>
     </None>
-    <None Include="Nuget\Civic.Core.Logging.nuspec" />
+    <None Include="Nuget\Civic.Core.Logging.nuspec">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Nuget\pack.bat" />
     <None Include="packages.config" />
   </ItemGroup>

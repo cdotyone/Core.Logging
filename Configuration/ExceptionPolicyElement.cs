@@ -1,43 +1,37 @@
-﻿using Civic.Core.Configuration;
+﻿using System;
+using System.Configuration;
+using Civic.Core.Configuration;
 
 namespace Civic.Core.Logging.Configuration
 {
-    public class ExceptionPolicyElement : NamedConfigurationElement
-    {       
-        [System.Configuration.ConfigurationProperty("boundary", IsKey = false, IsRequired = true)]
-        public LoggingBoundaries Boundary
-        {
-            get
-            {
-                return ((LoggingBoundaries)(base["boundary"]));
-            }
-            set
-            {
-                base["boundary"] = value;
-            }
-        }
+    public class ExceptionPolicyElement
+    {
+        public string Name { get; set; }
 
-        [System.Configuration.ConfigurationProperty("rethrow", DefaultValue = true, IsKey = false)]
-        public bool Rethrow
-        {
-            get
-            {
-                return ((bool)(base["rethrow"]));
-            }
-            set
-            {
-                base["rethrow"] = value;
-            }
-        }        
+        public LoggingBoundaries Boundary { get; set; }
 
-        [System.Configuration.ConfigurationProperty("type", DefaultValue="", IsKey=false, IsRequired=false)]
-        public string Type {
-            get {
-                return ((string)(base["type"]));
-            }
-            set {
-                base["type"] = value;
-            }
+        public bool Rethrow { get; set; }
+       
+        public string Type { get; set; }
+
+        public static ExceptionPolicyElement Create(INamedElement configElement)
+        {
+            if (string.IsNullOrEmpty(configElement.Name) || !configElement.Attributes.ContainsKey(Constants.CONFIG_BOUNDARY_PROP))
+                throw new ConfigurationErrorsException("exception element must contain a name and a boundary attributes");
+
+            var config = new ExceptionPolicyElement
+            {
+                Name = configElement.Name,
+                Boundary = (LoggingBoundaries)Enum.Parse(typeof(LoggingBoundaries), configElement.Attributes[Constants.CONFIG_BOUNDARY_PROP])
+            };
+
+            if (configElement.Attributes.ContainsKey(Constants.CONFIG_TYPE_PROP))
+                config.Type = configElement.Attributes[Constants.CONFIG_TYPE_PROP];
+
+            if (configElement.Attributes.ContainsKey(Constants.CONFIG_RETHROW_PROP))
+                config.Rethrow = bool.Parse(configElement.Attributes[Constants.CONFIG_RETHROW_PROP]);
+
+            return config;
         }
     }
 }

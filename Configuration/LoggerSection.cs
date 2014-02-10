@@ -1,80 +1,108 @@
+using System.Collections.Generic;
+using System.Configuration;
+using System.Linq;
 using Civic.Core.Configuration;
+using Civic.Core.Logging.LogWriters;
 
 namespace Civic.Core.Logging.Configuration {
 
-    public class LoggerSection : System.Configuration.ConfigurationSection {
-        
-        [System.Configuration.ConfigurationProperty("app", IsKey=false, IsRequired=true)]
-        public string App {
-            get {
-                return ((string)(base["app"]));
-            }
-            set {
-                base["app"] = value;
+    public class LoggerSection : Section
+    {
+
+        private static LoggerSection _coreConfig;
+
+        /// <summary>
+        /// The current configuration for caching module
+        /// </summary>
+        public static LoggerSection Current
+        {
+            get
+            {
+                // load the configuration from the config file
+                string configNode = ConfigurationManager.AppSettings["LoggerConfigNode"];
+                if (string.IsNullOrEmpty(configNode)) configNode = Constants.CORE_LOGGING_SECTION;
+
+                if (_coreConfig == null) _coreConfig = (LoggerSection) ConfigurationManager.GetSection(configNode);
+
+                return _coreConfig ?? (_coreConfig = new LoggerSection
+                    {
+                        App = "Unknown",
+                    });
             }
         }
-        
-        [System.Configuration.ConfigurationProperty("logname", DefaultValue="PO", IsKey=false, IsRequired=false)]
+
+        [ConfigurationProperty(Constants.CONFIG_APP_PROP, IsKey = false, IsRequired = true)]
+        public string App
+        {
+            get { return (string)base[Constants.CONFIG_APP_PROP]; }
+            set { base[Constants.CONFIG_APP_PROP] = value; }
+        }
+
+        [ConfigurationProperty(Constants.CONFIG_LOGNAME_PROP, DefaultValue = Constants.CONFIG_LOGNAME_DEFAULT, IsKey = false, IsRequired = false)]
         public string LogName {
-            get {
-                return ((string)(base["logname"]));
-            }
-            set {
-                base["logname"] = value;
-            }
+            get { return (string)base[Constants.CONFIG_LOGNAME_PROP]; }
+            set { base[Constants.CONFIG_LOGNAME_PROP] = value; }
         }
-        
-        [System.Configuration.ConfigurationProperty("trace", DefaultValue=false, IsKey=false, IsRequired=false)]
+
+        [ConfigurationProperty(Constants.CONFIG_TRACE_PROP, DefaultValue = Constants.CONFIG_TRACE_DEFAULT, IsKey = false, IsRequired = false)]
         public bool Trace {
-            get {
-                return ((bool)(base["trace"]));
-            }
-            set {
-                base["trace"] = value;
-            }
+            get { return (bool)base[Constants.CONFIG_TRACE_PROP]; }
+            set { base[Constants.CONFIG_TRACE_PROP] = value; }
         }
 
-        [System.Configuration.ConfigurationProperty("useThread", DefaultValue = false, IsKey = false, IsRequired = false)]
-        public bool UseThread
+        [ConfigurationProperty(Constants.CONFIG_USETHREAD_PROP, DefaultValue = Constants.CONFIG_USETHREAD_DEFAULT, IsKey = false, IsRequired = false)]
+        public bool UseThread {
+            get { return (bool)base[Constants.CONFIG_USETHREAD_PROP]; }
+            set { base[Constants.CONFIG_USETHREAD_PROP] = value; }
+        }
+
+        [ConfigurationProperty(Constants.CONFIG_LOGGERS_PROP, IsDefaultCollection = false, IsRequired = true)]
+        public List<LoggerElement> Loggers
         {
             get
             {
-                return ((bool)(base["useThread"]));
-            }
-            set
-            {
-                base["useThread"] = value;
+                if (_loggers != null) return _loggers;
+                if (Children.ContainsKey(Constants.CONFIG_LOGGERS_PROP))
+                {
+                    _loggers =
+                        Children[Constants.CONFIG_LOGGERS_PROP].Children.Values.Select(LoggerElement.Create).ToList();
+                }
+                return _loggers ??
+                       (_loggers = new List<LoggerElement>(new[]
+                           {
+                               new LoggerElement
+                                   {
+                                       Name = Constants.CONFIG_LOGNAME_DEFAULT,
+                                       Assembly = typeof (MSMQLogger).Assembly.FullName,
+                                       Type = typeof (MSMQLogger).FullName
+                                   }
+                           }));
             }
         }
+        private List<LoggerElement> _loggers;
 
-        [System.Configuration.ConfigurationProperty("loggers", IsDefaultCollection = false, IsRequired = true)]
-        public NamedElementCollection<LoggerElement> Loggers {
-            get {
-                return ((NamedElementCollection<LoggerElement>)(base["loggers"]));
-            }
-        }
-
-        [System.Configuration.ConfigurationProperty("exceptionPolicy", IsDefaultCollection = false, IsRequired = false)]
-        public NamedElementCollection<ExceptionPolicyElement> ExceptionPolicies
+        [ConfigurationProperty("exceptionPolicy", IsDefaultCollection = false, IsRequired = false)]
+        public List<ExceptionPolicyElement> ExceptionPolicies
         {
             get
             {
-                var policies = ((NamedElementCollection<ExceptionPolicyElement>)(base["exceptionPolicy"]));
-                if (policies != null && policies.Count > 0) return policies;
-
-                if(_exceptionPoliciesOverride==null)
-                    _exceptionPoliciesOverride = new NamedElementCollection<ExceptionPolicyElement>
-                               {
-                                   new ExceptionPolicyElement
-                                       {
-                                           Rethrow = false,
-                                           Name = LoggingBoundaries.UI.ToString(),
-                                           Boundary = LoggingBoundaries.UI
-                                       }
-                               };
-                return _exceptionPoliciesOverride;
+                if (_exceptionPoliciesOverride != null) return _exceptionPoliciesOverride;
+                if (Children.ContainsKey(Constants.CONFIG_EXCEPTIONPOLICY_PROP))
+                {
+                    _exceptionPoliciesOverride = Children[Constants.CONFIG_LOGGERS_PROP].Children.Values.Select(ExceptionPolicyElement.Create).ToList();
+                }
+                return _exceptionPoliciesOverride ??
+                       (_exceptionPoliciesOverride = new List<ExceptionPolicyElement>(new[]
+                           {
+                               new ExceptionPolicyElement
+                                   {
+                                       Rethrow = false,
+                                       Name = LoggingBoundaries.UI.ToString(),
+                                       Boundary = LoggingBoundaries.UI
+                                   }
+                           }));
             }
         }
-        private NamedElementCollection<ExceptionPolicyElement> _exceptionPoliciesOverride;
+        private List<ExceptionPolicyElement> _exceptionPoliciesOverride;
     }
 }

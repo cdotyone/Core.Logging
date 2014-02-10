@@ -33,6 +33,8 @@ namespace Civic.Core.Logging.LogWriters
         public bool HasMessage
         {
             get {
+                if (_mqueue == null) return false;
+
                 try
                 {
                     return _mqueue.Peek(TimeSpan.FromMilliseconds(0)) != null;
@@ -48,6 +50,8 @@ namespace Civic.Core.Logging.LogWriters
 
         public ILogMessage Receive()
         {
+            if (_mqueue == null) return null;
+
             var msg = _mqueue.Receive();
             if (msg == null) return null;
             var sr = new StreamReader(msg.BodyStream);
@@ -125,6 +129,7 @@ namespace Civic.Core.Logging.LogWriters
         /// </summary>
         public void Delete()
         {
+            if (_mqueue == null) return;
             MessageQueue.Delete(_path);
         }
 
@@ -140,6 +145,8 @@ namespace Civic.Core.Logging.LogWriters
         {
             try
             {
+                if (_mqueue == null) return false;
+
                 if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
                 var body = JsonConvert.SerializeObject(message);
                 var msg = new Message { BodyStream = new MemoryStream(Encoding.ASCII.GetBytes(body)) };
