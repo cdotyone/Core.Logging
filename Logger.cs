@@ -176,7 +176,7 @@ namespace Civic.Core.Logging
                         }
 
                         var obj = logwriter.Create( _config.App, _config.LogName, _config.UseThread, addtionalAttributes );
-                        LogWriters.Add( obj );
+                        LogWriters.Add((ILogWriter) obj );
                     }
                 }
             }

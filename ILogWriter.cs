@@ -68,7 +68,7 @@ namespace Civic.Core.Logging
         /// <param name="canThread">tells the log write if it can use threads</param>
         /// <param name="addtionalParameters">addtional attributes from the configuration of this logger</param>
         /// <returns></returns>
-        ILogWriter Create(string applicationname, string logname, bool canThread, Dictionary<string, string> addtionalParameters);
+        object Create(string applicationname, string logname, bool canThread, Dictionary<string, string> addtionalParameters);
 
         /// <summary>
         /// On logs that can be deleted.  

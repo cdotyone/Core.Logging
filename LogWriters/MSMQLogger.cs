@@ -82,7 +82,7 @@ namespace Civic.Core.Logging.LogWriters
         /// <param name="logname">Name of the log, this can be interperted the way the class want to, but it must identify a unique logger.</param>
         /// <param name="canThread">should the logger use threads.  generally advised this is false for web sites</param>
         /// <param name="addtionalParameters">any additional parameters found on configuration node</param>
-        public ILogWriter Create( string applicationname, string logname, bool canThread, Dictionary<string, string> addtionalParameters )
+        public object Create( string applicationname, string logname, bool canThread, Dictionary<string, string> addtionalParameters )
         {
             var ev = new MSMQLogger {LogName = logname, ApplicationName = applicationname};
 
