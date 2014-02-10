@@ -37,9 +37,10 @@ namespace Civic.Core.Logging.LogWriters
                 {
                     return _mqueue.Peek(TimeSpan.FromMilliseconds(0)) != null;
                 }
-                catch(Exception ex)
+                catch(MessageQueueException ex)
                 {
-                    Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex);
+                    if (ex.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout)
+                        Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex);
                     return false;
                 }
             }
