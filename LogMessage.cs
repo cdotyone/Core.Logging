@@ -31,12 +31,18 @@ namespace Civic.Core.Logging
             ServerName = GetMachineName();
         }
 
-        public LogMessage(LoggingBoundaries boundary, LogSeverity entrytype, params object[] parameterValues)
+        public LogMessage(LoggingBoundaries boundary, LogSeverity entrytype, params object[] parameterValues) : this()
         {
             Boundary = boundary;
             Type = entrytype;
+            var ofs = 0;
 
-            for (int i = 0; i < parameterValues.Length; i++)
+            if (parameterValues.Length > 0 && parameterValues[0] is string)
+            {
+                ofs++;
+                Message = parameterValues[0].ToString();
+            }
+            for (int i = ofs; i < parameterValues.Length; i++)
             {
                 if (parameterValues[i] is Dictionary<string,object>)
                 {
@@ -53,7 +59,7 @@ namespace Civic.Core.Logging
                 }
 
                 if (string.IsNullOrEmpty(Message)) Message = "{0}";
-                Message = Message.Replace("{" + i + "}", parameterValues[i].ToString());
+                Message = Message.Replace("{" + (i - ofs) + "}", parameterValues[i].ToString());
             }
         }
 
@@ -161,6 +167,7 @@ namespace Civic.Core.Logging
             catch (Exception)
             {
             }
+
             return null;
         }
 
