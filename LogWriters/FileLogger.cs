@@ -166,7 +166,7 @@ namespace Civic.Core.Logging.LogWriters
         /// </summary>
         public void Delete()
         {
-            throw new Exception("The method or operation is not supported.");
+            //throw new Exception("The method or operation is not supported.");
         }
 
         public void Flush()
