@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Newtonsoft.Json;
 
 #endregion References
 
@@ -330,15 +331,19 @@ namespace Civic.Core.Logging.LogWriters
                     {
                         case LogSeverity.Error:
                             output.WriteLine("[{0}] {1} - {2}", t, "ERROR:", m.Message);
+                            writeExtended(output, m);
                             break;
                         case LogSeverity.Warning:
                             output.WriteLine("[{0}] {1} - {2}", t, "WARNING:", m.Message);
+                            writeExtended(output, m);
                             break;
                         case LogSeverity.Information:
                             output.WriteLine("[{0}] {1} - {2}", t, "INFO:", m.Message);
+                            writeExtended(output, m);
                             break;
                         case LogSeverity.Trace:
                             output.WriteLine("[{0}] {1} - {2}", t, "TRACE:", m.Message);
+                            writeExtended(output, m);
                             break;
                     }
                 }
@@ -346,6 +351,14 @@ namespace Civic.Core.Logging.LogWriters
 
             // Close the log file
             if(output!=null) output.Close();
+        }
+
+        private void writeExtended(TextWriter output,LogMessage message)
+        {
+            if (message.Extended != null && message.Extended.Count > 0)
+            {
+                output.WriteLine("\t{0}", JsonConvert.SerializeObject(message.Extended));
+            }
         }
 
         #endregion Methods
