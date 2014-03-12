@@ -386,6 +386,8 @@ namespace Civic.Core.Logging
         {
             if(_config==null) Init();
 
+            LogError(boundary, ex);
+
             var key = boundary + "_" + ex.GetType().FullName;
             if (_policies.ContainsKey(key)) return _policies[key];
             key = boundary.ToString();
