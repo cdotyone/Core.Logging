@@ -24,10 +24,8 @@ namespace Civic.Core.Logging.Configuration {
 
                 if (_coreConfig == null) _coreConfig = (LoggerSection) ConfigurationManager.GetSection(configNode);
 
-                return _coreConfig ?? (_coreConfig = new LoggerSection
-                    {
-                        App = "Unknown",
-                    });
+
+                return _coreConfig ?? (_coreConfig = new LoggerSection());
             }
         }
 
@@ -36,7 +34,11 @@ namespace Civic.Core.Logging.Configuration {
         {
             get
             {
-                if (string.IsNullOrEmpty((string) base[Constants.CONFIG_APP_PROP])) return ConfigurationManager.AppSettings[Constants.CONFIG_APPNAME_PROP];
+                if (string.IsNullOrEmpty((string)base[Constants.CONFIG_APP_PROP]))
+                {
+                    if (string.IsNullOrEmpty(ConfigurationManager.AppSettings[Constants.CONFIG_APPNAME_PROP])) return "Unknown";
+                    return ConfigurationManager.AppSettings[Constants.CONFIG_APPNAME_PROP];
+                }
                 return (string)base[Constants.CONFIG_APP_PROP];
             }
             set { base[Constants.CONFIG_APP_PROP] = value; }
