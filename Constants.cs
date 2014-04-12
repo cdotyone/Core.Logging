@@ -4,7 +4,7 @@
     {
         public const string CONFIG_EXCEPTIONPOLICY_PROP = "exceptionPolicy";
         public const string CONFIG_APP_PROP = "app";
-        public const string CONFIG_APPNAME_PROP = "app";
+        public const string CONFIG_APPNAME_PROP = "appname";
         public const string CONFIG_RETHROW_PROP = "rethrow";
         public const string CONFIG_BOUNDARY_PROP = "boundary";
 
