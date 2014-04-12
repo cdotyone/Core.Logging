@@ -34,7 +34,11 @@ namespace Civic.Core.Logging.Configuration {
         [ConfigurationProperty(Constants.CONFIG_APP_PROP, IsKey = false, IsRequired = true)]
         public string App
         {
-            get { return (string)base[Constants.CONFIG_APP_PROP]; }
+            get
+            {
+                if (string.IsNullOrEmpty((string) base[Constants.CONFIG_APP_PROP])) return ConfigurationManager.AppSettings[Constants.CONFIG_APPNAME_PROP];
+                return (string)base[Constants.CONFIG_APP_PROP];
+            }
             set { base[Constants.CONFIG_APP_PROP] = value; }
         }
 
