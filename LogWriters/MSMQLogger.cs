@@ -30,20 +30,20 @@ namespace Civic.Core.Logging.LogWriters
 
         #region Properties
 
-        public bool HasMessage
+        public int HasMessage
         {
             get {
-                if (_mqueue == null) return false;
+                if (_mqueue == null) return 0;
 
                 try
                 {
-                    return _mqueue.Peek(TimeSpan.FromMilliseconds(0)) != null;
+                    return _mqueue.Peek(TimeSpan.FromMilliseconds(0)) != null ? 1 : 0;
                 }
                 catch(MessageQueueException ex)
                 {
                     if (ex.MessageQueueErrorCode != MessageQueueErrorCode.IOTimeout)
                         Logger.HandleException(LoggingBoundaries.ServiceBoundary, ex);
-                    return false;
+                    return -1;
                 }
             }
         }
