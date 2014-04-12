@@ -7,7 +7,7 @@ namespace Civic.Core.Logging
     /// </summary>
     public interface ILogReader
     {
-        bool HasMessage { get; }
+        int HasMessage { get; }
 
         ILogMessage Receive();
 
