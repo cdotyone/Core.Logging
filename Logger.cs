@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
 using System.Security;
@@ -175,7 +176,7 @@ namespace Civic.Core.Logging
 
             if (message2Log.Type == LogSeverity.Trace)
             {
-                if (!IsTraceOn)
+                if (!IsTraceOn && !Debugger.IsAttached)
                 {
                     return false;
                 }
@@ -251,13 +252,13 @@ namespace Civic.Core.Logging
         /// </summary>
         public static bool LogTrace(LoggingBoundaries boundary, params object[] parameterValues)
         {
-            if (!IsTraceOn) return false;
+            if (!IsTraceOn && !Debugger.IsAttached) return false;
             return Log(LogMessage.LogTrace(boundary, parameterValues));
         }
 
         public static IDisposable CreateTrace(LoggingBoundaries boundary, params object[] parameterValues)
         {
-            if (IsTraceOn) return _dummyTrace;
+            if (IsTraceOn && !Debugger.IsAttached) return _dummyTrace;
             return new PerformanceTracer(boundary, parameterValues);
         }
 
