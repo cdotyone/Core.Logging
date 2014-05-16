@@ -52,7 +52,11 @@ namespace Civic.Core.Logging.Configuration {
 
         [ConfigurationProperty(Constants.CONFIG_TRACE_PROP, DefaultValue = Constants.CONFIG_TRACE_DEFAULT, IsKey = false, IsRequired = false)]
         public bool Trace {
-            get { return (bool)base[Constants.CONFIG_TRACE_PROP]; }
+            get
+            {
+                if (System.Diagnostics.Debugger.IsAttached) return true;
+                return (bool)base[Constants.CONFIG_TRACE_PROP];
+            }
             set { base[Constants.CONFIG_TRACE_PROP] = value; }
         }
 
@@ -70,19 +74,43 @@ namespace Civic.Core.Logging.Configuration {
                 if (_loggers != null) return _loggers;
                 if (Children.ContainsKey(Constants.CONFIG_LOGGERS_PROP))
                 {
-                    _loggers =
-                        Children[Constants.CONFIG_LOGGERS_PROP].Children.Values.Select(LoggerElement.Create).ToList();
+                    _loggers = Children[Constants.CONFIG_LOGGERS_PROP].Children.Values.Select(LoggerElement.Create).ToList();
                 }
-                return _loggers ??
-                       (_loggers = new List<LoggerElement>(new[]
-                           {
-                               new LoggerElement
-                                   {
-                                       Name = Constants.CONFIG_LOGNAME_DEFAULT,
-                                       Assembly = typeof (MSMQLogger).Assembly.FullName,
-                                       Type = typeof (MSMQLogger).FullName
-                                   }
-                           }));
+                if (_loggers == null)
+                {
+                    if (System.Diagnostics.Debugger.IsAttached)
+                    {
+                        _loggers = new List<LoggerElement>(new[]
+                            {
+                                new LoggerElement
+                                    {
+                                        Name = Constants.CONFIG_LOGNAME_DEFAULT,
+                                        Assembly = typeof (MSMQLogger).Assembly.FullName,
+                                        Type = typeof (MSMQLogger).FullName
+                                    },
+                                new LoggerElement
+                                    {
+                                        Name = "DEBUG",
+                                        Assembly = typeof (DebugLogger).Assembly.FullName,
+                                        Type = typeof (DebugLogger).FullName
+                                    }
+
+                            });
+                    }
+                    else
+                    {
+                        _loggers = new List<LoggerElement>(new[]
+                            {
+                                new LoggerElement
+                                    {
+                                        Name = Constants.CONFIG_LOGNAME_DEFAULT,
+                                        Assembly = typeof (MSMQLogger).Assembly.FullName,
+                                        Type = typeof (MSMQLogger).FullName
+                                    }
+                            });
+                    }
+                }
+                return _loggers;
             }
         }
         private List<LoggerElement> _loggers;
