@@ -52,11 +52,7 @@ namespace Civic.Core.Logging.Configuration {
 
         [ConfigurationProperty(Constants.CONFIG_TRACE_PROP, DefaultValue = Constants.CONFIG_TRACE_DEFAULT, IsKey = false, IsRequired = false)]
         public bool Trace {
-            get
-            {
-                if (System.Diagnostics.Debugger.IsAttached) return true;
-                return (bool)base[Constants.CONFIG_TRACE_PROP];
-            }
+            get { return (bool)base[Constants.CONFIG_TRACE_PROP]; }
             set { base[Constants.CONFIG_TRACE_PROP] = value; }
         }
 
