@@ -115,7 +115,6 @@ namespace Civic.Core.Logging
 
 				_tracerDisposed = true;
 			}
-            GC.ReRegisterForFinalize(this);
 		}
 
 		public static bool IsTracingAvailable()
