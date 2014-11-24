@@ -31,6 +31,8 @@ namespace Civic.Core.Logging
         private static LoggerSection _config;
         private static Thread _tm;
         private static readonly IDisposable _dummyTrace = new PerformanceTracerDummy();
+        private static object _lock = new object();
+        private static bool _initialized = false;
 
         static Logger()
         {
@@ -129,40 +131,50 @@ namespace Civic.Core.Logging
             _config = LoggerSection.Current;
             LogWriters.Clear();
 
-            if ( _config != null )
-            {
+            if (_initialized) return;
 
-                // load the loggers
-                foreach (LoggerElement logger in _config.Loggers)
-                {
-                    var logwriter = DynamicInstance.CreateInstance<ILogWriter>(logger.Assembly, logger.Type);
-                    var obj = logwriter.Create( _config.App, _config.LogName, _config.UseThread, logger.Attributes );
-                    LogWriters.Add((ILogWriter) obj );
-                }
-            }
-
-            if (_config!=null)
+            lock (_lock)
             {
-                foreach (ExceptionPolicyElement policy in _config.ExceptionPolicies)
+                if (_config != null)
                 {
-                    string key;
-                    if(!string.IsNullOrEmpty(policy.Type))
+                    // load the loggers
+                    foreach (LoggerElement logger in _config.Loggers)
                     {
-                        key = policy.Type;
-                    } else key = policy.Boundary.ToString();
-
-
-                    if (!_policies.ContainsKey(key)) _policies.Add(key, policy.Rethrow);
+                        var logwriter = DynamicInstance.CreateInstance<ILogWriter>(logger.Assembly, logger.Type);
+                        var obj = logwriter.Create(_config.App, _config.LogName, _config.UseThread, logger.Attributes);
+                        LogWriters.Add((ILogWriter)obj);
+                    }
                 }
-            }
 
-            if (_config != null && _config.UseThread)
-            {
-                IsShutdown = false;
-                _tm = new Thread( Process ) {Name = "Multi Logger Process"};
-                _tm.Start();
+                if (_config != null)
+                {
+                    foreach (ExceptionPolicyElement policy in _config.ExceptionPolicies)
+                    {
+                        string key;
+                        if (!string.IsNullOrEmpty(policy.Type))
+                        {
+                            key = policy.Type;
+                        }
+                        else key = policy.Boundary.ToString();
+
+
+                        if (!_policies.ContainsKey(key)) _policies.Add(key, policy.Rethrow);
+                    }
+                }
+
+                if (_config != null)
+                {
+                    if (_config.UseThread)
+                    {
+                        IsShutdown = false;
+                        _tm = new Thread(Process) {Name = "Multi Logger Process"};
+                        _tm.Start();
+                    }
+                    else _tm = null;
+                }
+
+                _initialized = true;
             }
-            else _tm = null;
         }
 
         /// <summary>
