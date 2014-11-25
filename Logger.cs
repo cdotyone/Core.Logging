@@ -31,7 +31,6 @@ namespace Civic.Core.Logging
         private static Thread _tm;
         private static readonly IDisposable _dummyTrace = new PerformanceTracerDummy();
         private static readonly object _lock = new object();
-        private static bool _initialized;
         private static List<ILogWriter> _logWriters = new List<ILogWriter>();
         private static bool _isShutdown = true;
 
@@ -111,7 +110,7 @@ namespace Civic.Core.Logging
 
             try
             {
-                foreach ( ILogWriter iLog in LogWriters )
+                foreach (ILogWriter iLog in LogWriters)
                 {
                     iLog.Flush();
                 }
@@ -131,13 +130,14 @@ namespace Civic.Core.Logging
         {
             if (!IsShutdown) return;
 
-            _config = LoggerSection.Current;
-            LogWriters.Clear();
-
-            if (_initialized) return;
-
             lock (_lock)
             {
+                if (_config == null) _config = LoggerSection.Current;
+                else return;
+
+                if (_logWriters == null) _logWriters = new List<ILogWriter>();
+                _logWriters.Clear();
+            
                 if (_config != null)
                 {
                     // load the loggers
@@ -147,29 +147,21 @@ namespace Civic.Core.Logging
                         var obj = logwriter.Create(_config.App, _config.LogName, _config.UseThread, logger.Attributes);
                         LogWriters.Add((ILogWriter)obj);
                     }
-                }
-
-                if (_config != null)
-                {
+                
                     foreach (ExceptionPolicyElement policy in _config.ExceptionPolicies)
                     {
                         string key = !string.IsNullOrEmpty(policy.Type) ? policy.Type : policy.Boundary.ToString();
                         if (!_policies.ContainsKey(key)) _policies.Add(key, policy.Rethrow);
                     }
-                }
-
-                if (_config != null)
-                {
+                
                     if (_config.UseThread)
                     {
                         IsShutdown = false;
-                        _tm = new Thread(Process) {Name = "Multi Logger Process"};
+                        _tm = new Thread(Process) { Name = "Multi Logger Process" };
                         _tm.Start();
                     }
                     else _tm = null;
                 }
-
-                _initialized = true;
             }
         }
 
@@ -180,7 +172,7 @@ namespace Civic.Core.Logging
         /// <returns>true if it was added, false if it was suppressed because of the tracelevel</returns>
         public static bool Log(ILogMessage message2Log)
         {
-            if (_config == null) Init();
+            Init();
 
             if (message2Log.Type == LogSeverity.Trace)
             {
@@ -190,8 +182,8 @@ namespace Civic.Core.Logging
                 }
             }
 
-            if (message2Log.Extended==null) message2Log.Extended = new Dictionary<string, object>();
-            if (_config!=null && string.IsNullOrEmpty(message2Log.ApplicationName)) message2Log.ApplicationName = _config.App;
+            if (message2Log.Extended == null) message2Log.Extended = new Dictionary<string, object>();
+            if (_config != null && string.IsNullOrEmpty(message2Log.ApplicationName)) message2Log.ApplicationName = _config.App;
             if (!message2Log.Extended.ContainsKey("FullName")) message2Log.Extended.Add("FullName", Assembly.GetExecutingAssembly().FullName);
             if (!message2Log.Extended.ContainsKey("AppDomainName")) message2Log.Extended.Add("AppDomainName", AppDomain.CurrentDomain.FriendlyName);
             if (!message2Log.Extended.ContainsKey("ThreadIdentity")) message2Log.Extended.Add("ThreadIdentity", Thread.CurrentPrincipal.Identity.Name);
@@ -202,7 +194,7 @@ namespace Civic.Core.Logging
                 _eventQueue.Enqueue(message2Log);
             }
 
-            if ( IsShutdown ) Flush();
+            if (IsShutdown) Flush();
             return true;
         }
 
@@ -288,7 +280,7 @@ namespace Civic.Core.Logging
             Thread.Sleep(100);
 
             // Sleep a little longer, wait for the thread to finish
-            if (_config!=null && _config.UseThread) Thread.Sleep(2000);
+            if (_config != null && _config.UseThread) Thread.Sleep(2000);
 
             // Double check there are no more events on queue, if so, run them.
             if (PendingLogEntries > 0)
@@ -298,7 +290,7 @@ namespace Civic.Core.Logging
 
             try
             {
-                if (_config!=null && _config.UseThread )
+                if (_config != null && _config.UseThread)
                 {
                     _tm.Abort();
                     _tm = null;
@@ -336,7 +328,7 @@ namespace Civic.Core.Logging
                 {
                     RunQueue();
                 }
-                catch(Exception)
+                catch (Exception)
                 {
                     // Catch everything and do nothing
                 }
@@ -360,7 +352,7 @@ namespace Civic.Core.Logging
                 // Lock for writing
                 lock (_eventQueue)
                 {
-                    if(PendingLogEntries > 0)
+                    if (PendingLogEntries > 0)
                         m = (LogMessage)_eventQueue.Dequeue();
                 }
 
@@ -369,9 +361,9 @@ namespace Civic.Core.Logging
                 {
                     try
                     {
-                        foreach ( ILogWriter iLog in LogWriters )
+                        foreach (ILogWriter iLog in LogWriters)
                         {
-                            iLog.Log( m );
+                            iLog.Log(m);
                         }
                     }
                     catch (Exception)
@@ -393,7 +385,7 @@ namespace Civic.Core.Logging
         /// <returns>true if the calling method should throw the exception again</returns>
         public static bool HandleException(LoggingBoundaries boundary, Exception ex)
         {
-            if(_config==null) Init();
+            Init();
 
             LogError(boundary, ex);
 
