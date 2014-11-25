@@ -145,7 +145,7 @@ namespace Civic.Core.Logging
                     {
                         var logwriter = DynamicInstance.CreateInstance<ILogWriter>(logger.Assembly, logger.Type);
                         var obj = logwriter.Create(_config.App, _config.LogName, _config.UseThread, logger.Attributes);
-                        LogWriters.Add((ILogWriter)obj);
+                        _logWriters.Add((ILogWriter)obj);
                     }
                 
                     foreach (ExceptionPolicyElement policy in _config.ExceptionPolicies)
