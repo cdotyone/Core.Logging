@@ -4,7 +4,6 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Diagnostics;
-using System.Globalization;
 using System.Reflection;
 using System.Security;
 using System.Security.Principal;
@@ -31,14 +30,10 @@ namespace Civic.Core.Logging
         private static LoggerSection _config;
         private static Thread _tm;
         private static readonly IDisposable _dummyTrace = new PerformanceTracerDummy();
-        private static object _lock = new object();
-        private static bool _initialized = false;
-
-        static Logger()
-        {
-            LogWriters = new List<ILogWriter>();
-            IsShutdown = true;
-        }
+        private static readonly object _lock = new object();
+        private static bool _initialized;
+        private static List<ILogWriter> _logWriters = new List<ILogWriter>();
+        private static bool _isShutdown = true;
 
         #endregion Fields
 
@@ -47,7 +42,11 @@ namespace Civic.Core.Logging
         /// <summary>
         /// True if the logging thread is shutdown, false if it is running
         /// </summary>
-        public static bool IsShutdown { get; private set; }
+        public static bool IsShutdown
+        {
+            get { return _isShutdown; }
+            private set { _isShutdown = value; }
+        }
 
         /// <summary>
         /// Default trace level for all of the loggers
@@ -61,7 +60,11 @@ namespace Civic.Core.Logging
         /// <summary>
         /// The current log writers that are installed
         /// </summary>
-        public static List<ILogWriter> LogWriters { get; private set; }
+        public static List<ILogWriter> LogWriters
+        {
+            get { return _logWriters; }
+            private set { _logWriters = value; }
+        }
 
         /// <summary>
         /// gets current log entries left to process
@@ -150,14 +153,7 @@ namespace Civic.Core.Logging
                 {
                     foreach (ExceptionPolicyElement policy in _config.ExceptionPolicies)
                     {
-                        string key;
-                        if (!string.IsNullOrEmpty(policy.Type))
-                        {
-                            key = policy.Type;
-                        }
-                        else key = policy.Boundary.ToString();
-
-
+                        string key = !string.IsNullOrEmpty(policy.Type) ? policy.Type : policy.Boundary.ToString();
                         if (!_policies.ContainsKey(key)) _policies.Add(key, policy.Rethrow);
                     }
                 }
