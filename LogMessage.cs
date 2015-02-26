@@ -53,7 +53,7 @@ namespace Civic.Core.Logging
                 if (parameterValues[i] is Exception)
                 {
                     var e = (Exception)parameterValues[0];
-                    Message = (string.IsNullOrEmpty(Message) ? string.Empty : Message + "\n") + expandException(e);
+                    Message = (string.IsNullOrEmpty(Message) ? string.Empty : Message + "\n") + ExpandException(e);
                     if (parameterValues.Length - 1 > i) Message = "{" + (i + 1) + "}\n" + Message;
                     if(Extended==null) Extended = new Dictionary<string, object>();
                     Extended["StackTrace"] = e.StackTrace;
@@ -178,7 +178,7 @@ namespace Civic.Core.Logging
         /// </summary>
         /// <param name="ex">the exception to be expanded</param>
         /// <returns>the expanded exception in string form</returns>
-        private static string expandException(Exception ex)
+        public static string ExpandException(Exception ex)
         {
             if ( ex == null ) return "";
 
@@ -187,7 +187,7 @@ namespace Civic.Core.Logging
             if ( string.IsNullOrEmpty( ex.StackTrace ) ) retval += "\n---" + ex.StackTrace;
 
             if(ex.InnerException != null)
-                retval += "\n\t" + expandException( ex.InnerException );
+                retval += "\n\t" + ExpandException( ex.InnerException );
 
             return retval;
         }
