@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Security;
+using Newtonsoft.Json;
 
 #endregion References
 
@@ -61,7 +62,8 @@ namespace Civic.Core.Logging
                 }
 
                 if (string.IsNullOrEmpty(Message)) Message = "{0}";
-                Message = Message.Replace("{" + (i - ofs) + "}", parameterValues[i].ToString());
+                if (parameterValues[i].GetType().IsPrimitive) Message = Message.Replace("{" + (i - ofs) + "}", parameterValues[i].ToString());
+                else Message = Message.Replace("{" + (i - ofs) + "}", JsonConvert.SerializeObject(parameterValues[i]));
             }
         }
 
