@@ -140,6 +140,8 @@ namespace Civic.Core.Logging
             
                 if (_config != null)
                 {
+                    IsTraceOn = _config.Trace;
+
                     // load the loggers
                     foreach (LoggerElement logger in _config.Loggers)
                     {
@@ -176,7 +178,7 @@ namespace Civic.Core.Logging
 
             if (message2Log.Type == LogSeverity.Trace)
             {
-                if (!IsTraceOn && !Debugger.IsAttached)
+                if (!IsTraceOn || Debugger.IsAttached)
                 {
                     return false;
                 }
@@ -252,13 +254,15 @@ namespace Civic.Core.Logging
         /// </summary>
         public static bool LogTrace(LoggingBoundaries boundary, params object[] parameterValues)
         {
-            if (!IsTraceOn && !Debugger.IsAttached) return false;
+            if (_config == null) Init();
+            if (!IsTraceOn || Debugger.IsAttached) return false;
             return Log(LogMessage.LogTrace(boundary, parameterValues));
         }
 
         public static IDisposable CreateTrace(LoggingBoundaries boundary, params object[] parameterValues)
         {
-            if (IsTraceOn && !Debugger.IsAttached) return _dummyTrace;
+            if (_config == null) Init();
+            if (IsTraceOn || Debugger.IsAttached) return _dummyTrace;
             return new PerformanceTracer(boundary, parameterValues);
         }
 
