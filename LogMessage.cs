@@ -62,7 +62,7 @@ namespace Civic.Core.Logging
                 }
 
                 if (string.IsNullOrEmpty(Message)) Message = "{0}";
-                if (parameterValues[i].GetType().IsPrimitive || parameterValues[i].GetType() is string) Message = Message.Replace("{" + (i - ofs) + "}", parameterValues[i].ToString());
+                if (parameterValues[i].GetType().IsPrimitive || parameterValues[i] is string) Message = Message.Replace("{" + (i - ofs) + "}", parameterValues[i].ToString());
                 else Message = Message.Replace("{" + (i - ofs) + "}", JsonConvert.SerializeObject(parameterValues[i]));
             }
         }
