@@ -29,6 +29,14 @@ namespace Civic.Core.Logging
         #region Properties
 
         /// <summary>
+        /// gets/sets the tracking guid for the 
+        /// </summary>
+        string TrackingGUID
+        {
+            get; set;
+        }
+
+        /// <summary>
         /// gets/sets the message text for this message
         /// </summary>
         string Message
@@ -42,6 +50,24 @@ namespace Civic.Core.Logging
         LogSeverity Type
         {
             get; set;
+        }
+
+        /// <summary>
+        /// gets/sets the name of the client, may be CIVIC for shared services
+        /// </summary>
+        string ClientCode
+        {
+            get;
+            set;
+        }
+
+        /// <summary>
+        /// gets/sets the name of the environment DEV,TEST,QA,STAGE,PROD
+        /// </summary>
+        string EnvironmentCode
+        {
+            get;
+            set;
         }
 
         /// <summary>
