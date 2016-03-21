@@ -58,6 +58,7 @@ namespace Civic.Core.Logging
                     if (parameterValues.Length - 1 > i) Message = "{" + (i + 1) + "}\n" + Message;
                     if(Extended==null) Extended = new Dictionary<string, object>();
                     Extended["StackTrace"] = e.StackTrace;
+                    TrackingGUID = e.GetReferenceID().ToString();
                     continue;
                 }
 
@@ -82,6 +83,11 @@ namespace Civic.Core.Logging
         public Dictionary<string, object> Extended { get; set; }
 
         /// <summary>
+        /// gets/sets the tracking guid for the 
+        /// </summary>
+        public string TrackingGUID { get; set; }
+
+        /// <summary>
         /// gets/sets the message text for this message
         /// </summary>
         public string Message { get; set; }
@@ -90,6 +96,16 @@ namespace Civic.Core.Logging
         /// gets/sets the data packet for this message
         /// </summary>
         public LogSeverity Type { get; set; }
+
+        /// <summary>
+        /// gets/sets the name of the client, may be CIVIC for shared services
+        /// </summary>
+        public string ClientCode { get; set; }
+
+        /// <summary>
+        /// gets/sets the name of the environment DEV,TEST,QA,STAGE,PROD
+        /// </summary>
+        public string EnvironmentCode { get; set; }
 
         /// <summary>
         /// gets/sets the name of the application
@@ -120,6 +136,7 @@ namespace Civic.Core.Logging
                 if (parameterValues.Length == 0) throw new Exception("must provide at least one parameter");
                 return new LogMessage(boundary, LogSeverity.Error, parameterValues);
             }
+            // ReSharper disable once EmptyGeneralCatchClause
             catch (Exception)
             {
             }
@@ -136,6 +153,7 @@ namespace Civic.Core.Logging
                 if (parameterValues.Length == 0) throw new Exception("must provide at least one parameter");
                 return new LogMessage(boundary, LogSeverity.Information, parameterValues);
             }
+            // ReSharper disable once EmptyGeneralCatchClause
             catch (Exception)
             {
             }
@@ -152,6 +170,7 @@ namespace Civic.Core.Logging
                 if (parameterValues.Length == 0) throw new Exception("must provide at least one parameter");
                 return new LogMessage(boundary, LogSeverity.Trace, parameterValues);
             }
+            // ReSharper disable once EmptyGeneralCatchClause
             catch (Exception)
             {
             }
@@ -168,6 +187,7 @@ namespace Civic.Core.Logging
                 if (parameterValues.Length == 0) throw new Exception("must provide at least one parameter");
                 return new LogMessage(boundary, LogSeverity.Warning, parameterValues);
             }
+            // ReSharper disable once EmptyGeneralCatchClause
             catch (Exception)
             {
             }

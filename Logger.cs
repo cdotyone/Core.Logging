@@ -146,7 +146,7 @@ namespace Civic.Core.Logging
                     foreach (LoggerElement logger in _config.Loggers)
                     {
                         var logwriter = DynamicInstance.CreateInstance<ILogWriter>(logger.Assembly, logger.Type);
-                        var obj = logwriter.Create(_config.App, _config.LogName, _config.UseThread, logger.Attributes);
+                        var obj = logwriter.Create(_config.ApplicationName, _config.LogName, _config.UseThread, logger.Attributes);
                         _logWriters.Add((ILogWriter)obj);
                     }
                 
@@ -185,7 +185,9 @@ namespace Civic.Core.Logging
             }
 
             if (message2Log.Extended == null) message2Log.Extended = new Dictionary<string, object>();
-            if (_config != null && string.IsNullOrEmpty(message2Log.ApplicationName)) message2Log.ApplicationName = _config.App;
+            if (_config != null && string.IsNullOrEmpty(message2Log.ApplicationName)) message2Log.ApplicationName = _config.ApplicationName;
+            if (_config != null && string.IsNullOrEmpty(message2Log.ClientCode)) message2Log.ClientCode = _config.ClientCode;
+            if (_config != null && string.IsNullOrEmpty(message2Log.EnvironmentCode)) message2Log.EnvironmentCode = _config.EnvironmentCode;
             if (!message2Log.Extended.ContainsKey("FullName")) message2Log.Extended.Add("FullName", Assembly.GetExecutingAssembly().FullName);
             if (!message2Log.Extended.ContainsKey("AppDomainName")) message2Log.Extended.Add("AppDomainName", AppDomain.CurrentDomain.FriendlyName);
             if (!message2Log.Extended.ContainsKey("ThreadIdentity")) message2Log.Extended.Add("ThreadIdentity", Thread.CurrentPrincipal.Identity.Name);

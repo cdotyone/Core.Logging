@@ -30,7 +30,37 @@ namespace Civic.Core.Logging.Configuration {
         }
 
         [ConfigurationProperty(Constants.CONFIG_APP_PROP, IsKey = false, IsRequired = true)]
-        public string App
+        public string ClientCode
+        {
+            get
+            {
+                if (string.IsNullOrEmpty((string)base[Constants.CONFIG_APP_PROP]))
+                {
+                    if (string.IsNullOrEmpty(ConfigurationManager.AppSettings[Constants.CONFIG_APPNAME_PROP])) return "CIVIC";
+                    return ConfigurationManager.AppSettings[Constants.CONFIG_APPNAME_PROP];
+                }
+                return (string)base[Constants.CONFIG_APP_PROP];
+            }
+            set { base[Constants.CONFIG_APP_PROP] = value; }
+        }
+
+        [ConfigurationProperty(Constants.CONFIG_APP_PROP, IsKey = false, IsRequired = true)]
+        public string EnvironmentCode
+        {
+            get
+            {
+                if (string.IsNullOrEmpty((string)base[Constants.CONFIG_APP_PROP]))
+                {
+                    if (string.IsNullOrEmpty(ConfigurationManager.AppSettings[Constants.CONFIG_APPNAME_PROP])) return "PROD";
+                    return ConfigurationManager.AppSettings[Constants.CONFIG_APPNAME_PROP];
+                }
+                return (string)base[Constants.CONFIG_APP_PROP];
+            }
+            set { base[Constants.CONFIG_APP_PROP] = value; }
+        }
+
+        [ConfigurationProperty(Constants.CONFIG_APP_PROP, IsKey = false, IsRequired = true)]
+        public string ApplicationName
         {
             get
             {

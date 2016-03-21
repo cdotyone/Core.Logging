@@ -91,6 +91,7 @@
     <Reference Include="System.Messaging" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Web" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -98,6 +99,9 @@
     <Compile Include="..\..\References\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="SenderFaultDetail.cs" />
+    <Compile Include="ReceiverFaultDetail.cs" />
+    <Compile Include="ExceptionExtension.cs" />
     <Compile Include="Configuration\ExceptionPolicyElement.cs" />
     <Compile Include="Configuration\LoggerSection.cs" />
     <Compile Include="Configuration\LoggerElement.cs" />
