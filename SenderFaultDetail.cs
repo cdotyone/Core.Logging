@@ -21,9 +21,7 @@ namespace Civic.Core.Logging
         {
             Message = message;
             Description = description;
-
-            if (bodyElements != null)
-                FailedBodyElements = bodyElements;
+            FailedBodyElements = bodyElements ?? new List<string>();
         }
 
         [DataMember(Name = "Message", IsRequired = true, Order = 0)]
@@ -33,7 +31,7 @@ namespace Civic.Core.Logging
         public string Description { get; set; }
 
         [DataMember(Name = "FailedBodyElements", IsRequired = true, Order = 2)]
-        public List<string> FailedBodyElements { get; set; } = new List<string>();
+        public List<string> FailedBodyElements { get; set; }
 
         [DataMember(Name = "ReferenceID", IsRequired = true, Order = 3)]
         public Guid ReferenceID { get; set; }
