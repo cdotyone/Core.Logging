@@ -21,7 +21,7 @@
         public const string CONFIG_TRACE_PROP = "trace";
         public const bool CONFIG_TRACE_DEFAULT = false;
 
-        public const string CONFIG_LOGGERS_PROP = "loggers";
+        public const string CONFIG_LOGGERS_PROP = "writers";
 
         public const string CORE_LOGGING_SECTION = "coreLogging";
         public const string CONFIG_ASSEMBLY_PROP = "assembly";
