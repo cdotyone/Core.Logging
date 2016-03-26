@@ -8,7 +8,6 @@ namespace Civic.Core.Logging.Configuration {
 
     public class LoggerSection : Section
     {
-
         private static LoggerSection _coreConfig;
 
         /// <summary>
@@ -20,13 +19,18 @@ namespace Civic.Core.Logging.Configuration {
             {
                 // load the configuration from the config file
                 string configNode = ConfigurationManager.AppSettings["LoggerConfigNode"];
-                if (string.IsNullOrEmpty(configNode)) configNode = Constants.CORE_LOGGING_SECTION;
+                if (string.IsNullOrEmpty(configNode)) configNode = SectionName;
 
                 if (_coreConfig == null) _coreConfig = (LoggerSection) ConfigurationManager.GetSection(configNode);
 
 
                 return _coreConfig ?? (_coreConfig = new LoggerSection());
             }
+        }
+
+        public static string SectionName
+        {
+            get { return Constants.CORE_LOGGING_SECTION; }
         }
 
         /// <summary>

@@ -99,6 +99,7 @@
     <Compile Include="..\..\References\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="LogWriterManager.cs" />
     <Compile Include="SenderFaultDetail.cs" />
     <Compile Include="ReceiverFaultDetail.cs" />
     <Compile Include="ExceptionExtension.cs" />
