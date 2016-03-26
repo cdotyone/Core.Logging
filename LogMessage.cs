@@ -32,6 +32,17 @@ namespace Civic.Core.Logging
             ServerName = GetMachineName();
         }
 
+        public LogMessage(ILogMessage logMessage)
+        {
+            Message = logMessage.Message;
+            Boundary = logMessage.Boundary;
+            Created = logMessage.Created;
+            ServerName = logMessage.ServerName;
+            ClientCode = logMessage.ClientCode;
+            EnvironmentCode = logMessage.EnvironmentCode;
+            Extended = logMessage.Extended;
+        }
+
         public LogMessage(LoggingBoundaries boundary, LogSeverity entrytype, params object[] parameterValues) : this()
         {
             Boundary = boundary;
