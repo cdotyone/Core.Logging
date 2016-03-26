@@ -143,7 +143,7 @@ namespace Civic.Core.Logging
                     IsTraceOn = _config.Trace;
 
                     // load the loggers
-                    foreach (LoggerElement logger in _config.Loggers)
+                    foreach (LoggerConfig logger in _config.Loggers)
                     {
                         var logwriter = DynamicInstance.CreateInstance<ILogWriter>(logger.Assembly, logger.Type);
                         var obj = logwriter.Create(_config.ApplicationName, _config.LogName, _config.UseThread, logger.Attributes);
