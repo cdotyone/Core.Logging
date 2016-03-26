@@ -31,7 +31,7 @@ namespace Civic.Core.Logging
         private static Thread _tm;
         private static readonly IDisposable _dummyTrace = new PerformanceTracerDummy();
         private static readonly object _lock = new object();
-        private static List<ILogWriter> _logWriters = new List<ILogWriter>();
+        private static List<ILogWriter> _loggers = new List<ILogWriter>();
         private static bool _isShutdown = true;
 
         #endregion Fields
@@ -59,10 +59,10 @@ namespace Civic.Core.Logging
         /// <summary>
         /// The current log writers that are installed
         /// </summary>
-        public static List<ILogWriter> LogWriters
+        public static List<ILogWriter> Loggers
         {
-            get { return _logWriters; }
-            private set { _logWriters = value; }
+            get { return _loggers; }
+            private set { _loggers = value; }
         }
 
         /// <summary>
@@ -94,7 +94,7 @@ namespace Civic.Core.Logging
         /// </summary>
         public static void DeleteAll()
         {
-            foreach (ILogWriter logger in LogWriters)
+            foreach (ILogWriter logger in Loggers)
             {
                 if (logger.CanDelete)
                     logger.Delete();
@@ -110,7 +110,7 @@ namespace Civic.Core.Logging
 
             try
             {
-                foreach (ILogWriter iLog in LogWriters)
+                foreach (ILogWriter iLog in Loggers)
                 {
                     iLog.Flush();
                 }
@@ -135,8 +135,8 @@ namespace Civic.Core.Logging
                 if (_config == null) _config = LoggerSection.Current;
                 else return;
 
-                if (_logWriters == null) _logWriters = new List<ILogWriter>();
-                _logWriters.Clear();
+                if (_loggers == null) _loggers = new List<ILogWriter>();
+                _loggers.Clear();
             
                 if (_config != null)
                 {
@@ -147,7 +147,7 @@ namespace Civic.Core.Logging
                     {
                         var logwriter = DynamicInstance.CreateInstance<ILogWriter>(logger.Assembly, logger.Type);
                         var obj = logwriter.Create(_config.ApplicationName, _config.LogName, _config.UseThread, logger.Attributes);
-                        _logWriters.Add((ILogWriter)obj);
+                        _loggers.Add((ILogWriter)obj);
                     }
                 
                     foreach (ExceptionPolicyElement policy in _config.ExceptionPolicies)
@@ -307,7 +307,7 @@ namespace Civic.Core.Logging
                 // Do nothing...
             }
 
-            LogWriters.Clear();
+            Loggers.Clear();
         }
 
         /// <summary>
@@ -367,7 +367,7 @@ namespace Civic.Core.Logging
                 {
                     try
                     {
-                        foreach (ILogWriter iLog in LogWriters)
+                        foreach (ILogWriter iLog in Loggers)
                         {
                             iLog.Log(m);
                         }
