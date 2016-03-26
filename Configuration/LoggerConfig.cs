@@ -4,9 +4,9 @@ using Civic.Core.Configuration;
 
 namespace Civic.Core.Logging.Configuration
 {
-    public class LoggerElement {
+    public class LoggerConfig {
 
-        public LoggerElement()
+        public LoggerConfig()
         {
             Attributes = new Dictionary<string, string>();
         }
@@ -27,7 +27,7 @@ namespace Civic.Core.Logging.Configuration
 
         public ILogWriter Writer { get; set; }
 
-        public static LoggerElement Create(INamedElement configElement)
+        public static LoggerConfig Create(INamedElement configElement)
         {
             if (string.IsNullOrEmpty(configElement.Name) || !configElement.Attributes.ContainsKey(Constants.CONFIG_TYPE_PROP))
                 throw new ConfigurationErrorsException("projectConfig element must contain a name and a type for the log reader/writer");
@@ -36,7 +36,7 @@ namespace Civic.Core.Logging.Configuration
             if (configElement.Attributes.ContainsKey(Constants.CONFIG_ASSEMBLY_PROP))
                 assembly = configElement.Attributes[Constants.CONFIG_ASSEMBLY_PROP];
 
-            var config = new LoggerElement
+            var config = new LoggerConfig
             {
                 Name = configElement.Name,
                 Assembly = assembly,

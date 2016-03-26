@@ -113,28 +113,28 @@ namespace Civic.Core.Logging.Configuration {
         }
 
         [ConfigurationProperty(Constants.CONFIG_LOGGERS_PROP, IsDefaultCollection = false, IsRequired = true)]
-        public List<LoggerElement> Loggers
+        public List<LoggerConfig> Loggers
         {
             get
             {
                 if (_loggers != null) return _loggers;
                 if (Children.ContainsKey(Constants.CONFIG_LOGGERS_PROP))
                 {
-                    _loggers = Children[Constants.CONFIG_LOGGERS_PROP].Children.Values.Select(LoggerElement.Create).ToList();
+                    _loggers = Children[Constants.CONFIG_LOGGERS_PROP].Children.Values.Select(LoggerConfig.Create).ToList();
                 }
                 if (_loggers == null)
                 {
                     if (System.Diagnostics.Debugger.IsAttached)
                     {
-                        _loggers = new List<LoggerElement>(new[]
+                        _loggers = new List<LoggerConfig>(new[]
                             {
-                                new LoggerElement
+                                new LoggerConfig
                                     {
                                         Name = Constants.CONFIG_LOGNAME_DEFAULT,
                                         Assembly = typeof (MSMQLogger).Assembly.FullName,
                                         Type = typeof (MSMQLogger).FullName
                                     },
-                                new LoggerElement
+                                new LoggerConfig
                                     {
                                         Name = "DEBUG",
                                         Assembly = typeof (DebugLogger).Assembly.FullName,
@@ -145,9 +145,9 @@ namespace Civic.Core.Logging.Configuration {
                     }
                     else
                     {
-                        _loggers = new List<LoggerElement>(new[]
+                        _loggers = new List<LoggerConfig>(new[]
                             {
-                                new LoggerElement
+                                new LoggerConfig
                                     {
                                         Name = Constants.CONFIG_LOGNAME_DEFAULT,
                                         Assembly = typeof (MSMQLogger).Assembly.FullName,
@@ -159,18 +159,18 @@ namespace Civic.Core.Logging.Configuration {
                 return _loggers;
             }
         }
-        private List<LoggerElement> _loggers;
+        private List<LoggerConfig> _loggers;
 
 
         /// <summary>
         /// Gets the collection log readers that must be called
         /// </summary>
         [ConfigurationProperty(Constants.CONFIG_READERS_PROP, IsDefaultCollection = false)]
-        public List<LoggerElement> Readers
+        public List<LoggerConfig> Readers
         {
             get
             {
-                return Children.ContainsKey(Constants.CONFIG_READERS_PROP) ? Children[Constants.CONFIG_READERS_PROP].Children.Values.Select(LoggerElement.Create).ToList() : new List<LoggerElement>();
+                return Children.ContainsKey(Constants.CONFIG_READERS_PROP) ? Children[Constants.CONFIG_READERS_PROP].Children.Values.Select(LoggerConfig.Create).ToList() : new List<LoggerConfig>();
             }
         }
 
@@ -178,11 +178,11 @@ namespace Civic.Core.Logging.Configuration {
         /// Gets the collection log writers that must be called
         /// </summary>
         [ConfigurationProperty(Constants.CONFIG_WRITERS_PROP, IsDefaultCollection = false)]
-        public List<LoggerElement> Writers
+        public List<LoggerConfig> Writers
         {
             get
             {
-                return Children.ContainsKey(Constants.CONFIG_WRITERS_PROP) ? Children[Constants.CONFIG_WRITERS_PROP].Children.Values.Select(LoggerElement.Create).ToList() : new List<LoggerElement>();
+                return Children.ContainsKey(Constants.CONFIG_WRITERS_PROP) ? Children[Constants.CONFIG_WRITERS_PROP].Children.Values.Select(LoggerConfig.Create).ToList() : new List<LoggerConfig>();
             }
         }
 
