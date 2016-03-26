@@ -29,6 +29,26 @@ namespace Civic.Core.Logging.Configuration {
             }
         }
 
+        /// <summary>
+        /// Gets or sets the # minutes before the checks for config changes
+        /// </summary>
+        [ConfigurationProperty(Constants.CONFIG_RECHECKMINUTES_PROP, IsRequired = false, DefaultValue = Constants.CONFIG_RECHECKMINUTES_DEFAULT)]
+        public int ConfigChangeCheck
+        {
+            get { return (int)base[Constants.CONFIG_RECHECKMINUTES_PROP]; }
+            set { base[Constants.CONFIG_RECHECKMINUTES_PROP] = value; }
+        }
+
+        /// <summary>
+        /// Gets or sets the default time before the threads rescans for entries
+        /// </summary>
+        [ConfigurationProperty(Constants.CONFIG_CHECKFORENTRIESTIME_PROP, IsRequired = false, DefaultValue = Constants.CONFIG_CHECKFORENTRIESTIME_DEFAULT)]
+        public int DefaultCheckForEntriesTime
+        {
+            get { return (int)base[Constants.CONFIG_CHECKFORENTRIESTIME_PROP]; }
+            set { base[Constants.CONFIG_CHECKFORENTRIESTIME_PROP] = value; }
+        }
+
         [ConfigurationProperty(Constants.CONFIG_APP_PROP, IsKey = false, IsRequired = true)]
         public string ClientCode
         {
@@ -140,6 +160,31 @@ namespace Civic.Core.Logging.Configuration {
             }
         }
         private List<LoggerElement> _loggers;
+
+
+        /// <summary>
+        /// Gets the collection log readers that must be called
+        /// </summary>
+        [ConfigurationProperty(Constants.CONFIG_READERS_PROP, IsDefaultCollection = false)]
+        public List<LoggerElement> Readers
+        {
+            get
+            {
+                return Children.ContainsKey(Constants.CONFIG_READERS_PROP) ? Children[Constants.CONFIG_READERS_PROP].Children.Values.Select(LoggerElement.Create).ToList() : new List<LoggerElement>();
+            }
+        }
+
+        /// <summary>
+        /// Gets the collection log writers that must be called
+        /// </summary>
+        [ConfigurationProperty(Constants.CONFIG_WRITERS_PROP, IsDefaultCollection = false)]
+        public List<LoggerElement> Writers
+        {
+            get
+            {
+                return Children.ContainsKey(Constants.CONFIG_WRITERS_PROP) ? Children[Constants.CONFIG_WRITERS_PROP].Children.Values.Select(LoggerElement.Create).ToList() : new List<LoggerElement>();
+            }
+        }
 
         [ConfigurationProperty("exceptionPolicy", IsDefaultCollection = false, IsRequired = false)]
         public List<ExceptionPolicyElement> ExceptionPolicies
