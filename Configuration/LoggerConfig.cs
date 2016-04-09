@@ -9,6 +9,7 @@ namespace Civic.Core.Logging.Configuration
         public LoggerConfig()
         {
             Attributes = new Dictionary<string, string>();
+            UseFailureRecovery = true;
         }
 
         public string Name { get; set; }
@@ -16,6 +17,8 @@ namespace Civic.Core.Logging.Configuration
         public string Assembly { get; set; }
 
         public string Type { get; set; }
+
+        public bool UseFailureRecovery { get; set; }
 
         public Dictionary<string, string> Attributes { get; set; }
 
@@ -36,12 +39,17 @@ namespace Civic.Core.Logging.Configuration
             if (configElement.Attributes.ContainsKey(Constants.CONFIG_ASSEMBLY_PROP))
                 assembly = configElement.Attributes[Constants.CONFIG_ASSEMBLY_PROP];
 
+            var useFailureRecovery = true;
+            if (configElement.Attributes.ContainsKey(Constants.CONFIG_FAILURERECOVERY_PROP))
+                useFailureRecovery = bool.Parse(configElement.Attributes[Constants.CONFIG_FAILURERECOVERY_PROP]);
+
             var config = new LoggerConfig
             {
                 Name = configElement.Name,
                 Assembly = assembly,
                 Type = configElement.Attributes[Constants.CONFIG_TYPE_PROP],
-                Attributes = configElement.Attributes
+                Attributes = configElement.Attributes,
+                UseFailureRecovery = useFailureRecovery
             };
 
             if (config.Attributes == null) config.Attributes = new Dictionary<string, string>();

@@ -53,30 +53,30 @@ namespace Civic.Core.Logging.Configuration {
             set { base[Constants.CONFIG_CHECKFORENTRIESTIME_PROP] = value; }
         }
 
-        [ConfigurationProperty(Constants.CONFIG_APP_PROP, IsKey = false, IsRequired = true)]
+        [ConfigurationProperty(Constants.CONFIG_CLIENTCODE_PROP, IsKey = false, IsRequired = true)]
         public string ClientCode
         {
             get
             {
-                if (string.IsNullOrEmpty((string)base[Constants.CONFIG_APP_PROP]))
+                if (string.IsNullOrEmpty((string)base[Constants.CONFIG_CLIENTCODE_PROP]))
                 {
-                    if (string.IsNullOrEmpty(ConfigurationManager.AppSettings[Constants.CONFIG_APPNAME_PROP])) return "CIVIC";
-                    return ConfigurationManager.AppSettings[Constants.CONFIG_APPNAME_PROP];
+                    if (string.IsNullOrEmpty(ConfigurationManager.AppSettings[Constants.CONFIG_CLIENTCODE_PROP])) return "CIVIC";
+                    return ConfigurationManager.AppSettings[Constants.CONFIG_CLIENTCODE_PROP];
                 }
-                return (string)base[Constants.CONFIG_APP_PROP];
+                return (string)base[Constants.CONFIG_CLIENTCODE_PROP];
             }
-            set { base[Constants.CONFIG_APP_PROP] = value; }
+            set { base[Constants.CONFIG_CLIENTCODE_PROP] = value; }
         }
 
-        [ConfigurationProperty(Constants.CONFIG_APP_PROP, IsKey = false, IsRequired = true)]
+        [ConfigurationProperty(Constants.CONFIG_ENVCODE_PROP, IsKey = false, IsRequired = true)]
         public string EnvironmentCode
         {
             get
             {
-                if (string.IsNullOrEmpty((string)base[Constants.CONFIG_APP_PROP]))
+                if (string.IsNullOrEmpty((string)base[Constants.CONFIG_ENVCODE_PROP]))
                 {
-                    if (string.IsNullOrEmpty(ConfigurationManager.AppSettings[Constants.CONFIG_APPNAME_PROP])) return "PROD";
-                    return ConfigurationManager.AppSettings[Constants.CONFIG_APPNAME_PROP];
+                    if (string.IsNullOrEmpty(ConfigurationManager.AppSettings[Constants.CONFIG_ENVCODE_PROP])) return "PROD";
+                    return ConfigurationManager.AppSettings[Constants.CONFIG_ENVCODE_PROP];
                 }
                 return (string)base[Constants.CONFIG_APP_PROP];
             }
