@@ -11,6 +11,8 @@
         public const string CONFIG_APPNAME_PROP = "appname";
         public const string CONFIG_RETHROW_PROP = "rethrow";
         public const string CONFIG_BOUNDARY_PROP = "boundary";
+        public const string CONFIG_CLIENTCODE_PROP = "client";
+        public const string CONFIG_ENVCODE_PROP = "env";
 
         public const string CONFIG_LOGNAME_PROP = "logname";
         public const string CONFIG_LOGNAME_DEFAULT = "civic";
@@ -25,6 +27,7 @@
 
         public const string CORE_LOGGING_SECTION = "coreLogging";
         public const string CONFIG_ASSEMBLY_PROP = "assembly";
+        public const string CONFIG_FAILURERECOVERY_PROP = "failureRecovery";
         public const string CONFIG_TYPE_PROP = "type";
 
 
