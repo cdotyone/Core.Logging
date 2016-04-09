@@ -60,8 +60,8 @@ namespace Civic.Core.Logging
         {
             lock (_lock)
             {
-                var config = LoggerSection.Current;
-                if(config==null) throw  new ConfigurationErrorsException(string.Format("missing configuration section {0}",LoggerSection.SectionName));
+                var config = LoggingConfig.Current;
+                if(config==null) throw  new ConfigurationErrorsException(string.Format("missing configuration section {0}",LoggingConfig.SectionName));
 
                 if(_logWriters.Count>0) return;
 

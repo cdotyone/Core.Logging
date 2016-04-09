@@ -56,7 +56,7 @@ namespace Civic.Core.Logging.Configuration
 
             config.RescanTime = config.Attributes.ContainsKey(Constants.CONFIG_CHECKFORENTRIESTIME_PROP)
                 ? int.Parse(config.Attributes[Constants.CONFIG_CHECKFORENTRIESTIME_PROP])
-                : LoggerSection.Current.DefaultCheckForEntriesTime;
+                : LoggingConfig.Current.DefaultCheckForEntriesTime;
 
             config.FilterBy = configElement.Attributes.ContainsKey(Constants.CONFIG_FILTERBY_PROP) ?
                         new List<string>(configElement.Attributes[Constants.CONFIG_FILTERBY_PROP].Split(','))

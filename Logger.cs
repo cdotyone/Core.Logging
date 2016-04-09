@@ -27,7 +27,7 @@ namespace Civic.Core.Logging
         private static readonly Queue<ILogMessage> _eventQueue = new Queue<ILogMessage>();
         private static readonly Dictionary<string, bool> _policies = new Dictionary<string, bool>();
 
-        private static LoggerSection _config;
+        private static LoggingConfig _config;
         private static Thread _tm;
         private static readonly IDisposable _dummyTrace = new PerformanceTracerDummy();
         private static readonly object _lock = new object();
@@ -132,7 +132,7 @@ namespace Civic.Core.Logging
 
             lock (_lock)
             {
-                if (_config == null) _config = LoggerSection.Current;
+                if (_config == null) _config = LoggingConfig.Current;
                 else return;
 
                 if (_loggers == null) _loggers = new List<ILogWriter>();
