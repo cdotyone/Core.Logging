@@ -112,7 +112,6 @@ namespace Civic.Core.Logging.Configuration {
             set { _useThread = value; base[Constants.CONFIG_USETHREAD_PROP] = value; }
         }
 
-        [ConfigurationProperty(Constants.CONFIG_LOGGERS_PROP, IsDefaultCollection = false, IsRequired = true)]
         public List<LoggerConfig> Loggers
         {
             get
@@ -160,7 +159,6 @@ namespace Civic.Core.Logging.Configuration {
         /// <summary>
         /// Gets the collection log readers that must be called
         /// </summary>
-        [ConfigurationProperty(Constants.CONFIG_READERS_PROP, IsDefaultCollection = false)]
         public List<LoggerConfig> Readers
         {
             get
@@ -172,7 +170,6 @@ namespace Civic.Core.Logging.Configuration {
         /// <summary>
         /// Gets the collection log writers that must be called
         /// </summary>
-        [ConfigurationProperty(Constants.CONFIG_WRITERS_PROP, IsDefaultCollection = false)]
         public List<LoggerConfig> Writers
         {
             get
