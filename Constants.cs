@@ -16,16 +16,12 @@
 
         public const string CONFIG_LOGNAME_PROP = "logname";
         public const string CONFIG_LOGNAME_DEFAULT = "civic";
-
         public const string CONFIG_USETHREAD_PROP = "useThread";
-        public const bool CONFIG_USETHREAD_DEFAULT = false;
-
         public const string CONFIG_TRACE_PROP = "trace";
-        public const bool CONFIG_TRACE_DEFAULT = false;
 
         public const string CONFIG_LOGGERS_PROP = "loggers";
 
-        public const string CORE_LOGGING_SECTION = "coreLogging";
+        public const string CORE_LOGGING_SECTION = "logging";
         public const string CONFIG_ASSEMBLY_PROP = "assembly";
         public const string CONFIG_FAILURERECOVERY_PROP = "failureRecovery";
         public const string CONFIG_TYPE_PROP = "type";
