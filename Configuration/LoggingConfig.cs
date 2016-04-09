@@ -8,12 +8,34 @@ namespace Civic.Core.Logging.Configuration {
 
     public class LoggingConfig : NamedConfigurationElement
     {
+        private static CivicSection _coreConfig;
+        private static LoggingConfig _current;
+        private List<LoggerConfig> _loggers;
+        private List<ExceptionPolicyElement> _exceptionPoliciesOverride;
+        private int _configChangeCheck;
+        private int _defaultCheckForEntriesTime;
+        private string _clientCode;
+        private string _environmentCode;
+        private string _applicationName;
+        private string _logName;
+        private bool _trace;
+        private bool _useThread;
+
         public LoggingConfig(INamedElement element)
         {
             if (element == null) element = new NamedConfigurationElement() { Name = SectionName };
             Children = element.Children;
             Attributes = element.Attributes;
             Name = element.Name;
+
+            _configChangeCheck = Attributes.ContainsKey(Constants.CONFIG_RECHECKMINUTES_PROP) ? int.Parse(Attributes[Constants.CONFIG_RECHECKMINUTES_PROP]) : Constants.CONFIG_RECHECKMINUTES_DEFAULT;
+            _defaultCheckForEntriesTime = Attributes.ContainsKey(Constants.CONFIG_CHECKFORENTRIESTIME_PROP) ? int.Parse(Attributes[Constants.CONFIG_CHECKFORENTRIESTIME_PROP]) : Constants.CONFIG_CHECKFORENTRIESTIME_DEFAULT;
+            _clientCode = GetAttribute(Constants.CONFIG_CLIENTCODE_PROP, "CIVIC");
+            _environmentCode = GetAttribute(Constants.CONFIG_ENVCODE_PROP, "PROD");
+            _applicationName = GetAttribute(Constants.CONFIG_APPNAME_PROP, "Unknown");
+            _logName = Attributes.ContainsKey(Constants.CONFIG_LOGNAME_PROP) ? Attributes[Constants.CONFIG_LOGNAME_PROP] : Constants.CONFIG_LOGNAME_DEFAULT;
+            _trace = Attributes.ContainsKey(Constants.CONFIG_TRACE_PROP) && bool.Parse(Attributes[Constants.CONFIG_TRACE_PROP]);
+            _useThread = Attributes.ContainsKey(Constants.CONFIG_USETHREAD_PROP) && bool.Parse(Attributes[Constants.CONFIG_USETHREAD_PROP]);
         }
 
         /// <summary>
@@ -23,14 +45,12 @@ namespace Civic.Core.Logging.Configuration {
         {
             get
             {
+                if (_current != null) return _current;
                 if (_coreConfig == null) _coreConfig = CivicSection.Current;
                 _current = new LoggingConfig(_coreConfig.Children.ContainsKey(SectionName) ? _coreConfig.Children[SectionName] : null);
                 return _current;
             }
         }
-        private static CivicSection _coreConfig;
-        private static LoggingConfig _current;
-
 
         public static string SectionName
         {
@@ -42,8 +62,8 @@ namespace Civic.Core.Logging.Configuration {
         /// </summary>
         public int ConfigChangeCheck
         {
-            get { return Attributes.ContainsKey(Constants.CONFIG_RECHECKMINUTES_PROP) ? int.Parse(Attributes[Constants.CONFIG_RECHECKMINUTES_PROP]) : Constants.CONFIG_RECHECKMINUTES_DEFAULT; }
-            set { Attributes[Constants.CONFIG_RECHECKMINUTES_PROP] = value.ToString(); }
+            get { return _configChangeCheck; }
+            set { _configChangeCheck = value; Attributes[Constants.CONFIG_RECHECKMINUTES_PROP] = value.ToString(); }
         }
 
         /// <summary>
@@ -51,56 +71,45 @@ namespace Civic.Core.Logging.Configuration {
         /// </summary>
         public int DefaultCheckForEntriesTime
         {
-            get { return Attributes.ContainsKey(Constants.CONFIG_CHECKFORENTRIESTIME_PROP) ? int.Parse(Attributes[Constants.CONFIG_CHECKFORENTRIESTIME_PROP]) : Constants.CONFIG_CHECKFORENTRIESTIME_DEFAULT; }
-            set { Attributes[Constants.CONFIG_CHECKFORENTRIESTIME_PROP] = value.ToString(); }
+            get { return _defaultCheckForEntriesTime; }
+            set { _defaultCheckForEntriesTime = value; Attributes[Constants.CONFIG_CHECKFORENTRIESTIME_PROP] = value.ToString(); }
         }
 
         public string ClientCode
         {
-            get
-            {
-                if (Attributes.ContainsKey(Constants.CONFIG_CLIENTCODE_PROP)) return Attributes[Constants.CONFIG_CLIENTCODE_PROP];
-                if (string.IsNullOrEmpty(ConfigurationManager.AppSettings[Constants.CONFIG_CLIENTCODE_PROP])) return "CIVIC";
-                return ConfigurationManager.AppSettings[Constants.CONFIG_CLIENTCODE_PROP];
-            }
-            set { Attributes[Constants.CONFIG_CLIENTCODE_PROP] = value; }
+            get { return _clientCode; }
+            set { _clientCode = value; Attributes[Constants.CONFIG_CLIENTCODE_PROP] = value; }
         }
 
         public string EnvironmentCode
         {
-            get
-            {
-                if (Attributes.ContainsKey(Constants.CONFIG_ENVCODE_PROP)) return Attributes[Constants.CONFIG_ENVCODE_PROP];
-                if (string.IsNullOrEmpty(ConfigurationManager.AppSettings[Constants.CONFIG_ENVCODE_PROP])) return "PROD";
-                return ConfigurationManager.AppSettings[Constants.CONFIG_ENVCODE_PROP];
-            }
-            set { Attributes[Constants.CONFIG_APP_PROP] = value; }
+            get { return _environmentCode; }
+            set { _environmentCode = value; Attributes[Constants.CONFIG_ENVCODE_PROP] = value; }
         }
 
         public string ApplicationName
         {
-            get
-            {
-                if (Attributes.ContainsKey(Constants.CONFIG_APP_PROP)) return Attributes[Constants.CONFIG_APP_PROP];
-                if (string.IsNullOrEmpty(ConfigurationManager.AppSettings[Constants.CONFIG_APP_PROP])) return "Unknown";
-                return ConfigurationManager.AppSettings[Constants.CONFIG_APP_PROP];
-            }
-            set { Attributes[Constants.CONFIG_APP_PROP] = value; }
+            get { return _applicationName; }
+            set { _applicationName = value; Attributes[Constants.CONFIG_APPNAME_PROP] = value; }
         }
 
-        public string LogName {
-            get { return Attributes.ContainsKey(Constants.CONFIG_LOGNAME_PROP) ? Attributes[Constants.CONFIG_LOGNAME_PROP] : Constants.CONFIG_LOGNAME_DEFAULT; }
-            set { Attributes[Constants.CONFIG_LOGNAME_PROP] = value; }
+        public string LogName
+        {
+            get { return _logName; }
+            set { _logName = value; Attributes[Constants.CONFIG_LOGNAME_PROP] = value; }
         }
 
-        public bool Trace {
-            get { return Attributes.ContainsKey(Constants.CONFIG_TRACE_PROP) && bool.Parse(Attributes[Constants.CONFIG_TRACE_PROP]); }
-            set { base[Constants.CONFIG_TRACE_PROP] = value; }
+
+        public bool Trace
+        {
+            get { return _trace; }
+            set { _trace = value; base[Constants.CONFIG_TRACE_PROP] = value; }
         }
 
-        public bool UseThread {
-            get { return Attributes.ContainsKey(Constants.CONFIG_USETHREAD_PROP) && bool.Parse(Attributes[Constants.CONFIG_USETHREAD_PROP]); }
-            set { base[Constants.CONFIG_USETHREAD_PROP] = value; }
+        public bool UseThread
+        {
+            get { return _useThread; }
+            set { _useThread = value; base[Constants.CONFIG_USETHREAD_PROP] = value; }
         }
 
         [ConfigurationProperty(Constants.CONFIG_LOGGERS_PROP, IsDefaultCollection = false, IsRequired = true)]
@@ -147,8 +156,6 @@ namespace Civic.Core.Logging.Configuration {
                 return _loggers;
             }
         }
-        private List<LoggerConfig> _loggers;
-
 
         /// <summary>
         /// Gets the collection log readers that must be called
@@ -195,6 +202,13 @@ namespace Civic.Core.Logging.Configuration {
                            }));
             }
         }
-        private List<ExceptionPolicyElement> _exceptionPoliciesOverride;
+
+
+        private string GetAttribute(string name, string defaultValue)
+        {
+            if (Attributes.ContainsKey(name)) return Attributes[name];
+            if (string.IsNullOrEmpty(ConfigurationManager.AppSettings[name])) return defaultValue;
+            return ConfigurationManager.AppSettings[name];
+        }
     }
 }
