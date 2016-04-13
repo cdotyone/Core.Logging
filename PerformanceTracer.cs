@@ -46,7 +46,7 @@ namespace Civic.Core.Logging
             }
             for (var i = 1; i < parameterValues.Length; i++)
             {
-                if (parameterValues is Type)
+                if (parameterValues[i] is Type)
                     operation += "." + ((Type) parameterValues[i]).Name;
                 else
                     operation += "." + parameterValues[i].ToString();

@@ -178,7 +178,7 @@ namespace Civic.Core.Logging
 
             if (message2Log.Type == LogSeverity.Trace)
             {
-                if (!IsTraceOn || Debugger.IsAttached)
+                if (!IsTraceOn)
                 {
                     return false;
                 }
@@ -264,7 +264,7 @@ namespace Civic.Core.Logging
         public static IDisposable CreateTrace(LoggingBoundaries boundary, params object[] parameterValues)
         {
             if (_config == null) Init();
-            if (IsTraceOn || Debugger.IsAttached) return _dummyTrace;
+            if (!IsTraceOn) return _dummyTrace;
             return new PerformanceTracer(boundary, parameterValues);
         }
 
