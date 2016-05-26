@@ -183,7 +183,7 @@ namespace Civic.Core.Logging
                     return false;
                 }
             }
-
+            
             if (message2Log.Extended == null) message2Log.Extended = new Dictionary<string, object>();
             if (_config != null && string.IsNullOrEmpty(message2Log.ApplicationName)) message2Log.ApplicationName = _config.ApplicationName;
             if (_config != null && string.IsNullOrEmpty(message2Log.ClientCode)) message2Log.ClientCode = _config.ClientCode;
