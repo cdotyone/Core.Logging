@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Civic.Core.Configuration;
 using Civic.Core.Logging.LogWriters;
 
@@ -28,11 +29,13 @@ namespace Civic.Core.Logging.Configuration {
             Attributes = element.Attributes;
             Name = element.Name;
 
+            var civicSection = CivicSection.Current;
+
             _configChangeCheck = Attributes.ContainsKey(Constants.CONFIG_RECHECKMINUTES_PROP) ? int.Parse(Attributes[Constants.CONFIG_RECHECKMINUTES_PROP]) : Constants.CONFIG_RECHECKMINUTES_DEFAULT;
             _defaultCheckForEntriesTime = Attributes.ContainsKey(Constants.CONFIG_CHECKFORENTRIESTIME_PROP) ? int.Parse(Attributes[Constants.CONFIG_CHECKFORENTRIESTIME_PROP]) : Constants.CONFIG_CHECKFORENTRIESTIME_DEFAULT;
-            _clientCode = GetAttribute(Constants.CONFIG_CLIENTCODE_PROP, "CIVIC");
-            _environmentCode = GetAttribute(Constants.CONFIG_ENVCODE_PROP, "PROD");
-            _applicationName = GetAttribute(Constants.CONFIG_APPNAME_PROP, "Unknown");
+            _applicationName = GetAttribute(Constants.CONFIG_APPNAME_PROP, civicSection.ApplicationName);
+            _clientCode = civicSection.ClientCode;
+            _environmentCode = civicSection.EnvironmentCode;
             _logName = Attributes.ContainsKey(Constants.CONFIG_LOGNAME_PROP) ? Attributes[Constants.CONFIG_LOGNAME_PROP] : Constants.CONFIG_LOGNAME_DEFAULT;
             _trace = Attributes.ContainsKey(Constants.CONFIG_TRACE_PROP) && bool.Parse(Attributes[Constants.CONFIG_TRACE_PROP]);
             _useThread = Attributes.ContainsKey(Constants.CONFIG_USETHREAD_PROP) && bool.Parse(Attributes[Constants.CONFIG_USETHREAD_PROP]);
@@ -78,13 +81,11 @@ namespace Civic.Core.Logging.Configuration {
         public string ClientCode
         {
             get { return _clientCode; }
-            set { _clientCode = value; Attributes[Constants.CONFIG_CLIENTCODE_PROP] = value; }
         }
 
         public string EnvironmentCode
         {
             get { return _environmentCode; }
-            set { _environmentCode = value; Attributes[Constants.CONFIG_ENVCODE_PROP] = value; }
         }
 
         public string ApplicationName

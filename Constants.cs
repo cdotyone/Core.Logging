@@ -4,16 +4,14 @@
     {
         public const string CONFIG_EXCEPTIONPOLICY_PROP = "exceptionPolicy";
 
-        public const string CONFIG_APPNAME_PROP = "appname";
         public const string CONFIG_RETHROW_PROP = "rethrow";
         public const string CONFIG_BOUNDARY_PROP = "boundary";
-        public const string CONFIG_CLIENTCODE_PROP = "client";
-        public const string CONFIG_ENVCODE_PROP = "env";
 
         public const string CONFIG_LOGNAME_PROP = "logname";
         public const string CONFIG_LOGNAME_DEFAULT = "civic";
         public const string CONFIG_USETHREAD_PROP = "useThread";
         public const string CONFIG_TRACE_PROP = "trace";
+        public const string CONFIG_APPNAME_PROP = "appname";
 
         public const string CONFIG_LOGGERS_PROP = "loggers";
 
