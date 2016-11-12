@@ -85,7 +85,11 @@ namespace Civic.Core.Logging.Configuration {
 
         public string EnvironmentCode
         {
-            get { return _environmentCode; }
+            get
+            {
+                if (string.IsNullOrEmpty(_environmentCode)) return "PROD";
+                return _environmentCode; 
+            }
         }
 
         public string ApplicationName
