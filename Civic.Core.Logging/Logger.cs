@@ -257,7 +257,7 @@ namespace Civic.Core.Logging
         public static bool LogTrace(LoggingBoundaries boundary, params object[] parameterValues)
         {
             if (_config == null) Init();
-            if (!IsTraceOn || Debugger.IsAttached) return false;
+            if (!IsTraceOn) return false;
             return Log(LogMessage.LogTrace(boundary, parameterValues));
         }
 
