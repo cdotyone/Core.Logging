@@ -108,6 +108,7 @@ UpgradeLog*.XML
 
 node_modules
 dist
+.vs
 .tmp
 .sass-cache
 app/bower_components
