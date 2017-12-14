@@ -1,12 +1,13 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Civic.Core.Logging", "Civic.Core.Logging\Civic.Core.Logging.csproj", "{62B8463D-2C19-47C2-A7C2-2740F78C27D1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{F9CB147E-97DB-4899-93EC-95417286D356}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		Nuget\Civic.Core.Logging.nuspec = Nuget\Civic.Core.Logging.nuspec
 	EndProjectSection
 EndProject
@@ -29,5 +30,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6C97A49A-6F08-4420-90D0-D439C8DFBB91}
 	EndGlobalSection
 EndGlobal
