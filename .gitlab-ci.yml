@@ -4,7 +4,7 @@ stages:
 build:
   stage: build
   variables:
-    VERSION: '$CI_BUILD_ID.0'
+    VERSION: '$CI_PIPELINE_ID.0'
   script:
     - 'echo %CI_PROJECT_DIR%'
     - 'C:\Builds\.nuget\AssemblyVersionSetter.exe -t -e %VERSION% %CI_PROJECT_DIR%\References'
