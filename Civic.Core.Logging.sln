@@ -8,21 +8,22 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{F9CB147E-97DB-4899-93EC-95417286D356}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
+		.gitlab-ci.yml = .gitlab-ci.yml
 		Nuget\Civic.Core.Logging.nuspec = Nuget\Civic.Core.Logging.nuspec
 	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
-		Nuget|Any CPU = Nuget|Any CPU
+		Nuget-45|Any CPU = Nuget-45|Any CPU
 		Nuget-46|Any CPU = Nuget-46|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{62B8463D-2C19-47C2-A7C2-2740F78C27D1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{62B8463D-2C19-47C2-A7C2-2740F78C27D1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{62B8463D-2C19-47C2-A7C2-2740F78C27D1}.Nuget|Any CPU.ActiveCfg = Nuget|Any CPU
-		{62B8463D-2C19-47C2-A7C2-2740F78C27D1}.Nuget|Any CPU.Build.0 = Nuget|Any CPU
+		{62B8463D-2C19-47C2-A7C2-2740F78C27D1}.Nuget-45|Any CPU.ActiveCfg = Nuget-45|Any CPU
+		{62B8463D-2C19-47C2-A7C2-2740F78C27D1}.Nuget-45|Any CPU.Build.0 = Nuget-45|Any CPU
 		{62B8463D-2C19-47C2-A7C2-2740F78C27D1}.Nuget-46|Any CPU.ActiveCfg = Nuget-46|Any CPU
 		{62B8463D-2C19-47C2-A7C2-2740F78C27D1}.Nuget-46|Any CPU.Build.0 = Nuget-46|Any CPU
 		{62B8463D-2C19-47C2-A7C2-2740F78C27D1}.Release|Any CPU.ActiveCfg = Release|Any CPU
