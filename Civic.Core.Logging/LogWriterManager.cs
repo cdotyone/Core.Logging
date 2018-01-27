@@ -61,7 +61,7 @@ namespace Civic.Core.Logging
             lock (_lock)
             {
                 var config = LoggingConfig.Current;
-                if(config==null) throw  new ConfigurationErrorsException(string.Format("missing configuration section {0}",LoggingConfig.SectionName));
+                if(config==null) throw  new ConfigurationErrorsException($"missing configuration section {LoggingConfig.SectionName}");
 
                 if(_logWriters.Count>0) return;
 
@@ -69,7 +69,7 @@ namespace Civic.Core.Logging
                 foreach (LoggerConfig logger in config.Writers)
                 {
                     var logwriter = DynamicInstance.CreateInstance<ILogWriter>(logger.Assembly, logger.Type);
-                    var obj = logwriter.Create(config.ApplicationName, config.LogName, config.UseThread, logger.Attributes) as ILogWriter;
+                    var obj = logwriter.Create(config.ApplicationName, config.LogName, config.UseThread, logger.UseFailureRecovery, logger.Attributes) as ILogWriter;
                     logger.Writer = obj;
                     _logWriters.Add(logger);
                 }
@@ -85,7 +85,10 @@ namespace Civic.Core.Logging
         {
             var allSuccess = true;
 
-            if(_logWriters.Count==0) Init();
+            lock (_logWriters)
+            {
+                if(_logWriters.Count==0) Init();
+            }
 
             // ReSharper disable once InconsistentlySynchronizedField
 
@@ -150,7 +153,6 @@ namespace Civic.Core.Logging
 
                         if (logger != null)
                         {
-                            var success = true;
                             GenerateLogFileName(parts[0], true);
                             using (var file = File.Open(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
                             {
@@ -163,7 +165,6 @@ namespace Civic.Core.Logging
                                         if (logEntry == null || logger.Writer.Log(logEntry)) continue;
 
                                         // failed to write again, so recover the remaining log entries
-                                        success = false;
                                         WriteFailure(logEntry, logger.Name);
 
                                         //move the remaining contents of the log to the new file
@@ -189,7 +190,7 @@ namespace Civic.Core.Logging
             }
             catch (Exception ex)
             {
-                Logger.LogError(LoggingBoundaries.ServiceBoundary, "Failed while too perform log recovery: {0}", ex);
+                Logger.LogError(LoggingBoundaries.ServiceBoundary, "Failed while trying too perform log recovery: {0}", ex);
             }
         }
 

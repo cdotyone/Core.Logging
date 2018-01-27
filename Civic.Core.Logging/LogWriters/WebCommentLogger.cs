@@ -82,8 +82,10 @@ namespace Civic.Core.Logging.LogWriters
         /// <param name="applicationname">Name of the application using this log</param>
         /// <param name="logname">Name of the log, this can be interperted the way the class want to, but it must identify a unique logger.</param>
         /// <param name="canThread">should the logger us a thread, generally false is suggested for web sites</param>
+        /// <param name="useFailureRecovery"></param>
         /// <param name="addtionalParameters">any additional configuration parameters found on the configuration node for this logger</param>
-        public object Create( string applicationname, string logname, bool canThread, Dictionary<string, string> addtionalParameters )
+        public object Create(string applicationname, string logname, bool canThread, bool useFailureRecovery,
+            Dictionary<string, string> addtionalParameters)
         {
             var ev = new WebCommentLogger
                 {
