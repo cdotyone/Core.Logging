@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using Civic.Core.Logging.Configuration;
 
 #endregion References
 
@@ -77,15 +78,13 @@ namespace Civic.Core.Logging.LogWriters
         #region Methods
 
         /// <summary>
-        /// Initliazes the logger
+        /// Used by factory to create objects of this type
         /// </summary>
-        /// <param name="applicationname">Name of the application using this log</param>
-        /// <param name="logname">Name of the log, this can be interperted the way the class want to, but it must identify a unique logger.</param>
-        /// <param name="canThread">should the logger us a thread, generally false is suggested for web sites</param>
-        /// <param name="useFailureRecovery"></param>
-        /// <param name="addtionalParameters">any additional configuration parameters found on the configuration node for this logger</param>
-        public object Create(string applicationname, string logname, bool canThread, bool useFailureRecovery,
-            Dictionary<string, string> addtionalParameters)
+        /// <param name="applicationname">application name given to this logger</param>
+        /// <param name="logname">log name given to this log</param>
+        /// <param name="config">The log writers configuration</param>
+        /// <returns></returns>
+        public object Create(string applicationname, string logname, LoggerConfig config)
         {
             var ev = new WebCommentLogger
                 {
@@ -97,13 +96,15 @@ namespace Civic.Core.Logging.LogWriters
         }
 
         /// <summary>
-        /// On logs that can be deleted.  
-        /// This will delete the log
+        /// Does nothing, required by interface
         /// </summary>
         public void Delete()
         {
         }
 
+        /// <summary>
+        /// Does nothing, required by interface
+        /// </summary>
         public void Flush()
         {
         }

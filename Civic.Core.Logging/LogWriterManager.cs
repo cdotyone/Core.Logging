@@ -69,7 +69,7 @@ namespace Civic.Core.Logging
                 foreach (LoggerConfig logger in config.Writers)
                 {
                     var logwriter = DynamicInstance.CreateInstance<ILogWriter>(logger.Assembly, logger.Type);
-                    var obj = logwriter.Create(config.ApplicationName, config.LogName, config.UseThread, logger.UseFailureRecovery, logger.Attributes) as ILogWriter;
+                    var obj = logwriter.Create(config.ApplicationName, config.LogName, logger) as ILogWriter;
                     logger.Writer = obj;
                     _logWriters.Add(logger);
                 }
