@@ -66,9 +66,10 @@ namespace Civic.Core.Logging
         /// <param name="applicationname">application name given to this logger</param>
         /// <param name="logname">log name given to this log</param>
         /// <param name="canThread">tells the log write if it can use threads</param>
+        /// <param name="useFailureRecovery">Tells log writer if it should record failures</param>
         /// <param name="addtionalParameters">addtional attributes from the configuration of this logger</param>
         /// <returns></returns>
-        object Create(string applicationname, string logname, bool canThread, Dictionary<string, string> addtionalParameters);
+        object Create(string applicationname, string logname, bool canThread, bool useFailureRecovery, Dictionary<string, string> addtionalParameters);
 
         /// <summary>
         /// On logs that can be deleted.  

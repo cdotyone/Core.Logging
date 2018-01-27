@@ -18,6 +18,8 @@ namespace Civic.Core.Logging.Configuration
 
         public string Type { get; set; }
 
+        public bool UseThread { get; set; }
+
         public bool UseFailureRecovery { get; set; }
 
         public Dictionary<string, string> Attributes { get; set; }
@@ -53,6 +55,10 @@ namespace Civic.Core.Logging.Configuration
             };
 
             if (config.Attributes == null) config.Attributes = new Dictionary<string, string>();
+
+            config.UseThread = config.Attributes.ContainsKey(Constants.CONFIG_USETHREAD_PROP)
+                ? bool.Parse(config.Attributes[Constants.CONFIG_USETHREAD_PROP])
+                : LoggingConfig.Current.UseThread;
 
             config.RescanTime = config.Attributes.ContainsKey(Constants.CONFIG_CHECKFORENTRIESTIME_PROP)
                 ? int.Parse(config.Attributes[Constants.CONFIG_CHECKFORENTRIESTIME_PROP])

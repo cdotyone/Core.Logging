@@ -40,7 +40,8 @@ namespace Civic.Core.Logging.LogWriters
 
         #region Methods
 
-        public object Create(string applicationname, string logname, bool canThread, Dictionary<string, string> addtionalParameters)
+        public object Create(string applicationname, string logname, bool canThread, bool useFailureRecovery,
+            Dictionary<string, string> addtionalParameters)
         {
             var dl = new DebugLogger
                 {
