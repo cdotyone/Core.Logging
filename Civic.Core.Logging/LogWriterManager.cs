@@ -199,7 +199,7 @@ namespace Civic.Core.Logging
         /// </summary>
         /// <param name="message">The log entry that filed to write</param>
         /// <param name="name">name of log writer we are logging failure</param>
-        private static void WriteFailure(ILogMessage message, string name)
+        public static void WriteFailure(ILogMessage message, string name)
         {
             if (!Directory.Exists(RecoveryDirectory)) Directory.CreateDirectory(RecoveryDirectory);
 
