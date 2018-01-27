@@ -41,7 +41,7 @@ namespace Civic.Core.Logging.Configuration
             if (configElement.Attributes.ContainsKey(Constants.CONFIG_ASSEMBLY_PROP))
                 assembly = configElement.Attributes[Constants.CONFIG_ASSEMBLY_PROP];
 
-            var useFailureRecovery = true;
+            var useFailureRecovery = false;
             if (configElement.Attributes.ContainsKey(Constants.CONFIG_FAILURERECOVERY_PROP))
                 useFailureRecovery = bool.Parse(configElement.Attributes[Constants.CONFIG_FAILURERECOVERY_PROP]);
 
