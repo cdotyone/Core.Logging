@@ -124,6 +124,11 @@ namespace Civic.Core.Logging
         public string ApplicationName { get; set; }
 
         /// <summary>
+        /// gets/sets the name of the application internal identifier
+        /// </summary>
+        public string ApplicationInternal { get; set; }
+
+        /// <summary>
         /// gets/sets the name of the server
         /// </summary>
         public string ServerName { get; set; }

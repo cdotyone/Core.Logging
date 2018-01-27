@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading;
+using Civic.Core.Logging.Configuration;
 using Newtonsoft.Json;
 
 #endregion References
@@ -119,15 +120,13 @@ namespace Civic.Core.Logging.LogWriters
         }
 
         /// <summary>
-        /// Initliazes the logger
+        /// Used by factory to create objects of this type
         /// </summary>
-        /// <param name="applicationname">Name of the application using this log</param>
-        /// <param name="logname">Name of the log, this can be interperted the way the class want to, but it must identify a unique logger.</param>
-        /// <param name="canThread">should the logger us a thread, generally false is suggested for web sites</param>
-        /// <param name="useFailureRecovery"></param>
-        /// <param name="addtionalParameters">any additional configuration parameters found on the configuration node for this logger</param>
-        public object Create(string applicationname, string logname, bool canThread, bool useFailureRecovery,
-            Dictionary<string, string> addtionalParameters)
+        /// <param name="applicationname">application name given to this logger</param>
+        /// <param name="logname">log name given to this log</param>
+        /// <param name="config">The log writers configuration</param>
+        /// <returns></returns>
+        public object Create(string applicationname, string logname, LoggerConfig config)
         {
             var fl = new FileLogger
                 {
@@ -138,7 +137,7 @@ namespace Civic.Core.Logging.LogWriters
                     _eventQueue = new Queue<ILogMessage>()
                 };
 
-            if ( canThread )
+            if ( config.UseThread )
             {
                 fl._tm = new Thread( Process );
                 fl._tm.Name = "File Logger Process";
@@ -148,15 +147,15 @@ namespace Civic.Core.Logging.LogWriters
 
             try
             {
-                if (!string.IsNullOrEmpty(addtionalParameters["logpath"]))
-                    fl.LogFilePath = addtionalParameters["logpath"];
+                if (!string.IsNullOrEmpty(config.Attributes["logpath"]))
+                    fl.LogFilePath = config.Attributes["logpath"];
             }
             catch { }
 
             try
             {
-                if (!string.IsNullOrEmpty(addtionalParameters["logfileformat"]))
-                    fl.LogFileFormat = addtionalParameters["logfileformat"];
+                if (!string.IsNullOrEmpty(config.Attributes["logfileformat"]))
+                    fl.LogFileFormat = config.Attributes["logfileformat"];
             }
             catch { }
 
@@ -172,6 +171,9 @@ namespace Civic.Core.Logging.LogWriters
             //throw new Exception("The method or operation is not supported.");
         }
 
+        /// <summary>
+        /// forces all items left in logger queue to write out to it's storage device
+        /// </summary>
         public void Flush()
         {
             RunQueue();

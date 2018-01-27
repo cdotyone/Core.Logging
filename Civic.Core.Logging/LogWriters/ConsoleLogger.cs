@@ -12,6 +12,7 @@
 
 using System;
 using System.Collections.Generic;
+using Civic.Core.Logging.Configuration;
 
 #endregion References
 
@@ -21,8 +22,15 @@ namespace Civic.Core.Logging.LogWriters
     {
         #region Properties
 
+        /// <summary>
+        /// gets the application name given to this logger
+        /// </summary>
         public string ApplicationName { get; private set; }
 
+        /// <summary>
+        /// true if the ILogWriter supports a delete command
+        /// false if it does not
+        /// </summary>
         public bool CanDelete
         {
             get { return true; }
@@ -30,6 +38,9 @@ namespace Civic.Core.Logging.LogWriters
 
         public string LogName { get; private set; }
 
+        /// <summary>
+        /// gets the display name given to this logger
+        /// </summary>
         public string Name
         {
             get { return "Console Logger"; }
@@ -39,7 +50,14 @@ namespace Civic.Core.Logging.LogWriters
 
         #region Methods
 
-        public object Create(string applicationname, string logname, bool canThread, bool useFailureRecovery, Dictionary<string, string> addtionalParameters)
+        /// <summary>
+        /// Used by factory to create objects of this type
+        /// </summary>
+        /// <param name="applicationname">application name given to this logger</param>
+        /// <param name="logname">log name given to this log</param>
+        /// <param name="config">The log writers configuration</param>
+        /// <returns></returns>
+        public object Create(string applicationname, string logname, LoggerConfig config)
         {
             var dl = new ConsoleLogger
                 {
@@ -50,15 +68,24 @@ namespace Civic.Core.Logging.LogWriters
             return dl;
         }
 
+        /// <summary>
+        /// Does nothing, required by interface
+        /// </summary>
         public void Delete()
         {
-            throw new Exception("The method or operation is not supported.");
         }
 
+        /// <summary>
+        /// Does nothing, required by interface
+        /// </summary>
         public void Flush()
         {
         }
 
+        /// <summary>
+        /// Logs a message to the log class
+        /// </summary>
+        /// <param name="message">the message to write the the log</param>
         public bool Log(ILogMessage message)
         {
             if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
@@ -66,6 +93,9 @@ namespace Civic.Core.Logging.LogWriters
             return true;
         }
 
+        /// <summary>
+        /// shuts down and cleans up after logger
+        /// </summary>
         public void Shutdown()
         {
         }

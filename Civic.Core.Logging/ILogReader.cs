@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using Civic.Core.Logging.Configuration;
 
 namespace Civic.Core.Logging
 {
@@ -16,10 +17,8 @@ namespace Civic.Core.Logging
         /// </summary>
         /// <param name="applicationname">application name given to this logger</param>
         /// <param name="logname">log name given to this log</param>
-        /// <param name="canThread">tells the log write if it can use threads</param>
-        /// <param name="useFailureRecovery">Not used, compatibility for ILogWriter</param>
-        /// <param name="addtionalParameters">addtional attributes from the configuration of this logger</param>
+        /// <param name="config">The log readers configuration</param>
         /// <returns></returns>
-        object Create(string applicationname, string logname, bool canThread, bool useFailureRecovery, Dictionary<string, string> addtionalParameters);
+        object Create(string applicationname, string logname, LoggerConfig config);
     }
 }

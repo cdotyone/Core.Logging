@@ -1,10 +1,10 @@
 using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Messaging;
 using System.Security;
 using System.Text;
+using Civic.Core.Logging.Configuration;
 using Newtonsoft.Json;
 
 namespace Civic.Core.Logging.LogWriters
@@ -94,21 +94,14 @@ namespace Civic.Core.Logging.LogWriters
         #endregion Properties
 
         #region Methods
-
-        /// <summary>
-        /// Initliazes the logger
-        /// </summary>
-        /// <param name="applicationname">Name of the application using this log</param>
-        /// <param name="logname">Name of the log, this can be interperted the way the class want to, but it must identify a unique logger.</param>
-        /// <param name="canThread">should the logger use threads.  generally advised this is false for web sites</param>
-        /// <param name="useFailureRecovery"></param>
-        /// <param name="addtionalParameters">any additional parameters found on configuration node</param>
-        public object Create(string applicationname, string logname, bool canThread, bool useFailureRecovery, Dictionary<string, string> addtionalParameters)
+        public object Create(string applicationname, string logname, LoggerConfig config)
         {
             var ev = new MSMQLogger {LogName = logname, ApplicationName = applicationname};
 
             var servername = GetMachineName();
             string connectservername;
+
+            var addtionalParameters = config.Attributes;
             if (addtionalParameters != null && addtionalParameters.ContainsKey("serverName"))
                 connectservername = addtionalParameters["serverName"];
             else connectservername = servername;
