@@ -76,10 +76,10 @@ namespace Civic.Core.Logging
                     _logWriters.Add(logger);
 
                     var recover = LoggerConfig.Create(logger);
-                    obj = logwriter.Create(config.ApplicationName, config.LogName, recover) as ILogWriter;
-                    recover.Writer = obj;
                     recover.UseThread = false;
                     recover.UseFailureRecovery = false;
+                    obj = logwriter.Create(config.ApplicationName, config.LogName, recover) as ILogWriter;
+                    recover.Writer = obj;
                     _logRecovers.Add(recover);
                 }
             }
