@@ -12,8 +12,10 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
+using System.Threading.Tasks;
 using Civic.Core.Logging.Configuration;
 using Newtonsoft.Json;
 
@@ -27,13 +29,7 @@ namespace Civic.Core.Logging.LogWriters
         #region Fields
 
         private string _lastlogdate;
-        private AutoResetEvent _logWaiting;
         private string _logfilename;
-        private bool _running;
-        private AutoResetEvent _shutDown;
-        [NonSerialized]
-        private Thread _tm;
-        private Queue<ILogMessage> _eventQueue;
 
         #endregion Fields
 
@@ -41,17 +37,8 @@ namespace Civic.Core.Logging.LogWriters
 
         public FileLogger()
         {
-            _logWaiting = new AutoResetEvent(false);
-            _shutDown = new AutoResetEvent(false);
-            _eventQueue = new Queue<ILogMessage>();
-
             LogFileFormat = "<NAME>yyyyMMdd.log";
             _lastlogdate = "";
-        }
-
-        ~FileLogger()
-        {
-            Shutdown();
         }
 
         #endregion Constructors
@@ -95,29 +82,9 @@ namespace Civic.Core.Logging.LogWriters
             get { return "File Logger"; }
         }
 
-        /// <summary>
-        /// gets current log entries left to process
-        /// </summary>
-        protected int PendingLogs
-        {
-            get { return _eventQueue.Count; }
-        }
-
         #endregion Properties
 
         #region Methods
-
-        /// <summary>
-        /// clears any remaining log entries left to process
-        /// </summary>
-        public void Clear()
-        {
-            // Lock for writing
-            lock (_eventQueue)
-            {
-                _eventQueue.Clear();
-            }
-        }
 
         /// <summary>
         /// Used by factory to create objects of this type
@@ -134,30 +101,12 @@ namespace Civic.Core.Logging.LogWriters
                     LogFileFormat = "<NAME>yyyyMMdd.log",
                     _lastlogdate = "",
                     LogName = logname,
-                    _eventQueue = new Queue<ILogMessage>()
                 };
 
-            if ( config.UseThread )
-            {
-                fl._tm = new Thread( Process );
-                fl._tm.Name = "File Logger Process";
-                fl._tm.Start();
-            }
-            else fl._tm = null;
-
-            try
-            {
-                if (!string.IsNullOrEmpty(config.Attributes["logpath"]))
-                    fl.LogFilePath = config.Attributes["logpath"];
-            }
-            catch { }
-
-            try
-            {
-                if (!string.IsNullOrEmpty(config.Attributes["logfileformat"]))
-                    fl.LogFileFormat = config.Attributes["logfileformat"];
-            }
-            catch { }
+            if (config.Attributes.ContainsKey("logpath") && !string.IsNullOrEmpty(config.Attributes["logpath"]))
+                fl.LogFilePath = config.Attributes["logpath"];
+            if (config.Attributes.ContainsKey("logfileformat") && !string.IsNullOrEmpty(config.Attributes["logfileformat"]))
+                fl.LogFileFormat = config.Attributes["logfileformat"];
 
             return fl;
         }
@@ -176,188 +125,108 @@ namespace Civic.Core.Logging.LogWriters
         /// </summary>
         public void Flush()
         {
-            RunQueue();
         }
 
         /// <summary>
         /// Logs a message to the log class
         /// </summary>
         /// <param name="message">the message to write the the log</param>
-        public bool Log(ILogMessage message)
+        public Task<LogWriterResult> Log(ILogMessage message)
         {
-            if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
-
-            // Lock for writing
-            lock (_eventQueue)
+            return new Task<LogWriterResult>(delegate
             {
-                _eventQueue.Enqueue(message);
-            }
-
-            if (!_running) RunQueue();
-            else _logWaiting.Set();
-            return true;
-        }
-
-        /// <summary>
-        /// shuts down and cleans up after logger
-        /// </summary>
-        public void Shutdown()
-        {
-            _running = false;
-
-            if ( _tm != null )
-            {
-                // Set shutdown flag
-                _shutDown.Set();
-                _logWaiting.Set();
-                Thread.Sleep( 100 );
-
-                // Double check there are no more events on queue, if so, run them.
-                if ( PendingLogs > 0 )
-                {
-                    RunQueue();
-                }
+                if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
 
                 try
                 {
-                    _tm.Abort();
-                    _tm = null;
+                    AppendToLog(message);
                 }
-                catch
+                catch (Exception ex)
                 {
-                    // Do nothing...
+                    Logger.HandleException(LoggingBoundaries.Unknown, ex);
+                    return new LogWriterResult { Success = false, Name = Name, Message = message};
                 }
-            }
-        }
 
-        /// <summary>
-        /// Process the queue on a thread
-        /// </summary>
-        protected void Process()
-        {
-            _running = true;
-            // Loop and monitor every second.
-            while (_logWaiting.WaitOne())
-            {
-                if (_shutDown.WaitOne(0, true))
-                    break;
-                try
-                {
-                    RunQueue();
-                }
-                catch
-                {
-                    // Catch everything and do nothing
-                }
-                Thread.Sleep(100); // slow us down
-            }
+                return new LogWriterResult {Success = true, Name = Name};;
+            });
         }
 
         /// <summary>
         /// Run any events currently on queue
         /// </summary>
-        protected void RunQueue()
+        protected void AppendToLog(ILogMessage message)
         {
             TextWriter output = null;
-            if (PendingLogs > 0)
+            DateTime dt = DateTime.Now;
+
+            if (_lastlogdate != dt.ToShortDateString())
             {
-                DateTime dt = DateTime.Now;
+                // get the file extension
+                string[] parts = LogFileFormat.Split('.');
+                _logfilename = ".log";
+                if (parts.Length > 1)
+                    _logfilename = "." + parts[1];
 
-                if (_lastlogdate != dt.ToShortDateString())
+                // get the date format for the filename
+                parts = parts[0].Split('>');
+                if (parts[0].IndexOf("<") > -1 && parts.Length > 1)
+                    _logfilename = parts[0].Replace("<NAME", LogName) + dt.ToString(parts[1]) + _logfilename;
+                else if (parts[1].IndexOf("<") > -1 && parts.Length > 1)
+                    _logfilename = dt.ToString(parts[0]) + parts[1].Replace("<NAME", LogName) + _logfilename;
+                else if (parts[0].IndexOf("<") > -1)
+                    _logfilename = parts[1].Replace("<NAME", LogName) + _logfilename;
+                else if (parts[0].IndexOf("<") == 1 && parts[0].IndexOf(">") == 1)
+                    _logfilename = LogName + _logfilename;
+
+                // add the file path
+                if (LogFilePath == null) LogFilePath = "";
+                if (LogFilePath.Length > 0)
                 {
-                    // get the file extension
-                    string[] parts = LogFileFormat.Split('.');
-                    _logfilename = ".log";
-                    if (parts.Length > 1)
-                        _logfilename = "." + parts[1];
-
-                    // get the date format for the filename
-                    parts = parts[0].Split('>');
-                    if (parts[0].IndexOf("<") > -1 && parts.Length > 1)
-                        _logfilename = parts[0].Replace("<NAME", LogName) + dt.ToString(parts[1]) + _logfilename;
+                    if (LogFilePath[LogFilePath.Length - 1] != '\\')
+                        _logfilename = LogFilePath + "\\" + _logfilename;
                     else
-                        if (parts[1].IndexOf("<") > -1 && parts.Length > 1)
-                            _logfilename = dt.ToString(parts[0]) + parts[1].Replace("<NAME", LogName) + _logfilename;
-                        else
-                            if (parts[0].IndexOf("<") > -1)
-                                _logfilename = parts[1].Replace("<NAME", LogName) + _logfilename;
-                            else
-                                if (parts[0].IndexOf("<") == 1 && parts[0].IndexOf(">") == 1)
-                                    _logfilename = LogName + _logfilename;
-
-                    // add the file path
-                    if (LogFilePath == null) LogFilePath = "";
-                    if (LogFilePath.Length > 0)
-                    {
-                        if (LogFilePath[LogFilePath.Length - 1] != '\\')
-                            _logfilename = LogFilePath + "\\" + _logfilename;
-                        else
-                            _logfilename = LogFilePath + _logfilename;
-                    }
-
-                    _lastlogdate = dt.ToShortDateString();
+                        _logfilename = LogFilePath + _logfilename;
                 }
 
-                // Open the logfile
-                int count = 0;
-                while (count<6) {
-                    try {
-                        count++;
-                        output = File.AppendText(_logfilename);
-                        break;
-                    } catch {
-                        Thread.Sleep( 500 );
-                    }
-                }
+                _lastlogdate = dt.ToShortDateString();
             }
 
-            // Loop until queue is empty
-            while (PendingLogs > 0)
+
+            using (output = File.AppendText(_logfilename))
             {
-                LogMessage m;
-
-                // Lock for writing
-                lock (_eventQueue)
-                {
-                    m = (LogMessage)_eventQueue.Dequeue();
-                }
-
                 // Output log line
-                if (m != null && output!=null)
+                if (message != null)
                 {
                     DateTime t = DateTime.Now;
 
-                    // stop loggin in this file if we have rolled into a new day
-                    if (t.ToShortDateString() != _lastlogdate)
-                        break;
-
-                    switch (m.Type)
+                    switch (message.Type)
                     {
+                        case LogSeverity.Exception:
+                            output.WriteLine("[{0}] {1} - {2}", t, "EXCEPTION:", message.Message);
+                            writeExtended(output, message);
+                            break;
                         case LogSeverity.Error:
-                            output.WriteLine("[{0}] {1} - {2}", t, "ERROR:", m.Message);
-                            writeExtended(output, m);
+                            output.WriteLine("[{0}] {1} - {2}", t, "ERROR:", message.Message);
+                            writeExtended(output, message);
                             break;
                         case LogSeverity.Warning:
-                            output.WriteLine("[{0}] {1} - {2}", t, "WARNING:", m.Message);
-                            writeExtended(output, m);
+                            output.WriteLine("[{0}] {1} - {2}", t, "WARNING:", message.Message);
+                            writeExtended(output, message);
                             break;
                         case LogSeverity.Information:
-                            output.WriteLine("[{0}] {1} - {2}", t, "INFO:", m.Message);
-                            writeExtended(output, m);
+                            output.WriteLine("[{0}] {1} - {2}", t, "INFO:", message.Message);
+                            writeExtended(output, message);
                             break;
                         case LogSeverity.Trace:
-                            output.WriteLine("[{0}] {1} - {2}", t, "TRACE:", m.Message);
-                            writeExtended(output, m);
+                            output.WriteLine("[{0}] {1} - {2}", t, "TRACE:", message.Message);
+                            writeExtended(output, message);
                             break;
                     }
                 }
             }
-
-            // Close the log file
-            if(output!=null) output.Close();
         }
 
-        private void writeExtended(TextWriter output,LogMessage message)
+        private void writeExtended(TextWriter output,ILogMessage message)
         {
             if (message.Extended != null && message.Extended.Count > 0)
             {

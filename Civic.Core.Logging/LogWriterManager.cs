@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Threading.Tasks;
 using Civic.Core.Configuration;
 using Civic.Core.Logging.Configuration;
 using Newtonsoft.Json;
@@ -23,7 +24,6 @@ namespace Civic.Core.Logging
         private static readonly object _filenameLock = new object();
 
         private static readonly List<LoggerConfig> _logWriters = new List<LoggerConfig>();
-        private static readonly List<LoggerConfig> _logRecovers = new List<LoggerConfig>();
         private static readonly object _lock = new object();
 
         #endregion Fields
@@ -50,7 +50,6 @@ namespace Civic.Core.Logging
             lock (_lock)
             {
                 _logWriters.Clear();
-                _logRecovers.Clear();
             }
         }
 
@@ -74,13 +73,6 @@ namespace Civic.Core.Logging
                     var obj = logwriter.Create(config.ApplicationName, config.LogName, logger) as ILogWriter;
                     logger.Writer = obj;
                     _logWriters.Add(logger);
-
-                    var recover = LoggerConfig.Create(logger);
-                    recover.UseThread = false;
-                    recover.UseFailureRecovery = false;
-                    obj = logwriter.Create(config.ApplicationName, config.LogName, recover) as ILogWriter;
-                    recover.Writer = obj;
-                    _logRecovers.Add(recover);
                 }
             }
         }
@@ -101,6 +93,8 @@ namespace Civic.Core.Logging
 
             // ReSharper disable once InconsistentlySynchronizedField
 
+            var tasks = new List<Task<LogWriterResult>>();
+
             foreach (var writerConfig in _logWriters)
             {
                 try
@@ -108,25 +102,25 @@ namespace Civic.Core.Logging
                     if (!(writerConfig.FilterBy.Count == 0 || writerConfig.FilterBy.Contains(message.Type.ToString())))
                         continue;
 
-                    if (writerConfig.Writer.Log(message))
-                    {
-                        if (writerConfig.UseFailureRecovery) // if log recovery is on, than check to see if there are any that need to be recovered
-                        {
-                            RecoverFailures(writerConfig.Name);
-                        }
-                    }
-                    else
-                    {
-                        allSuccess = false;
-                        if (writerConfig.UseFailureRecovery) // log the write failure, if we are requested too
-                        {
-                            WriteFailure(message, writerConfig.Name);
-                        }
-                    }
+                    var task = writerConfig.Writer.Log(message);
+                    task.Start();
+                    tasks.Add(task);
                 }
                 catch (Exception ex)
                 {
                     Logger.LogError(LoggingBoundaries.ServiceBoundary, "Failed to log to writer {0}", ex);
+                }
+            }
+
+            Task.WaitAll(tasks.ToArray());
+
+            foreach (var task in tasks)
+            {
+                var result = task.Result;
+                if (!result.Success)
+                {
+                    allSuccess = false;
+                    WriteFailure(result.Message, result.Name);
                 }
             }
 
@@ -150,9 +144,9 @@ namespace Civic.Core.Logging
 
                         LoggerConfig logger = null;
 
-                        lock (_logRecovers)
+                        lock (_logWriters)
                         {
-                            foreach (LoggerConfig logWriter in _logRecovers)
+                            foreach (LoggerConfig logWriter in _logWriters)
                             {
                                 if (string.Compare(logWriter.Name, parts[0], StringComparison.InvariantCultureIgnoreCase) == 0) continue;
                                 logger = logWriter;
@@ -173,7 +167,10 @@ namespace Civic.Core.Logging
                                         var logEntry = JsonConvert.DeserializeObject<LogMessage>(entry);
                                         if (logEntry == null) continue;
 
-                                        if (logger.Writer.Log(logEntry)) continue;
+                                        var task = logger.Writer.Log(logEntry);
+                                        task.Start();
+                                        Task.WaitAll(new Task[] {task});
+                                        if (task.Result.Success) continue;
                                         else break;
                                     }
                                 }

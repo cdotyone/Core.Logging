@@ -4,6 +4,7 @@ using System.IO;
 using System.Messaging;
 using System.Security;
 using System.Text;
+using System.Threading.Tasks;
 using Civic.Core.Logging.Configuration;
 using Newtonsoft.Json;
 
@@ -112,12 +113,12 @@ namespace Civic.Core.Logging.LogWriters
 
                 if (connectservername == servername)
                 {
-                    ev._path = string.Format("{0}\\private$\\{1}", connectservername, logname);
+                    ev._path = $"{connectservername}\\private$\\{logname}";
                     ev._mqueue = MessageQueue.Exists(ev._path) ? new MessageQueue(ev._path) : MessageQueue.Create(ev._path);
                 }
                 else
                 {
-                    ev._path = string.Format("FormatName:DIRECT=OS:{0}\\private$\\{1}", connectservername, logname);
+                    ev._path = $"FormatName:DIRECT=OS:{connectservername}\\private$\\{logname}";
                     ev._mqueue = new MessageQueue(ev._path);
                 }
             }
@@ -149,23 +150,26 @@ namespace Civic.Core.Logging.LogWriters
         /// Logs a message to the log class
         /// </summary>
         /// <param name="message">the message to write the the log</param>
-        public bool Log(ILogMessage message)
+        public Task<LogWriterResult> Log(ILogMessage message)
         {
-            try
+            return new Task<LogWriterResult>(delegate
             {
-                if (_mqueue == null) return false;
+                try
+                {
+                    if (_mqueue == null) return new LogWriterResult { Success = false, Name = Name, Message = message }; ;
 
-                if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
-                var body = JsonConvert.SerializeObject(message);
-                var msg = new Message { BodyStream = new MemoryStream(Encoding.ASCII.GetBytes(body)) };
-                _mqueue.Send(msg);
-            }
-            catch
-            {
-                return false;
-            }
+                    if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
+                    var body = JsonConvert.SerializeObject(message);
+                    var msg = new Message {BodyStream = new MemoryStream(Encoding.ASCII.GetBytes(body))};
+                    _mqueue.Send(msg);
+                }
+                catch
+                {
+                    return new LogWriterResult { Success = false, Name = Name, Message = message }; ;
+                }
 
-            return true;
+                return new LogWriterResult { Success = true, Name = Name }; 
+            });
         }
 
         /// <summary>
