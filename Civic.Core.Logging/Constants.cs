@@ -28,11 +28,14 @@
         public const string CONFIG_READERS_PROP = "readers";
 
         // the # minutes before the service rescans the domain to get a fresh cache
-        public const string CONFIG_RECHECKMINUTES_PROP = "recheckMinutes";
-        public const int CONFIG_RECHECKMINUTES_DEFAULT = 5;
+        public const string CONFIG_CONFIGCHECKMINUTES_PROP = "recheckMinutes";
+        public const int CONFIG_CONFIGCHECKMINUTES_DEFAULT = 5;
 
-        public const string CONFIG_CHECKFORENTRIESTIME_PROP = "rescanTime";
-        public const int CONFIG_CHECKFORENTRIESTIME_DEFAULT = 30000;
+        public const string CONFIG_RESCANTIME_PROP = "rescanTime";
+        public const int CONFIG_RESCANTIME_DEFAULT = 30000;
+
+        public const string CONFIG_RECOVERYTIME_PROP = "recoveryTime";
+        public const int CONFIG_RECOVERYTIME_DEFAULT = 120000;
 
     }
 }
