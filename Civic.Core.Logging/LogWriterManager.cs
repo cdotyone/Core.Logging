@@ -23,6 +23,7 @@ namespace Civic.Core.Logging
         private static readonly object _filenameLock = new object();
 
         private static readonly List<LoggerConfig> _logWriters = new List<LoggerConfig>();
+        private static readonly List<LoggerConfig> _logRecovers = new List<LoggerConfig>();
         private static readonly object _lock = new object();
 
         #endregion Fields
@@ -36,7 +37,7 @@ namespace Civic.Core.Logging
         /// </summary>
         public static string RecoveryDirectory
         {
-            get { return Path.GetTempPath() + Path.DirectorySeparatorChar + "Civic.Logging"; }
+            get { return Path.Combine(Path.GetTempPath(),"Civic.Logging"); }
         }
 
         #region Methods
@@ -49,6 +50,7 @@ namespace Civic.Core.Logging
             lock (_lock)
             {
                 _logWriters.Clear();
+                _logRecovers.Clear();
             }
         }
 
@@ -72,7 +74,16 @@ namespace Civic.Core.Logging
                     var obj = logwriter.Create(config.ApplicationName, config.LogName, logger) as ILogWriter;
                     logger.Writer = obj;
                     _logWriters.Add(logger);
+
+                    var recover = LoggerConfig.Create(logger);
+                    obj = logwriter.Create(config.ApplicationName, config.LogName, recover) as ILogWriter;
+                    recover.Writer = obj;
+                    recover.UseThread = false;
+                    recover.UseFailureRecovery = false;
+                    _logRecovers.Add(recover);
                 }
+
+
             }
         }
 
@@ -103,7 +114,7 @@ namespace Civic.Core.Logging
                     {
                         if (writerConfig.UseFailureRecovery) // if log recovery is on, than check to see if there are any that need to be recovered
                         {
-                            RecoverFailures();
+                            RecoverFailures(writerConfig.Name);
                         }
                     }
                     else
@@ -128,7 +139,7 @@ namespace Civic.Core.Logging
         /// Checks to see if any write failures have been logged to the file system.
         /// If found it attempts to write them again
         /// </summary>
-        public static void RecoverFailures()
+        public static void RecoverFailures(string name)
         {
             try
             {
@@ -141,17 +152,17 @@ namespace Civic.Core.Logging
 
                         LoggerConfig logger = null;
 
-                        lock (_logWriters)
+                        lock (_logRecovers)
                         {
-                            foreach (LoggerConfig logWriter in _logWriters)
+                            foreach (LoggerConfig logWriter in _logRecovers)
                             {
                                 if (string.Compare(logWriter.Name, parts[0], StringComparison.InvariantCultureIgnoreCase) == 0) continue;
                                 logger = logWriter;
                                 break;
                             }
                         }
-
-                        if (logger != null)
+                        
+                        if (logger != null && (name==null || string.Compare(logger.Name,name, StringComparison.InvariantCultureIgnoreCase) ==0 ))
                         {
                             GenerateLogFileName(parts[0], true);
                             using (var file = File.Open(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
@@ -162,19 +173,10 @@ namespace Civic.Core.Logging
                                     {
                                         var entry = reader.ReadLine();
                                         var logEntry = JsonConvert.DeserializeObject<LogMessage>(entry);
-                                        if (logEntry == null || logger.Writer.Log(logEntry)) continue;
+                                        if (logEntry == null) continue;
 
-                                        // failed to write again, so recover the remaining log entries
-                                        WriteFailure(logEntry, logger.Name);
-
-                                        //move the remaining contents of the log to the new file
-                                        while (!reader.EndOfStream)
-                                        {
-                                            entry = reader.ReadLine();
-                                            logEntry = JsonConvert.DeserializeObject<LogMessage>(entry);
-                                            if (logEntry != null) WriteFailure(logEntry, logger.Name);
-                                        }
-                                        break;
+                                        if (logger.Writer.Log(logEntry)) continue;
+                                        else break;
                                     }
                                 }
                             }

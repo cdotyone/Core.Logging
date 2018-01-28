@@ -4,6 +4,7 @@ using Civic.Core.Configuration;
 
 namespace Civic.Core.Logging.Configuration
 {
+
     public class LoggerConfig {
 
         public LoggerConfig()
@@ -32,6 +33,22 @@ namespace Civic.Core.Logging.Configuration
 
         public ILogWriter Writer { get; set; }
 
+        public static LoggerConfig Create(LoggerConfig from)
+        {
+            return new LoggerConfig
+            {
+                Name = from.Name,
+                Assembly = from.Assembly,
+                Type = from.Type,
+                UseThread = from.UseThread,
+                UseFailureRecovery = from.UseFailureRecovery,
+                Attributes = from.Attributes.Clone(),
+                AppliesTo = new List<string>(from.AppliesTo.Clone()),
+                FilterBy = new List<string>(from.FilterBy.Clone()),
+                RescanTime = from.RescanTime
+            };
+        }
+        
         public static LoggerConfig Create(INamedElement configElement)
         {
             if (string.IsNullOrEmpty(configElement.Name) || !configElement.Attributes.ContainsKey(Constants.CONFIG_TYPE_PROP))
