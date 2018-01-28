@@ -82,8 +82,6 @@ namespace Civic.Core.Logging
                     recover.UseFailureRecovery = false;
                     _logRecovers.Add(recover);
                 }
-
-
             }
         }
 
