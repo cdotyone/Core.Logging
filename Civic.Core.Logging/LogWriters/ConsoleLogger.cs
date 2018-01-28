@@ -11,7 +11,7 @@
 #region References
 
 using System;
-using System.Collections.Generic;
+using System.Threading.Tasks;
 using Civic.Core.Logging.Configuration;
 
 #endregion References
@@ -33,7 +33,7 @@ namespace Civic.Core.Logging.LogWriters
         /// </summary>
         public bool CanDelete
         {
-            get { return true; }
+            get { return false; }
         }
 
         public string LogName { get; private set; }
@@ -86,18 +86,15 @@ namespace Civic.Core.Logging.LogWriters
         /// Logs a message to the log class
         /// </summary>
         /// <param name="message">the message to write the the log</param>
-        public bool Log(ILogMessage message)
+        public Task<LogWriterResult> Log(ILogMessage message)
         {
-            if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
-            Console.WriteLine( message.Message );
-            return true;
-        }
+            return new Task<LogWriterResult>(delegate
+            {
+                if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
+                Console.WriteLine(message.Message);
+                return new LogWriterResult {Success = true, Name = Name};
+            });
 
-        /// <summary>
-        /// shuts down and cleans up after logger
-        /// </summary>
-        public void Shutdown()
-        {
         }
 
         #endregion Methods

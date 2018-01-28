@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Civic.Core.Logging.Configuration;
 
 #endregion References
@@ -32,7 +33,17 @@ namespace Civic.Core.Logging.LogWriters
 
         ~EventLogger()
         {
-            Shutdown();
+            if (_eventlog != null)
+            {
+                try
+                {
+                    _eventlog.Close();
+                }
+                catch (Exception)
+                {
+                }
+                _eventlog = null;
+            }
         }
 
         #endregion Constructors
@@ -151,47 +162,40 @@ namespace Civic.Core.Logging.LogWriters
         /// Logs a message to the log class
         /// </summary>
         /// <param name="message">the message to write the the log</param>
-        public bool Log(ILogMessage message)
+        public Task<LogWriterResult> Log(ILogMessage message)
         {
-            if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
-
-            switch (message.Type)
+            return new Task<LogWriterResult>(delegate
             {
-                case LogSeverity.Exception:
-                    _eventlog.WriteEntry(ApplicationName + " (" + message.Boundary + ")" + " - EXCEPTION: " + message.Message, EventLogEntryType.Error);
-                    break;
-                case LogSeverity.Error:
-                    _eventlog.WriteEntry(ApplicationName + " (" + message.Boundary + ")" + ": " + message.Message, EventLogEntryType.Error);
-                    break;
-                case LogSeverity.Warning:
-                    _eventlog.WriteEntry(ApplicationName + " (" + message.Boundary + ")" + ": " + message.Message, EventLogEntryType.Warning);
-                    break;
-                case LogSeverity.Information:
-                    _eventlog.WriteEntry(ApplicationName + " (" + message.Boundary + ")" + ": " + message.Message, EventLogEntryType.Information);
-                    break;
-                case LogSeverity.Trace:
-                    _eventlog.WriteEntry(ApplicationName + " (" + message.Boundary + ")" + " - TRACE: " + message.Message, EventLogEntryType.Information);
-                    return false;
-            }
-            return true;
-        }
+                if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
 
-        /// <summary>
-        /// shuts down and cleans up after logger
-        /// </summary>
-        public void Shutdown()
-        {
-            if (_eventlog != null)
-            {
-                try
+                switch (message.Type)
                 {
-                    _eventlog.Close();
+                    case LogSeverity.Exception:
+                        _eventlog.WriteEntry(
+                            ApplicationName + " (" + message.Boundary + ")" + " - EXCEPTION: " + message.Message,
+                            EventLogEntryType.Error);
+                        break;
+                    case LogSeverity.Error:
+                        _eventlog.WriteEntry(ApplicationName + " (" + message.Boundary + ")" + ": " + message.Message,
+                            EventLogEntryType.Error);
+                        break;
+                    case LogSeverity.Warning:
+                        _eventlog.WriteEntry(ApplicationName + " (" + message.Boundary + ")" + ": " + message.Message,
+                            EventLogEntryType.Warning);
+                        break;
+                    case LogSeverity.Information:
+                        _eventlog.WriteEntry(ApplicationName + " (" + message.Boundary + ")" + ": " + message.Message,
+                            EventLogEntryType.Information);
+                        break;
+                    case LogSeverity.Trace:
+                        _eventlog.WriteEntry(
+                            ApplicationName + " (" + message.Boundary + ")" + " - TRACE: " + message.Message,
+                            EventLogEntryType.Information);
+                        break;
                 }
-                catch (Exception)
-                {
-                }
-                _eventlog = null;
-            }
+
+                return new LogWriterResult { Success = true, Name = Name }; ;
+            });
         }
 
         #endregion Methods

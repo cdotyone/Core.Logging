@@ -13,6 +13,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using Civic.Core.Logging.Configuration;
 
 #endregion References
@@ -93,38 +94,37 @@ namespace Civic.Core.Logging.LogWriters
         /// Logs a message to the log class
         /// </summary>
         /// <param name="message">the message to write the the log</param>
-        public bool Log(ILogMessage message)
+        public Task<LogWriterResult> Log(ILogMessage message)
         {
-            if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
-            Debug.AutoFlush = true;
-
-            switch (message.Type)
+            return new Task<LogWriterResult>(delegate
             {
-                case LogSeverity.Exception:
-                    Debug.WriteLine(ApplicationName + " (" + message.Boundary + ") - EXCEPTION: " + message.Message);
-                    break;
-                case LogSeverity.Error:
-                    Debug.WriteLine(ApplicationName + " (" + message.Boundary + ") - ERROR: " + message.Message);
-                    break;
-                case LogSeverity.Warning:
-                    Debug.WriteLine(ApplicationName + " (" + message.Boundary + ") - WARNING: " + message.Message);
-                    break;
-                case LogSeverity.Information:
-                    Debug.WriteLine(ApplicationName + " (" + message.Boundary + ") - INFORMATION: " + message.Message);
-                    break;
-                case LogSeverity.Trace:
-                    Debug.WriteLine(ApplicationName + " (" + message.Boundary + ")" + " - TRACE: " + message.Message);
-                    return false;
-            }
+                if (string.IsNullOrEmpty(message.ApplicationName)) message.ApplicationName = ApplicationName;
+                Debug.AutoFlush = true;
 
-            return true;
-        }
+                switch (message.Type)
+                {
+                    case LogSeverity.Exception:
+                        Debug.WriteLine(ApplicationName + " (" + message.Boundary + ") - EXCEPTION: " +
+                                        message.Message);
+                        break;
+                    case LogSeverity.Error:
+                        Debug.WriteLine(ApplicationName + " (" + message.Boundary + ") - ERROR: " + message.Message);
+                        break;
+                    case LogSeverity.Warning:
+                        Debug.WriteLine(ApplicationName + " (" + message.Boundary + ") - WARNING: " + message.Message);
+                        break;
+                    case LogSeverity.Information:
+                        Debug.WriteLine(ApplicationName + " (" + message.Boundary + ") - INFORMATION: " +
+                                        message.Message);
+                        break;
+                    case LogSeverity.Trace:
+                        Debug.WriteLine(
+                            ApplicationName + " (" + message.Boundary + ")" + " - TRACE: " + message.Message);
+                        break;
+                }
 
-        /// <summary>
-        /// shuts down and cleans up after logger
-        /// </summary>
-        public void Shutdown()
-        {
+                return new LogWriterResult { Success = true, Name = Name }; ;
+            });
         }
 
         #endregion Methods

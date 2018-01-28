@@ -11,6 +11,7 @@
 #region References
 
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Civic.Core.Logging.Configuration;
 
 #endregion References
@@ -85,12 +86,8 @@ namespace Civic.Core.Logging
         /// Logs a message to the log class
         /// </summary>
         /// <param name="message">the message to write the the log</param>
-        bool Log(ILogMessage message);
-
-        /// <summary>
-        /// shuts down and cleans up after logger
-        /// </summary>
-        void Shutdown();
+        /// <returns>Result of loggin activity</returns>
+        Task<LogWriterResult> Log(ILogMessage message);
 
         #endregion Methods
     }
