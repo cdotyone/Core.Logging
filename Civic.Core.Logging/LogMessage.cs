@@ -64,7 +64,7 @@ namespace Civic.Core.Logging
                 }
                 if (parameterValues[i] is Exception)
                 {
-                    var e = (Exception)parameterValues[0];
+                    var e = (Exception)parameterValues[i];
                     Message = (string.IsNullOrEmpty(Message) ? string.Empty : Message + "\n") + ExpandException(e);
                     if (parameterValues.Length - 1 > i) Message = "{" + (i + 1) + "}\n" + Message;
                     if(Extended==null) Extended = new Dictionary<string, object>();
