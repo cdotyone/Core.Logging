@@ -31,6 +31,8 @@ namespace Civic.Core.Logging.Configuration
 
         public int RescanTime { get; set; }
 
+        public int RecoveryTime { get; set; }
+
         public ILogWriter Writer { get; set; }
 
         public static LoggerConfig Create(LoggerConfig from)
@@ -45,7 +47,8 @@ namespace Civic.Core.Logging.Configuration
                 Attributes = from.Attributes.Clone(),
                 AppliesTo = new List<string>(from.AppliesTo.Clone()),
                 FilterBy = new List<string>(from.FilterBy.Clone()),
-                RescanTime = from.RescanTime
+                RescanTime = from.RescanTime,
+                RecoveryTime = from.RecoveryTime
             };
         }
         
@@ -77,9 +80,13 @@ namespace Civic.Core.Logging.Configuration
                 ? bool.Parse(config.Attributes[Constants.CONFIG_USETHREAD_PROP])
                 : LoggingConfig.Current.UseThread;
 
-            config.RescanTime = config.Attributes.ContainsKey(Constants.CONFIG_CHECKFORENTRIESTIME_PROP)
-                ? int.Parse(config.Attributes[Constants.CONFIG_CHECKFORENTRIESTIME_PROP])
-                : LoggingConfig.Current.DefaultCheckForEntriesTime;
+            config.RescanTime = config.Attributes.ContainsKey(Constants.CONFIG_RESCANTIME_PROP)
+                ? int.Parse(config.Attributes[Constants.CONFIG_RESCANTIME_PROP])
+                : LoggingConfig.Current.DefaultRescanTime;
+
+            config.RecoveryTime = config.Attributes.ContainsKey(Constants.CONFIG_RECOVERYTIME_PROP)
+                ? int.Parse(config.Attributes[Constants.CONFIG_RECOVERYTIME_PROP])
+                : LoggingConfig.Current.DefaultRecoveryTime;
 
             config.FilterBy = configElement.Attributes.ContainsKey(Constants.CONFIG_FILTERBY_PROP) ?
                         new List<string>(configElement.Attributes[Constants.CONFIG_FILTERBY_PROP].Split(','))

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Civic.Core.Configuration;
 using Civic.Core.Logging.LogWriters;
 
@@ -14,7 +13,8 @@ namespace Civic.Core.Logging.Configuration {
         private List<LoggerConfig> _loggers;
         private List<ExceptionPolicyElement> _exceptionPoliciesOverride;
         private int _configChangeCheck;
-        private int _defaultCheckForEntriesTime;
+        private int _defaultRescanTime;
+        private int _defaultRecoveryTime;
         private string _clientCode;
         private string _environmentCode;
         private string _applicationName;
@@ -31,8 +31,9 @@ namespace Civic.Core.Logging.Configuration {
 
             var civicSection = CivicSection.Current;
 
-            _configChangeCheck = Attributes.ContainsKey(Constants.CONFIG_RECHECKMINUTES_PROP) ? int.Parse(Attributes[Constants.CONFIG_RECHECKMINUTES_PROP]) : Constants.CONFIG_RECHECKMINUTES_DEFAULT;
-            _defaultCheckForEntriesTime = Attributes.ContainsKey(Constants.CONFIG_CHECKFORENTRIESTIME_PROP) ? int.Parse(Attributes[Constants.CONFIG_CHECKFORENTRIESTIME_PROP]) : Constants.CONFIG_CHECKFORENTRIESTIME_DEFAULT;
+            _configChangeCheck = Attributes.ContainsKey(Constants.CONFIG_CONFIGCHECKMINUTES_PROP) ? int.Parse(Attributes[Constants.CONFIG_CONFIGCHECKMINUTES_PROP]) : Constants.CONFIG_CONFIGCHECKMINUTES_DEFAULT;
+            _defaultRescanTime = Attributes.ContainsKey(Constants.CONFIG_RESCANTIME_PROP) ? int.Parse(Attributes[Constants.CONFIG_RESCANTIME_PROP]) : Constants.CONFIG_RESCANTIME_DEFAULT;
+            _defaultRecoveryTime = Attributes.ContainsKey(Constants.CONFIG_RECOVERYTIME_PROP) ? int.Parse(Attributes[Constants.CONFIG_RECOVERYTIME_PROP]) : Constants.CONFIG_RECOVERYTIME_DEFAULT;
             _applicationName = GetAttribute(Constants.CONFIG_APPNAME_PROP, civicSection.ApplicationName);
             _clientCode = civicSection.ClientCode;
             _environmentCode = civicSection.EnvironmentCode;
@@ -66,16 +67,25 @@ namespace Civic.Core.Logging.Configuration {
         public int ConfigChangeCheck
         {
             get { return _configChangeCheck; }
-            set { _configChangeCheck = value; Attributes[Constants.CONFIG_RECHECKMINUTES_PROP] = value.ToString(); }
+            set { _configChangeCheck = value; Attributes[Constants.CONFIG_CONFIGCHECKMINUTES_PROP] = value.ToString(); }
         }
 
         /// <summary>
         /// Gets or sets the default time before the threads rescans for entries
         /// </summary>
-        public int DefaultCheckForEntriesTime
+        public int DefaultRescanTime
         {
-            get { return _defaultCheckForEntriesTime; }
-            set { _defaultCheckForEntriesTime = value; Attributes[Constants.CONFIG_CHECKFORENTRIESTIME_PROP] = value.ToString(); }
+            get { return _defaultRescanTime; }
+            set { _defaultRescanTime = value; Attributes[Constants.CONFIG_RESCANTIME_PROP] = value.ToString(); }
+        }
+
+        /// <summary>
+        /// Gets or sets the default time before the threads rescans failures
+        /// </summary>
+        public int DefaultRecoveryTime
+        {
+            get { return _defaultRecoveryTime; }
+            set { _defaultRecoveryTime = value; Attributes[Constants.CONFIG_RECOVERYTIME_PROP] = value.ToString(); }
         }
 
         public string ClientCode
