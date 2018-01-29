@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
+using System.Text;
 using System.Threading.Tasks;
 using Civic.Core.Configuration;
 using Civic.Core.Logging.Configuration;
@@ -161,7 +162,7 @@ namespace Civic.Core.Logging
                                 {
                                     while (!reader.EndOfStream)
                                     {
-                                        var entry = reader.ReadLine();
+                                        var entry = Base64Decode(reader.ReadLine());
                                         var logEntry = JsonConvert.DeserializeObject<LogMessage>(entry);
                                         if (logEntry == null) continue;
 
@@ -201,9 +202,7 @@ namespace Civic.Core.Logging
 
                 var filename = GenerateLogFileName(name, count>0);
                 count++;
-                var entry = JsonConvert.SerializeObject(message, Formatting.None);
-                if (entry.Contains("\r")) entry = entry.Replace("\r", "\\r");
-                if (entry.Contains("\n")) entry = entry.Replace("\n", "\\n");
+                var entry = Base64Encode(JsonConvert.SerializeObject(message, Formatting.None));
                 File.AppendAllLines(filename, new[] {entry});
             }
             catch
@@ -211,6 +210,18 @@ namespace Civic.Core.Logging
                 if (count < 2) goto again;
                 else throw;
             }
+        }
+
+        private static string Base64Encode(string plainText)
+        {
+            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
+            return System.Convert.ToBase64String(plainTextBytes);
+        }
+
+        private static string Base64Decode(string base64EncodedData)
+        {
+            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
+            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
         /// <summary>
