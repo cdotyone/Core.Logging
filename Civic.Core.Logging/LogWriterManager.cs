@@ -103,24 +103,22 @@ namespace Civic.Core.Logging
                         continue;
 
                     var task = writerConfig.Writer.Log(message);
+                    task.ContinueWith(completed =>
+                    {
+                        var result = completed.Result;
+                        if (!result.Success)
+                        {
+                            allSuccess = false;
+                            WriteFailure(result.Message, result.Name);
+                        }
+                    });
                     task.Start();
                     tasks.Add(task);
+                   
                 }
                 catch (Exception ex)
                 {
                     Logger.LogError(LoggingBoundaries.ServiceBoundary, "Failed to log to writer {0}", ex);
-                }
-            }
-
-            Task.WaitAll(tasks.ToArray());
-
-            foreach (var task in tasks)
-            {
-                var result = task.Result;
-                if (!result.Success)
-                {
-                    allSuccess = false;
-                    WriteFailure(result.Message, result.Name);
                 }
             }
 
