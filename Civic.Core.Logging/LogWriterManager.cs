@@ -176,11 +176,6 @@ namespace Civic.Core.Logging
                             if (File.Exists(filename)) File.Delete(filename);
                         }
                     }
-
-                    if (Directory.GetFiles(RecoveryDirectory).Length == 0)
-                    {
-                        if (Directory.Exists(RecoveryDirectory)) Directory.Delete(RecoveryDirectory);
-                    }
                 }
             }
             catch (Exception ex)
@@ -196,13 +191,26 @@ namespace Civic.Core.Logging
         /// <param name="name">name of log writer we are logging failure</param>
         public static void WriteFailure(ILogMessage message, string name)
         {
-            if (!Directory.Exists(RecoveryDirectory)) Directory.CreateDirectory(RecoveryDirectory);
+            int count = 0;
 
-            var filename = GenerateLogFileName(name, false);
-            var entry = JsonConvert.SerializeObject(message, Formatting.None);
-            if (entry.Contains("\r")) entry = entry.Replace("\r", "\\r");
-            if (entry.Contains("\n")) entry = entry.Replace("\n", "\\n");
-            File.AppendAllLines(filename, new[] {entry});
+            again:
+
+            try
+            {
+                if (!Directory.Exists(RecoveryDirectory)) Directory.CreateDirectory(RecoveryDirectory);
+
+                var filename = GenerateLogFileName(name, count>0);
+                count++;
+                var entry = JsonConvert.SerializeObject(message, Formatting.None);
+                if (entry.Contains("\r")) entry = entry.Replace("\r", "\\r");
+                if (entry.Contains("\n")) entry = entry.Replace("\n", "\\n");
+                File.AppendAllLines(filename, new[] {entry});
+            }
+            catch
+            {
+                if (count < 2) goto again;
+                else throw;
+            }
         }
 
         /// <summary>
@@ -218,7 +226,7 @@ namespace Civic.Core.Logging
             {
                 if (!_failureFilenames.ContainsKey(name) || forceNew)
                 {
-                    _failureFilenames[name] = RecoveryDirectory + Path.DirectorySeparatorChar + name + "_" + Path.GetRandomFileName();
+                    _failureFilenames[name] = Path.Combine(RecoveryDirectory,name + "_" + Path.GetRandomFileName());
                 }
                 name = _failureFilenames[name];
             }
