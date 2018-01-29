@@ -138,7 +138,7 @@ namespace Civic.Core.Logging
                     var files = Directory.GetFiles(RecoveryDirectory);
                     foreach (var filename in files)
                     {
-                        var parts = filename.Split('_');
+                        var parts = Path.GetFileNameWithoutExtension(filename).Split('_');
 
                         LoggerConfig logger = null;
 
@@ -146,7 +146,7 @@ namespace Civic.Core.Logging
                         {
                             foreach (LoggerConfig logWriter in _logWriters)
                             {
-                                if (string.Compare(logWriter.Name, parts[0], StringComparison.InvariantCultureIgnoreCase) == 0) continue;
+                                if (string.Compare(logWriter.Name, parts[0], StringComparison.InvariantCultureIgnoreCase) != 0) continue;
                                 logger = logWriter;
                                 break;
                             }
