@@ -62,7 +62,6 @@ namespace Civic.Core.Logging
         public static List<ILogWriter> Loggers
         {
             get { return _loggers; }
-            private set { _loggers = value; }
         }
 
         /// <summary>
@@ -70,7 +69,13 @@ namespace Civic.Core.Logging
         /// </summary>
         protected static int PendingLogEntries
         {
-            get { return _eventQueue.Count; }
+            get
+            {
+                lock (_eventQueue)
+                {
+                    return _eventQueue.Count;
+                }
+            }
         }
 
         #endregion Properties
@@ -115,8 +120,9 @@ namespace Civic.Core.Logging
                     iLog.Flush();
                 }
             }
-            catch (Exception)
+            catch
             {
+                //INTENTIONALLY BLANK
             }
         }
 
@@ -257,7 +263,7 @@ namespace Civic.Core.Logging
         public static bool LogTrace(LoggingBoundaries boundary, params object[] parameterValues)
         {
             if (_config == null) Init();
-            if (!IsTraceOn && !Debugger.IsAttached) return false;
+            if (_config != null && !_config.Transmission) return false;
             return Log(LogMessage.LogTrace(boundary, parameterValues));
         }
 
@@ -384,6 +390,7 @@ namespace Civic.Core.Logging
                     }
                     catch (Exception)
                     {
+                        // INTENTIONALLY LEFT BLANK
                     }
                 }
             }

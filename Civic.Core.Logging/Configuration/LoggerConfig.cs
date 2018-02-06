@@ -92,7 +92,7 @@ namespace Civic.Core.Logging.Configuration
 
             config.ExcludeSeverity = configElement.Attributes.ContainsKey(Constants.CONFIG_EXCLUDESEVERITY_PROP) && string.IsNullOrEmpty(configElement.Attributes[Constants.CONFIG_EXCLUDESEVERITY_PROP]) ?
                         new List<string>(configElement.Attributes[Constants.CONFIG_EXCLUDESEVERITY_PROP].Split(','))
-                      : new List<string>(new [] {LogSeverity.Transmission.ToString()});
+                      : new List<string>();
 
             config.ExcludeBoundary = configElement.Attributes.ContainsKey(Constants.CONFIG_EXCLUDEBOUNDARY_PROP) && string.IsNullOrEmpty(configElement.Attributes[Constants.CONFIG_EXCLUDEBOUNDARY_PROP]) ?
                         new List<string>(configElement.Attributes[Constants.CONFIG_EXCLUDEBOUNDARY_PROP].Split(','))
