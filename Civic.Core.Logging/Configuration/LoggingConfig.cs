@@ -20,6 +20,7 @@ namespace Civic.Core.Logging.Configuration {
         private string _applicationName;
         private string _logName;
         private bool _trace;
+        private bool _logTransmissions;
         private bool _useThread;
 
         public LoggingConfig(INamedElement element)
@@ -39,6 +40,7 @@ namespace Civic.Core.Logging.Configuration {
             _environmentCode = civicSection.EnvironmentCode;
             _logName = Attributes.ContainsKey(Constants.CONFIG_LOGNAME_PROP) ? Attributes[Constants.CONFIG_LOGNAME_PROP] : Constants.CONFIG_LOGNAME_DEFAULT;
             _trace = Attributes.ContainsKey(Constants.CONFIG_TRACE_PROP) && bool.Parse(Attributes[Constants.CONFIG_TRACE_PROP]);
+            _logTransmissions = Attributes.ContainsKey(Constants.CONFIG_TRANSMISSION_PROP) && bool.Parse(Attributes[Constants.CONFIG_TRANSMISSION_PROP]);
             _useThread = Attributes.ContainsKey(Constants.CONFIG_USETHREAD_PROP) && bool.Parse(Attributes[Constants.CONFIG_USETHREAD_PROP]);
         }
 
@@ -119,6 +121,12 @@ namespace Civic.Core.Logging.Configuration {
         {
             get { return _trace; }
             set { _trace = value; base[Constants.CONFIG_TRACE_PROP] = value; }
+        }
+
+        public bool Transmission
+        {
+            get { return _logTransmissions; }
+            set { _logTransmissions = value; base[Constants.CONFIG_TRANSMISSION_PROP] = value; }
         }
 
         public bool UseThread

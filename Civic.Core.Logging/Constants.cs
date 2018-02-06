@@ -11,6 +11,8 @@
         public const string CONFIG_LOGNAME_DEFAULT = "civic";
         public const string CONFIG_USETHREAD_PROP = "useThread";
         public const string CONFIG_TRACE_PROP = "trace";
+        public const string CONFIG_TRANSMISSION_PROP = "transmission";
+        
         public const string CONFIG_APPNAME_PROP = "appname";
 
         public const string CONFIG_LOGGERS_PROP = "loggers";
