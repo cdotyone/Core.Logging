@@ -202,7 +202,9 @@ namespace Civic.Core.Logging
             try
             {
                 if (parameterValues.Length == 0) throw new Exception("must provide at least one parameter");
-                return new LogMessage(LoggingBoundaries.ServiceBoundary, LogSeverity.Trace, parameterValues) { TrackingGUID = trackingGUID };
+                var message = new LogMessage(LoggingBoundaries.ServiceBoundary, LogSeverity.Trace, parameterValues);
+                message.TrackingGUID = trackingGUID;
+                return message;
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch (Exception)
