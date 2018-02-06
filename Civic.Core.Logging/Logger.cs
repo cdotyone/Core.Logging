@@ -263,7 +263,7 @@ namespace Civic.Core.Logging
         public static bool LogTrace(LoggingBoundaries boundary, params object[] parameterValues)
         {
             if (_config == null) Init();
-            if (_config != null && !_config.Transmission) return false;
+            if (!IsTraceOn && !Debugger.IsAttached) return false;
             return Log(LogMessage.LogTrace(boundary, parameterValues));
         }
 
@@ -273,7 +273,7 @@ namespace Civic.Core.Logging
         public static bool LogTransmission(params object[] parameterValues)
         {
             if (_config == null) Init();
-            if (!IsTraceOn && !Debugger.IsAttached) return false;
+            if (_config != null && !_config.Transmission) return false;
             return Log(LogMessage.LogTransmission(parameterValues));
         }
 
