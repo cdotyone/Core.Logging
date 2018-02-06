@@ -271,11 +271,11 @@ namespace Civic.Core.Logging
         /// <summary>
         /// Logs service transmissions
         /// </summary>
-        public static bool LogTransmission(params object[] parameterValues)
+        public static bool LogTransmission(string trackingGUID,params object[] parameterValues)
         {
             if (_config == null) Init();
             if (_config != null && !_config.Transmission) return false;
-            return Log(LogMessage.LogTransmission(parameterValues));
+            return Log(LogMessage.LogTransmission(trackingGUID, parameterValues));
         }
 
         public static IDisposable CreateTrace(LoggingBoundaries boundary, params object[] parameterValues)
