@@ -261,6 +261,16 @@ namespace Civic.Core.Logging
             return Log(LogMessage.LogTrace(boundary, parameterValues));
         }
 
+        /// <summary>
+        /// Logs service transmissions
+        /// </summary>
+        public static bool LogTransmission(params object[] parameterValues)
+        {
+            if (_config == null) Init();
+            if (!IsTraceOn && !Debugger.IsAttached) return false;
+            return Log(LogMessage.LogTransmission(parameterValues));
+        }
+
         public static IDisposable CreateTrace(LoggingBoundaries boundary, params object[] parameterValues)
         {
             if (_config == null) Init();

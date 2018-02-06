@@ -21,7 +21,7 @@ namespace Civic.Core.Logging
     {
         #region Fields
 
-        private static Dictionary<string,string> _failureFilenames = new Dictionary<string, string>();
+        private static readonly Dictionary<string,string> _failureFilenames = new Dictionary<string, string>();
         private static readonly object _filenameLock = new object();
 
         private static readonly List<LoggerConfig> _logWriters = new List<LoggerConfig>();
@@ -93,14 +93,14 @@ namespace Civic.Core.Logging
             }
 
             // ReSharper disable once InconsistentlySynchronizedField
-
-            var tasks = new List<Task<LogWriterResult>>();
-
             foreach (var writerConfig in _logWriters)
             {
                 try
                 {
-                    if (!(writerConfig.FilterBy.Count == 0 || writerConfig.FilterBy.Contains(message.Type.ToString())))
+                    if (!(writerConfig.ExcludeSeverity.Count == 0 || writerConfig.ExcludeSeverity.Contains(message.Type.ToString())))
+                        continue;
+
+                    if (!(writerConfig.ExcludeBoundary.Count == 0 || writerConfig.ExcludeBoundary.Contains(message.Boundary.ToString())))
                         continue;
 
                     var task = writerConfig.Writer.Log(message);
@@ -114,8 +114,6 @@ namespace Civic.Core.Logging
                         }
                     });
                     task.Start();
-                    tasks.Add(task);
-                   
                 }
                 catch (Exception ex)
                 {
@@ -169,8 +167,6 @@ namespace Civic.Core.Logging
                                         var task = logger.Writer.Log(logEntry);
                                         task.Start();
                                         Task.WaitAll(new Task[] {task});
-                                        if (task.Result.Success) continue;
-                                        else break;
                                     }
                                 }
                             }
@@ -214,14 +210,14 @@ namespace Civic.Core.Logging
 
         private static string Base64Encode(string plainText)
         {
-            var plainTextBytes = System.Text.Encoding.UTF8.GetBytes(plainText);
-            return System.Convert.ToBase64String(plainTextBytes);
+            var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
+            return Convert.ToBase64String(plainTextBytes);
         }
 
         private static string Base64Decode(string base64EncodedData)
         {
-            var base64EncodedBytes = System.Convert.FromBase64String(base64EncodedData);
-            return System.Text.Encoding.UTF8.GetString(base64EncodedBytes);
+            var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
+            return Encoding.UTF8.GetString(base64EncodedBytes);
         }
 
         /// <summary>

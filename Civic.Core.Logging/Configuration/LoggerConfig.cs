@@ -1,5 +1,7 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using Civic.Core.Configuration;
 
 namespace Civic.Core.Logging.Configuration
@@ -25,9 +27,9 @@ namespace Civic.Core.Logging.Configuration
 
         public Dictionary<string, string> Attributes { get; set; }
 
-        public List<string> AppliesTo { get; set; }
+        public List<string> ExcludeBoundary { get; set; }
 
-        public List<string> FilterBy { get; set; }
+        public List<string> ExcludeSeverity { get; set; }
 
         public int RescanTime { get; set; }
 
@@ -45,8 +47,8 @@ namespace Civic.Core.Logging.Configuration
                 UseThread = from.UseThread,
                 UseFailureRecovery = from.UseFailureRecovery,
                 Attributes = from.Attributes.Clone(),
-                AppliesTo = new List<string>(from.AppliesTo.Clone()),
-                FilterBy = new List<string>(from.FilterBy.Clone()),
+                ExcludeBoundary = new List<string>(from.ExcludeBoundary.Clone()),
+                ExcludeSeverity = new List<string>(from.ExcludeSeverity.Clone()),
                 RescanTime = from.RescanTime,
                 RecoveryTime = from.RecoveryTime
             };
@@ -88,12 +90,12 @@ namespace Civic.Core.Logging.Configuration
                 ? int.Parse(config.Attributes[Constants.CONFIG_RECOVERYTIME_PROP])
                 : LoggingConfig.Current.DefaultRecoveryTime;
 
-            config.FilterBy = configElement.Attributes.ContainsKey(Constants.CONFIG_FILTERBY_PROP) ?
-                        new List<string>(configElement.Attributes[Constants.CONFIG_FILTERBY_PROP].Split(','))
-                      : new List<string>();
+            config.ExcludeSeverity = configElement.Attributes.ContainsKey(Constants.CONFIG_EXCLUDESEVERITY_PROP) && string.IsNullOrEmpty(configElement.Attributes[Constants.CONFIG_EXCLUDESEVERITY_PROP]) ?
+                        new List<string>(configElement.Attributes[Constants.CONFIG_EXCLUDESEVERITY_PROP].Split(','))
+                      : new List<string>(new [] {LogSeverity.Transmission.ToString()});
 
-            config.AppliesTo = configElement.Attributes.ContainsKey(Constants.CONFIG_APPLIESTO_PROP) ?
-                        new List<string>(configElement.Attributes[Constants.CONFIG_APPLIESTO_PROP].Split(','))
+            config.ExcludeBoundary = configElement.Attributes.ContainsKey(Constants.CONFIG_EXCLUDEBOUNDARY_PROP) && string.IsNullOrEmpty(configElement.Attributes[Constants.CONFIG_EXCLUDEBOUNDARY_PROP]) ?
+                        new List<string>(configElement.Attributes[Constants.CONFIG_EXCLUDEBOUNDARY_PROP].Split(','))
                       : new List<string>();
 
             return config;
