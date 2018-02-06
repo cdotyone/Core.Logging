@@ -22,8 +22,8 @@
 
 
         // added to combine configuration sections to one place for all logging services
-        public const string CONFIG_FILTERBY_PROP = "filterBy";
-        public const string CONFIG_APPLIESTO_PROP = "appliesTo";
+        public const string CONFIG_EXCLUDESEVERITY_PROP = "excludeSeverity";
+        public const string CONFIG_EXCLUDEBOUNDARY_PROP = "excludeBondary";
         public const string CONFIG_WRITERS_PROP = "writers";
         public const string CONFIG_READERS_PROP = "readers";
 

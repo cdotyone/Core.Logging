@@ -193,6 +193,24 @@ namespace Civic.Core.Logging
             return null;
         }
 
+
+        /// <summary>
+        /// Logs service tranmissions
+        /// </summary>
+        public static LogMessage LogTransmission(params object[] parameterValues)
+        {
+            try
+            {
+                if (parameterValues.Length == 0) throw new Exception("must provide at least one parameter");
+                return new LogMessage(LoggingBoundaries.ServiceBoundary, LogSeverity.Trace, parameterValues);
+            }
+            // ReSharper disable once EmptyGeneralCatchClause
+            catch (Exception)
+            {
+            }
+            return null;
+        }
+
         /// <summary>
         /// Log event for recording warning messages 
         /// </summary>

@@ -19,6 +19,7 @@ namespace Civic.Core.Logging
         Error,
         Warning,
         Information,
-        Trace
+        Trace,
+        Transmission
     }
 }
