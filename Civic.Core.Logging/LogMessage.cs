@@ -202,7 +202,7 @@ namespace Civic.Core.Logging
             try
             {
                 if (parameterValues.Length == 0) throw new Exception("must provide at least one parameter");
-                var message = new LogMessage(LoggingBoundaries.ServiceBoundary, LogSeverity.Trace, parameterValues);
+                var message = new LogMessage(LoggingBoundaries.ServiceBoundary, LogSeverity.Transmission, parameterValues);
                 message.TrackingGUID = trackingGUID;
                 return message;
             }
