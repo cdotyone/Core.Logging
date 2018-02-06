@@ -8,6 +8,7 @@ using System.Reflection;
 using System.Security;
 using System.Security.Principal;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Xml;
 using Civic.Core.Configuration;
 using Civic.Core.Logging.Configuration;
@@ -263,7 +264,7 @@ namespace Civic.Core.Logging
         public static bool LogTrace(LoggingBoundaries boundary, params object[] parameterValues)
         {
             if (_config == null) Init();
-            if (!IsTraceOn && !Debugger.IsAttached) return false;
+            if (!IsTraceOn || !Debugger.IsAttached) return false;
             return Log(LogMessage.LogTrace(boundary, parameterValues));
         }
 
@@ -383,10 +384,16 @@ namespace Civic.Core.Logging
                 {
                     try
                     {
+                        var all = new List<Task>();
+
                         foreach (ILogWriter iLog in Loggers)
                         {
-                            iLog.Log(m);
+                            var task = iLog.Log(m);
+                            task.Start();
+                            all.Add(task);
                         }
+
+                        Task.WaitAll(all.ToArray());
                     }
                     catch (Exception)
                     {
