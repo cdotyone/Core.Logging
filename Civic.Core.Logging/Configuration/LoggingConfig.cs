@@ -227,6 +227,7 @@ namespace Civic.Core.Logging.Configuration {
         private string GetAttribute(string name, string defaultValue)
         {
             if (Attributes.ContainsKey(name)) return Attributes[name];
+            if (_coreConfig.Attributes.ContainsKey(name)) return _coreConfig.Attributes[name];
             if (string.IsNullOrEmpty(ConfigurationManager.AppSettings[name])) return defaultValue;
             return ConfigurationManager.AppSettings[name];
         }
