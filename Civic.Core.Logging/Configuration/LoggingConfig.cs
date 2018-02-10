@@ -39,7 +39,7 @@ namespace Civic.Core.Logging.Configuration {
             _clientCode = civicSection.ClientCode;
             _environmentCode = civicSection.EnvironmentCode;
             _logName = Attributes.ContainsKey(Constants.CONFIG_LOGNAME_PROP) ? Attributes[Constants.CONFIG_LOGNAME_PROP] : Constants.CONFIG_LOGNAME_DEFAULT;
-            _trace = Attributes.ContainsKey(Constants.CONFIG_TRACE_PROP) && bool.Parse(Attributes[Constants.CONFIG_TRACE_PROP]);
+            _trace = bool.Parse(GetAttribute(Constants.CONFIG_TRACE_PROP, "false"));
             _logTransmissions = Attributes.ContainsKey(Constants.CONFIG_TRANSMISSION_PROP) && bool.Parse(Attributes[Constants.CONFIG_TRANSMISSION_PROP]);
             _useThread = Attributes.ContainsKey(Constants.CONFIG_USETHREAD_PROP) && bool.Parse(Attributes[Constants.CONFIG_USETHREAD_PROP]);
         }

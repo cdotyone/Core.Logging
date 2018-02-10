@@ -389,11 +389,17 @@ namespace Civic.Core.Logging
                         foreach (ILogWriter iLog in Loggers)
                         {
                             var task = iLog.Log(m);
-                            task.Start();
+                            if (_config != null && _config.UseThread)
+                            {
+                                task.Start();
+                            }
+                            else task.RunSynchronously();
+
                             all.Add(task);
                         }
 
-                        Task.WaitAll(all.ToArray());
+                        if (_config != null && _config.UseThread)
+                            Task.WaitAll(all.ToArray());
                     }
                     catch (Exception)
                     {
