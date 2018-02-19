@@ -153,8 +153,9 @@ namespace Civic.Core.Logging
                 return new LogMessage(boundary, LogSeverity.Error, parameterValues);
             }
             // ReSharper disable once EmptyGeneralCatchClause
-            catch (Exception)
+            catch (Exception ex)
             {
+                return new LogMessage(boundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
             }
             return null;
         }
@@ -170,8 +171,9 @@ namespace Civic.Core.Logging
                 return new LogMessage(boundary, LogSeverity.Information, parameterValues);
             }
             // ReSharper disable once EmptyGeneralCatchClause
-            catch (Exception)
+            catch (Exception ex)
             {
+                return new LogMessage(boundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
             }
             return null;
         }
@@ -187,8 +189,9 @@ namespace Civic.Core.Logging
                 return new LogMessage(boundary, LogSeverity.Trace, parameterValues);
             }
             // ReSharper disable once EmptyGeneralCatchClause
-            catch (Exception)
+            catch (Exception ex)
             {
+                return new LogMessage(boundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
             }
             return null;
         }
@@ -207,8 +210,9 @@ namespace Civic.Core.Logging
                 return message;
             }
             // ReSharper disable once EmptyGeneralCatchClause
-            catch (Exception)
+            catch (Exception ex)
             {
+                return new LogMessage(LoggingBoundaries.ServiceBoundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
             }
             return null;
         }
@@ -224,8 +228,9 @@ namespace Civic.Core.Logging
                 return new LogMessage(boundary, LogSeverity.Warning, parameterValues);
             }
             // ReSharper disable once EmptyGeneralCatchClause
-            catch (Exception)
+            catch (Exception ex)
             {
+                return new LogMessage(boundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
             }
 
             return null;
