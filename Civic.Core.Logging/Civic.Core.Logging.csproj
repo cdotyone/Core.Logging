@@ -101,11 +101,7 @@
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Civic.Core.Configuration">
-<<<<<<< HEAD
-      <Version>1.25.1955</Version>
-=======
       <Version>1.25.1543</Version>
->>>>>>> 5afd825920e737838037b695769120f79043ec2d
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="11.0.2" />
   </ItemGroup>
