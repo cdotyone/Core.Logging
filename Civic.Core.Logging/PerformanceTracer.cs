@@ -49,7 +49,7 @@ namespace Civic.Core.Logging
                 if (parameterValues[i] is Type)
                     operation += "." + ((Type) parameterValues[i]).Name;
                 else
-                    operation += "." + parameterValues[i].ToString();
+                    operation += "." + Convert.ToString(parameterValues[i]);
             }
 
             _operation = operation;
