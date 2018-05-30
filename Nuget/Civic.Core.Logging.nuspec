@@ -26,5 +26,7 @@
     <file src="..\Civic.Core.Logging\bin\nuget-45\Civic.Core.Logging.pdb" target="lib\net45" />
     <file src="..\Civic.Core.Logging\bin\nuget-46\Civic.Core.Logging.Dll" target="lib\net46" />
     <file src="..\Civic.Core.Logging\bin\nuget-46\Civic.Core.Logging.pdb" target="lib\net46" />
+    <file src="..\Civic.Core.Logging\bin\nuget-47\Civic.Core.Logging.Dll" target="lib\net47" />
+    <file src="..\Civic.Core.Logging\bin\nuget-47\Civic.Core.Logging.pdb" target="lib\net47" />
   </files>
 </package>
