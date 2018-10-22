@@ -12,7 +12,8 @@
     <summary>Civic.Core.Logging</summary>
     <dependencies>
       <group>
-        <dependency id="Civic.Core.Logging" version="$version$" xmlns="" />
+        <dependency id="Microsoft.ApplicationInsights" version="[2.8.0,3.0.0)" xmlns="" />
+        <dependency id="Newtonsoft.Json" version="[11.0.2,12.0.0)" xmlns="" />
       </group>
     </dependencies>
     <frameworkAssemblies>
