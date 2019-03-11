@@ -84,6 +84,11 @@ namespace log4net
             Logger.Log(LogMessage.LogInformation(LoggingBoundaries.Unknown, message));
         }
 
+        public void Warn(string message)
+        {
+            Logger.Log(LogMessage.LogWarning(LoggingBoundaries.Unknown, message));
+        }
+
         #endregion Methods
     }
 }
