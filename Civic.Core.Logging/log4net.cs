@@ -67,6 +67,8 @@ namespace log4net
 
         void Info(string message);
 
+        void Warn(string message);
+
         #endregion Methods
     }
 }
