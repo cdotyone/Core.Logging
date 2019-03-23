@@ -1,7 +1,6 @@
 ﻿using System;
-using System.ServiceModel;
 
-namespace Civic.Core.Logging
+namespace Core.Logging
 {
     public static class ExceptionExtension
     {
@@ -32,20 +31,20 @@ namespace Civic.Core.Logging
             }
             else
             {
-                if (ex is FaultException<ReceiverFaultDetail>)
-                {
-                    ret = ((FaultException<ReceiverFaultDetail>)ex).Detail.ReferenceID;
-                }
-                else if (ex is FaultException<SenderFaultDetail>)
-                {
-                    ret = ((FaultException<SenderFaultDetail>)ex).Detail.ReferenceID;
-                }
-                else
-                {
+                //if (ex is FaultException<ReceiverFaultDetail>)
+                //{
+                //    ret = ((FaultException<ReceiverFaultDetail>)ex).Detail.ReferenceID;
+                //}
+                //else if (ex is FaultException<SenderFaultDetail>)
+                //{
+                //    ret = ((FaultException<SenderFaultDetail>)ex).Detail.ReferenceID;
+                //}
+                //else
+                //{
                     //Recursively call down the inner exceptions to see if we
                     //have a reference id in one of the inner exceptions.
                     ret = GetReferenceID(ex.InnerException);
-                }
+                //}
                 //Add the referenceid to the data collection so it
                 //won't have to call recursively again.
                 ex.Data.Add(refID, ret);

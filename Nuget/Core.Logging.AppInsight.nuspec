@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
   <metadata>
-    <id>Civic.Core.Logging.AppInsight</id>
+    <id>Core.Logging.AppInsight</id>
     <version>$version$</version>
     <title />
     <authors>Chris Doty</authors>
@@ -9,7 +9,7 @@
     <iconUrl>http://nuget.civic.com/content/core.png</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Logging and Instrumentation Abstraction Layer - Application Insight Provider Dll</description>
-    <summary>Civic.Core.Logging.AppInsight</summary>
+    <summary>Core.Logging.AppInsight</summary>
     <dependencies>
       <group>
         <dependency id="Microsoft.ApplicationInsights" version="[2.9.1,3.0.0)" xmlns="" />
@@ -22,11 +22,7 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\Civic.Core.Logging.AppInsight\bin\nuget-45\Civic.Core.Logging.AppInsight.Dll" target="lib\net45" />
-    <file src="..\Civic.Core.Logging.AppInsight\bin\nuget-45\Civic.Core.Logging.AppInsight.pdb" target="lib\net45" />
-    <file src="..\Civic.Core.Logging.AppInsight\bin\nuget-46\Civic.Core.Logging.AppInsight.Dll" target="lib\net46" />
-    <file src="..\Civic.Core.Logging.AppInsight\bin\nuget-46\Civic.Core.Logging.AppInsight.pdb" target="lib\net46" />
-    <file src="..\Civic.Core.Logging.AppInsight\bin\nuget-47\Civic.Core.Logging.AppInsight.Dll" target="lib\net47" />
-    <file src="..\Civic.Core.Logging.AppInsight\bin\nuget-47\Civic.Core.Logging.AppInsight.pdb" target="lib\net47" />
+    <file src="..\Core.Configuration.AppInsight\bin\Release\net471\Core.Configuration.AppInsight.*" target="lib\net471" />
+    <file src="..\Core.Configuration.AppInsight\bin\Release\netstandard2.0\Core.Configuration.AppInsight.*" target="lib\netstandard2.0" />
   </files>
 </package>

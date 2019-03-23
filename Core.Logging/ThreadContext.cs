@@ -1,4 +1,4 @@
-namespace log4net
+namespace Core.Logging
 {
     /// <summary>
     /// this is used for log4net compatiblity

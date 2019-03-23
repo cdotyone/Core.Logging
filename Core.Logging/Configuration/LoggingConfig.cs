@@ -1,10 +1,10 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using Civic.Core.Configuration;
-using Civic.Core.Logging.LogWriters;
+using Core.Configuration;
+using Core.Logging.LogWriters;
 
-namespace Civic.Core.Logging.Configuration {
+namespace Core.Logging.Configuration {
 
     public class LoggingConfig : NamedConfigurationElement
     {
@@ -148,12 +148,12 @@ namespace Civic.Core.Logging.Configuration {
                 {
                     _loggers = new List<LoggerConfig>(new[]
                     {
-                        new LoggerConfig
-                        {
-                            Name = Constants.CONFIG_LOGNAME_DEFAULT,
-                            Assembly = typeof (MSMQLogger).Assembly.FullName,
-                            Type = typeof (MSMQLogger).FullName
-                        },
+                        //new LoggerConfig
+                        //{
+                        //    Name = Constants.CONFIG_LOGNAME_DEFAULT,
+                        //    Assembly = typeof (MSMQLogger).Assembly.FullName,
+                        //    Type = typeof (MSMQLogger).FullName
+                        //},
                         new LoggerConfig
                         {
                             Name = "DEBUG",
@@ -169,9 +169,9 @@ namespace Civic.Core.Logging.Configuration {
                     {
                         new LoggerConfig
                         {
-                            Name = Constants.CONFIG_LOGNAME_DEFAULT,
-                            Assembly = typeof (MSMQLogger).Assembly.FullName,
-                            Type = typeof (MSMQLogger).FullName
+                            Name = "DEBUG",
+                            Assembly = typeof (DebugLogger).Assembly.FullName,
+                            Type = typeof (DebugLogger).FullName
                         }
                     });
                 }

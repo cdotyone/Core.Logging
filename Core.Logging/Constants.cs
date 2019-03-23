@@ -1,4 +1,4 @@
-﻿namespace Civic.Core.Logging
+﻿namespace Core.Logging
 {
     internal class Constants
     {

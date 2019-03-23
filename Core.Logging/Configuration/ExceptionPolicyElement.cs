@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Configuration;
-using Civic.Core.Configuration;
+using Core.Configuration;
 
-namespace Civic.Core.Logging.Configuration
+namespace Core.Logging.Configuration
 {
     public class ExceptionPolicyElement
     {

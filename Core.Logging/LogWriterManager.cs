@@ -6,13 +6,13 @@ using System.Configuration;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Civic.Core.Configuration;
-using Civic.Core.Logging.Configuration;
+using Core.Configuration.Framework;
+using Core.Logging.Configuration;
 using Newtonsoft.Json;
 
 #endregion References
 
-namespace Civic.Core.Logging
+namespace Core.Logging
 {
     /// <summary>
     /// Primary logging class.  This does all of the routing to the log writers

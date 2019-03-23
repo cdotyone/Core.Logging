@@ -15,7 +15,7 @@ using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
 
-namespace Civic.Core.Logging
+namespace Core.Logging
 {
     internal class PerformanceTracer : IDisposable
     {
@@ -125,8 +125,13 @@ namespace Civic.Core.Logging
 			{
                 var permissionSet = new PermissionSet(PermissionState.None);
                 permissionSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.UnmanagedCode));
+
+                #if NETFULL
                 tracingAvailable = permissionSet.IsSubsetOf(AppDomain.CurrentDomain.PermissionSet);
-			}
+                #else
+                tracingAvailable = false; // not sure so we will turn it off for now
+                #endif
+            }
 			catch (SecurityException)
 			{ }
 
