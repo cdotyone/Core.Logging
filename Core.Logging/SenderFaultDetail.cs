@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Civic.Core.Logging
+namespace Core.Logging
 {
     [DataContract(Namespace = "http://schemas.thatindigogirl.com/samples/2006/06")]
     public class SenderFaultDetail

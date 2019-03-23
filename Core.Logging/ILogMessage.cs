@@ -15,7 +15,7 @@ using System.Collections.Generic;
 
 #endregion References
 
-namespace Civic.Core.Logging
+namespace Core.Logging
 {
     #region Enumerations
 

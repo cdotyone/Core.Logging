@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 
 #endregion References
 
-namespace Civic.Core.Logging
+namespace Core.Logging
 {
     [Serializable]
     public class LogMessage : ILogMessage

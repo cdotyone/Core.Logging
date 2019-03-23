@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Civic.Core.Logging.Configuration
+namespace Core.Logging.Configuration
 {
     internal static class Cloner
     {

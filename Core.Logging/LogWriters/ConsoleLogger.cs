@@ -12,11 +12,11 @@
 
 using System;
 using System.Threading.Tasks;
-using Civic.Core.Logging.Configuration;
+using Core.Logging.Configuration;
 
 #endregion References
 
-namespace Civic.Core.Logging.LogWriters
+namespace Core.Logging.LogWriters
 {
     public class ConsoleLogger : ILogWriter
     {

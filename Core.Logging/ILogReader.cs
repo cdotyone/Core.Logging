@@ -1,7 +1,6 @@
-using System.Collections.Generic;
-using Civic.Core.Logging.Configuration;
+using Core.Logging.Configuration;
 
-namespace Civic.Core.Logging
+namespace Core.Logging
 {
     /// <summary>
     /// Describes a log reader

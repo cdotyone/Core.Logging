@@ -8,7 +8,7 @@
 
 #endregion Copyright / Comments
 
-namespace Civic.Core.Logging
+namespace Core.Logging
 {
 	public enum LoggingBoundaries
 	{

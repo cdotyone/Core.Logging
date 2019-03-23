@@ -11,17 +11,14 @@
 #region References
 
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
-using System.Threading;
 using System.Threading.Tasks;
-using Civic.Core.Logging.Configuration;
+using Core.Logging.Configuration;
 using Newtonsoft.Json;
 
 #endregion References
 
-namespace Civic.Core.Logging.LogWriters
+namespace Core.Logging.LogWriters
 {
     [Serializable]
     public class FileLogger : ILogWriter

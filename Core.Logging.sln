@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2003
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{F9CB147E-97DB-4899-93EC-95417286D356}"
+	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
+		.gitlab-ci.yml = .gitlab-ci.yml
+		Nuget\Core.Logging.AppInsight.nuspec = Nuget\Core.Logging.AppInsight.nuspec
+		Nuget\Core.Logging.nuspec = Nuget\Core.Logging.nuspec
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Logging", "Core.Logging\Core.Logging.csproj", "{C793DAE5-1585-42B3-BF33-7A74164BFB99}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Logging.AppInsight", "Core.Logging.AppInsight\Core.Logging.AppInsight.csproj", "{199EFAD4-0A24-4E12-BF71-466CCAA25E94}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Nuget-45|Any CPU = Nuget-45|Any CPU
+		Nuget-46|Any CPU = Nuget-46|Any CPU
+		Nuget-47|Any CPU = Nuget-47|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C793DAE5-1585-42B3-BF33-7A74164BFB99}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C793DAE5-1585-42B3-BF33-7A74164BFB99}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C793DAE5-1585-42B3-BF33-7A74164BFB99}.Nuget-45|Any CPU.ActiveCfg = Debug|Any CPU
+		{C793DAE5-1585-42B3-BF33-7A74164BFB99}.Nuget-45|Any CPU.Build.0 = Debug|Any CPU
+		{C793DAE5-1585-42B3-BF33-7A74164BFB99}.Nuget-46|Any CPU.ActiveCfg = Debug|Any CPU
+		{C793DAE5-1585-42B3-BF33-7A74164BFB99}.Nuget-46|Any CPU.Build.0 = Debug|Any CPU
+		{C793DAE5-1585-42B3-BF33-7A74164BFB99}.Nuget-47|Any CPU.ActiveCfg = Debug|Any CPU
+		{C793DAE5-1585-42B3-BF33-7A74164BFB99}.Nuget-47|Any CPU.Build.0 = Debug|Any CPU
+		{C793DAE5-1585-42B3-BF33-7A74164BFB99}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C793DAE5-1585-42B3-BF33-7A74164BFB99}.Release|Any CPU.Build.0 = Release|Any CPU
+		{199EFAD4-0A24-4E12-BF71-466CCAA25E94}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{199EFAD4-0A24-4E12-BF71-466CCAA25E94}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{199EFAD4-0A24-4E12-BF71-466CCAA25E94}.Nuget-45|Any CPU.ActiveCfg = Debug|Any CPU
+		{199EFAD4-0A24-4E12-BF71-466CCAA25E94}.Nuget-45|Any CPU.Build.0 = Debug|Any CPU
+		{199EFAD4-0A24-4E12-BF71-466CCAA25E94}.Nuget-46|Any CPU.ActiveCfg = Debug|Any CPU
+		{199EFAD4-0A24-4E12-BF71-466CCAA25E94}.Nuget-46|Any CPU.Build.0 = Debug|Any CPU
+		{199EFAD4-0A24-4E12-BF71-466CCAA25E94}.Nuget-47|Any CPU.ActiveCfg = Debug|Any CPU
+		{199EFAD4-0A24-4E12-BF71-466CCAA25E94}.Nuget-47|Any CPU.Build.0 = Debug|Any CPU
+		{199EFAD4-0A24-4E12-BF71-466CCAA25E94}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{199EFAD4-0A24-4E12-BF71-466CCAA25E94}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6C97A49A-6F08-4420-90D0-D439C8DFBB91}
+	EndGlobalSection
+EndGlobal

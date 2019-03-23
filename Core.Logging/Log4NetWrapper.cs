@@ -11,7 +11,7 @@
 #region References
 
 using System;
-using Civic.Core.Logging;
+using Core.Logging;
 
 #endregion References
 

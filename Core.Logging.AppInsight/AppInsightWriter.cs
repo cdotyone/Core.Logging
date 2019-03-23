@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Civic.Core.Logging.Configuration;
+using Core.Logging.Configuration;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
 using Newtonsoft.Json;
 
-namespace Civic.Core.Logging.AppInsight
+namespace Core.Logging.AppInsight
 {
     public class AppInsightWriter : ILogWriter
     {

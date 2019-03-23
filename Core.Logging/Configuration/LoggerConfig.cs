@@ -1,10 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using Civic.Core.Configuration;
+using Core.Configuration;
 
-namespace Civic.Core.Logging.Configuration
+namespace Core.Logging.Configuration
 {
 
     public class LoggerConfig {

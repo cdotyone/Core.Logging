@@ -10,13 +10,12 @@
 
 #region References
 
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using Civic.Core.Logging.Configuration;
+using Core.Logging.Configuration;
 
 #endregion References
 
-namespace Civic.Core.Logging
+namespace Core.Logging
 {
     /// <summary>
     /// Describes a log writer
