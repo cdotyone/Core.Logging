@@ -22,7 +22,7 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\Core.Logging\bin\Release\net471\Core.Configuration.*" target="lib\net471" />
-    <file src="..\Core.Logging\bin\Release\netstandard2.0\Core.Configuration.*" target="lib\netstandard2.0" />
+    <file src="..\Core.Logging\bin\Release\net471\Core.Logging.*" target="lib\net471" />
+    <file src="..\Core.Logging\bin\Release\netstandard2.0\Core.Logging.*" target="lib\netstandard2.0" />
   </files>
 </package>
