@@ -7,8 +7,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{F9CB147E
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
 		.gitlab-ci.yml = .gitlab-ci.yml
-		Nuget\Core.Logging.AppInsight.nuspec = Nuget\Core.Logging.AppInsight.nuspec
-		Nuget\Core.Logging.nuspec = Nuget\Core.Logging.nuspec
+		Nuget\Stack.Core.Logging.AppInsight.nuspec = Nuget\Stack.Core.Logging.AppInsight.nuspec
+		Nuget\Stack.Core.Logging.nuspec = Nuget\Stack.Core.Logging.nuspec
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Logging", "Core.Logging\Core.Logging.csproj", "{C793DAE5-1585-42B3-BF33-7A74164BFB99}"
