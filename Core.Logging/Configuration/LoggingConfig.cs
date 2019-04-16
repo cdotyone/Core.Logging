@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using Core.Configuration;
+using Stack.Core.Configuration;
 using Stack.Core.Logging.LogWriters;
 
 namespace Stack.Core.Logging.Configuration {

@@ -6,8 +6,8 @@ using System.Configuration;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Core.Configuration.Framework;
 using Newtonsoft.Json;
+using Stack.Core.Configuration.Framework;
 using Stack.Core.Logging.Configuration;
 
 #endregion References

@@ -10,7 +10,7 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Core.Configuration.Framework;
+using Stack.Core.Configuration.Framework;
 using Stack.Core.Logging.Configuration;
 
 #endregion References

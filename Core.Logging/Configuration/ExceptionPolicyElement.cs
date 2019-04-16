@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Configuration;
-using Core.Configuration;
+using Stack.Core.Configuration;
 
 namespace Stack.Core.Logging.Configuration
 {
