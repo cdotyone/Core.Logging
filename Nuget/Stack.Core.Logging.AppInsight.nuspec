@@ -22,7 +22,7 @@
     </frameworkAssemblies>
   </metadata>
   <files>
-    <file src="..\Core.Logging.AppInsight\bin\Release\net471\Core.Configuration.AppInsight.*" target="lib\net471" />
-    <file src="..\Core.Logging.AppInsight\bin\Release\netstandard2.0\Core.Configuration.AppInsight.*" target="lib\netstandard2.0" />
+    <file src="..\Core.Logging.AppInsight\bin\Release\net471\Stack.Core.Configuration.AppInsight.*" target="lib\net471" />
+    <file src="..\Core.Logging.AppInsight\bin\Release\netstandard2.0\Stack.Core.Configuration.AppInsight.*" target="lib\netstandard2.0" />
   </files>
 </package>
