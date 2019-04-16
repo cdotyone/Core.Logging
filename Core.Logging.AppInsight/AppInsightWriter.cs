@@ -1,4 +1,12 @@
-﻿namespace Stack.Core.Logging.AppInsight
+﻿using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
+using Newtonsoft.Json;
+using Stack.Core.Logging.Configuration;
+
+namespace Stack.Core.Logging.AppInsight
 {
     public class AppInsightWriter : ILogWriter
     {
