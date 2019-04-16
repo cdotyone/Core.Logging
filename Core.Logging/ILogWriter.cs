@@ -11,11 +11,11 @@
 #region References
 
 using System.Threading.Tasks;
-using Core.Logging.Configuration;
+using Stack.Core.Logging.Configuration;
 
 #endregion References
 
-namespace Core.Logging
+namespace Stack.Core.Logging
 {
     /// <summary>
     /// Describes a log writer

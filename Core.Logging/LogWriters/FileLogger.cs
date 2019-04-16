@@ -13,12 +13,12 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-using Core.Logging.Configuration;
 using Newtonsoft.Json;
+using Stack.Core.Logging.Configuration;
 
 #endregion References
 
-namespace Core.Logging.LogWriters
+namespace Stack.Core.Logging.LogWriters
 {
     [Serializable]
     public class FileLogger : ILogWriter

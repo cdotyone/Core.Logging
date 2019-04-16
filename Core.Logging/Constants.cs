@@ -1,4 +1,4 @@
-﻿namespace Core.Logging
+﻿namespace Stack.Core.Logging
 {
     internal class Constants
     {

@@ -12,11 +12,11 @@
 
 using System;
 using System.Threading.Tasks;
-using Core.Logging.Configuration;
+using Stack.Core.Logging.Configuration;
 
 #endregion References
 
-namespace Core.Logging.LogWriters
+namespace Stack.Core.Logging.LogWriters
 {
     public class ConsoleLogger : ILogWriter
     {

@@ -7,12 +7,12 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Core.Configuration.Framework;
-using Core.Logging.Configuration;
 using Newtonsoft.Json;
+using Stack.Core.Logging.Configuration;
 
 #endregion References
 
-namespace Core.Logging
+namespace Stack.Core.Logging
 {
     /// <summary>
     /// Primary logging class.  This does all of the routing to the log writers

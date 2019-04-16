@@ -1,4 +1,4 @@
-namespace Core.Logging
+namespace Stack.Core.Logging
 {
     /// <summary>
     /// this is used for log4net compatiblity

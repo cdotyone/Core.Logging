@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using Core.Logging.Configuration;
-using Microsoft.ApplicationInsights;
-using Microsoft.ApplicationInsights.DataContracts;
-using Newtonsoft.Json;
-
-namespace Core.Logging.AppInsight
+﻿namespace Stack.Core.Logging.AppInsight
 {
     public class AppInsightWriter : ILogWriter
     {

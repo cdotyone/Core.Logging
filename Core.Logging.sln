@@ -11,9 +11,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{F9CB147E
 		Nuget\Stack.Core.Logging.nuspec = Nuget\Stack.Core.Logging.nuspec
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Logging", "Core.Logging\Core.Logging.csproj", "{C793DAE5-1585-42B3-BF33-7A74164BFB99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stack.Core.Logging", "Core.Logging\Stack.Core.Logging.csproj", "{C793DAE5-1585-42B3-BF33-7A74164BFB99}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Core.Logging.AppInsight", "Core.Logging.AppInsight\Core.Logging.AppInsight.csproj", "{199EFAD4-0A24-4E12-BF71-466CCAA25E94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stack.Core.Logging.AppInsight", "Core.Logging.AppInsight\Stack.Core.Logging.AppInsight.csproj", "{199EFAD4-0A24-4E12-BF71-466CCAA25E94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -34,6 +34,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {6C97A49A-6F08-4420-90D0-D439C8DFBB91}
+		SolutionGuid = {D68FB9D0-15A6-4B36-8D96-80C4BA34DD6C}
 	EndGlobalSection
 EndGlobal

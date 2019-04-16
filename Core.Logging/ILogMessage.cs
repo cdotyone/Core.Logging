@@ -15,7 +15,7 @@ using System.Collections.Generic;
 
 #endregion References
 
-namespace Core.Logging
+namespace Stack.Core.Logging
 {
     #region Enumerations
 

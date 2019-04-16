@@ -11,7 +11,7 @@
 #region References
 
 using System;
-using Core.Logging;
+using Stack.Core.Logging;
 
 #endregion References
 
