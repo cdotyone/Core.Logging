@@ -197,8 +197,10 @@ namespace Stack.Core.Logging
             if (_config != null && string.IsNullOrEmpty(message2Log.EnvironmentCode)) message2Log.EnvironmentCode = _config.EnvironmentCode;
             if (!message2Log.Extended.ContainsKey("FullName")) message2Log.Extended.Add("FullName", Assembly.GetExecutingAssembly().FullName);
             if (!message2Log.Extended.ContainsKey("AppDomainName")) message2Log.Extended.Add("AppDomainName", AppDomain.CurrentDomain.FriendlyName);
-            if (!message2Log.Extended.ContainsKey("ThreadIdentity")) message2Log.Extended.Add("ThreadIdentity", Thread.CurrentPrincipal.Identity.Name);
+#if NETFULL
+            if (!message2Log.Extended.ContainsKey("ThreadIdentity") && Thread.CurrentPrincipal!=null) message2Log.Extended.Add("ThreadIdentity", Thread.CurrentPrincipal.Identity.Name);
             if (!message2Log.Extended.ContainsKey("WindowsIdentity")) message2Log.Extended.Add("WindowsIdentity", GetWindowsIdentity());
+#endif
 
             lock (_eventQueue)
             {
