@@ -1,4 +1,4 @@
-﻿namespace Core.Logging
+﻿namespace Stack.Core.Logging
 {
     public class LogWriterResult
     {

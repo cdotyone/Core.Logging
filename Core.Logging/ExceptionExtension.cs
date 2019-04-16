@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Core.Logging
+namespace Stack.Core.Logging
 {
     public static class ExceptionExtension
     {

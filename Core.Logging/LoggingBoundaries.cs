@@ -8,7 +8,7 @@
 
 #endregion Copyright / Comments
 
-namespace Core.Logging
+namespace Stack.Core.Logging
 {
 	public enum LoggingBoundaries
 	{

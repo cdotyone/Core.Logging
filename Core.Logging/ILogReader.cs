@@ -1,6 +1,6 @@
-using Core.Logging.Configuration;
+using Stack.Core.Logging.Configuration;
 
-namespace Core.Logging
+namespace Stack.Core.Logging
 {
     /// <summary>
     /// Describes a log reader

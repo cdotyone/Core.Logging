@@ -11,11 +11,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using Core.Configuration.Framework;
-using Core.Logging.Configuration;
+using Stack.Core.Logging.Configuration;
 
 #endregion References
 
-namespace Core.Logging
+namespace Stack.Core.Logging
 {
     /// <summary>
     /// Primary logging class.  This does all of the routing to the log writers

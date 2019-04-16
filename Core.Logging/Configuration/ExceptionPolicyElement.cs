@@ -2,7 +2,7 @@
 using System.Configuration;
 using Core.Configuration;
 
-namespace Core.Logging.Configuration
+namespace Stack.Core.Logging.Configuration
 {
     public class ExceptionPolicyElement
     {

@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
 using Core.Configuration;
-using Core.Logging.LogWriters;
+using Stack.Core.Logging.LogWriters;
 
-namespace Core.Logging.Configuration {
+namespace Stack.Core.Logging.Configuration {
 
     public class LoggingConfig : NamedConfigurationElement
     {

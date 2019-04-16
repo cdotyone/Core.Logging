@@ -17,7 +17,7 @@ using Newtonsoft.Json;
 
 #endregion References
 
-namespace Core.Logging
+namespace Stack.Core.Logging
 {
     [Serializable]
     public class LogMessage : ILogMessage

@@ -15,7 +15,7 @@ using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
 
-namespace Core.Logging
+namespace Stack.Core.Logging
 {
     internal class PerformanceTracer : IDisposable
     {
