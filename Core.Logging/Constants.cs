@@ -1,4 +1,4 @@
-﻿namespace Stack.Core.Logging
+﻿namespace Core.Logging
 {
     internal class Constants
     {
@@ -8,7 +8,7 @@
         public const string CONFIG_BOUNDARY_PROP = "boundary";
 
         public const string CONFIG_LOGNAME_PROP = "logname";
-        public const string CONFIG_LOGNAME_DEFAULT = "civic";
+        public const string CONFIG_LOGNAME_DEFAULT = "core";
         public const string CONFIG_USETHREAD_PROP = "useThread";
         public const string CONFIG_TRACE_PROP = "trace";
         public const string CONFIG_TRANSMISSION_PROP = "transmission";

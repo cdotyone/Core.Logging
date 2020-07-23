@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stack.Core.Logging
+namespace Core.Logging
 {
     public static class ExceptionExtension
     {
@@ -45,7 +45,7 @@ namespace Stack.Core.Logging
                     //have a reference id in one of the inner exceptions.
                     ret = GetReferenceID(ex.InnerException);
                 //}
-                //Add the referenceid to the data collection so it
+                //Add the referenceId to the data collection so it
                 //won't have to call recursively again.
                 ex.Data.Add(refID, ret);
             }

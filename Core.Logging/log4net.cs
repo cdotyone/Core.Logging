@@ -1,20 +1,10 @@
-#region Copyright / Comments
-
-// <copyright file="LogManager.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
-// <author>Chris Doty</author>
-// <email>dotyc@civicinc.com</email>
-// <date>6/4/2013</date>
-// <summary></summary>
-
-#endregion Copyright / Comments
-
 using System;
 using log4net;
 
-namespace Stack.Core.Logging
+namespace Core.Logging
 {
     /// <summary>
-    /// this is used for log4net compatiblity
+    /// this is used for log4net compatibility
     /// </summary>
     public class LogManager
     {
@@ -29,7 +19,7 @@ namespace Stack.Core.Logging
     }
 
     /// <summary>
-    /// this is used for log4net compatiblity
+    /// this is used for log4net compatibility
     /// </summary>
     public interface ILog
     {

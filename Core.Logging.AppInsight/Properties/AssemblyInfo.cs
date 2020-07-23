@@ -7,10 +7,10 @@ using System.Runtime.InteropServices;
 #endregion References
 
 [assembly: CLSCompliant(true)]
-[assembly: AssemblyTitle("Civic.Core.Logging.AppInsight")]
+[assembly: AssemblyTitle("Core.Core.Logging.AppInsight")]
 [assembly: AssemblyDescription("Generic Logging Library.AppInsight")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("Civic.Core.Logging.AppInsight")]
+[assembly: AssemblyProduct("Core.Core.Logging.AppInsight")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

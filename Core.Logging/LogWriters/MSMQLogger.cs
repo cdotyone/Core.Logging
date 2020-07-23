@@ -5,10 +5,10 @@ using System.Messaging;
 using System.Security;
 using System.Text;
 using System.Threading.Tasks;
-using Civic.Core.Logging.Configuration;
+using Core.Core.Logging.Configuration;
 using Newtonsoft.Json;
 
-namespace Civic.Core.Logging.LogWriters
+namespace Core.Core.Logging.LogWriters
 {
     [Serializable]
     public class MSMQLogger : ILogWriter, ILogReader

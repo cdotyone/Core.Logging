@@ -1,13 +1,3 @@
-#region Copyright / Comments
-
-// <copyright file="ILogMessage.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
-// <author>Chris Doty</author>
-// <email>dotyc@civicinc.com</email>
-// <date>6/4/2013</date>
-// <summary></summary>
-
-#endregion Copyright / Comments
-
 #region References
 
 using System;
@@ -15,7 +5,7 @@ using System.Collections.Generic;
 
 #endregion References
 
-namespace Stack.Core.Logging
+namespace Core.Logging
 {
     #region Enumerations
 
@@ -50,15 +40,6 @@ namespace Stack.Core.Logging
         LogSeverity Type
         {
             get; set;
-        }
-
-        /// <summary>
-        /// gets/sets the name of the client, may be CIVIC for shared services
-        /// </summary>
-        string ClientCode
-        {
-            get;
-            set;
         }
 
         /// <summary>

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 
-namespace Stack.Core.Logging
+namespace Core.Logging
 {
     [DataContract(Namespace = "http://schemas.thatindigogirl.com/samples/2006/06")]
     public class ReceiverFaultDetail

@@ -1,21 +1,11 @@
-#region Copyright / Comments
-
-// <copyright file="ILogWriter.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
-// <author>Chris Doty</author>
-// <email>dotyc@civicinc.com</email>
-// <date>6/4/2013</date>
-// <summary></summary>
-
-#endregion Copyright / Comments
-
 #region References
 
 using System.Threading.Tasks;
-using Stack.Core.Logging.Configuration;
+using Core.Logging.Configuration;
 
 #endregion References
 
-namespace Stack.Core.Logging
+namespace Core.Logging
 {
     /// <summary>
     /// Describes a log writer
@@ -64,11 +54,11 @@ namespace Stack.Core.Logging
         /// <summary>
         /// Used by factory to create objects of this type
         /// </summary>
-        /// <param name="applicationname">application name given to this logger</param>
-        /// <param name="logname">log name given to this log</param>
+        /// <param name="applicationName">application name given to this logger</param>
+        /// <param name="logName">log name given to this log</param>
         /// <param name="config">The log writers configuration</param>
         /// <returns></returns>
-        object Create(string applicationname, string logname, LoggerConfig config);
+        object Create(string applicationName, string logName, LoggerConfig config);
 
         /// <summary>
         /// On logs that can be deleted.  
@@ -85,7 +75,7 @@ namespace Stack.Core.Logging
         /// Logs a message to the log class
         /// </summary>
         /// <param name="message">the message to write the the log</param>
-        /// <returns>Result of loggin activity</returns>
+        /// <returns>Result of logging activity</returns>
         Task<LogWriterResult> Log(ILogMessage message);
 
         #endregion Methods

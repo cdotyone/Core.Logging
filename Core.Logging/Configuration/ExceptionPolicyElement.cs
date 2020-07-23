@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Configuration;
-using Stack.Core.Configuration;
+using Core.Configuration;
 
-namespace Stack.Core.Logging.Configuration
+namespace Core.Logging.Configuration
 {
     public class ExceptionPolicyElement
     {

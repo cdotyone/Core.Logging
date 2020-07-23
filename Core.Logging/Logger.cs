@@ -10,12 +10,12 @@ using System.Security.Principal;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
-using Stack.Core.Configuration.Framework;
-using Stack.Core.Logging.Configuration;
+using Core.Configuration.Framework;
+using Core.Logging.Configuration;
 
 #endregion References
 
-namespace Stack.Core.Logging
+namespace Core.Logging
 {
     /// <summary>
     /// Primary logging class.  This does all of the routing to the log writers
@@ -32,8 +32,6 @@ namespace Stack.Core.Logging
         private static Thread _tm;
         private static readonly IDisposable _dummyTrace = new PerformanceTracerDummy();
         private static readonly object _lock = new object();
-        private static List<ILogWriter> _loggers = new List<ILogWriter>();
-        private static bool _isShutdown = true;
 
         #endregion Fields
 
@@ -42,11 +40,7 @@ namespace Stack.Core.Logging
         /// <summary>
         /// True if the logging thread is shutdown, false if it is running
         /// </summary>
-        public static bool IsShutdown
-        {
-            get { return _isShutdown; }
-            private set { _isShutdown = value; }
-        }
+        public static bool IsShutdown { get; private set; } = true;
 
         /// <summary>
         /// Default trace level for all of the loggers
@@ -60,10 +54,7 @@ namespace Stack.Core.Logging
         /// <summary>
         /// The current log writers that are installed
         /// </summary>
-        public static List<ILogWriter> Loggers
-        {
-            get { return _loggers; }
-        }
+        public static List<ILogWriter> Loggers { get; private set; } = new List<ILogWriter>();
 
         /// <summary>
         /// gets current log entries left to process
@@ -129,7 +120,7 @@ namespace Stack.Core.Logging
 
         /// <summary>
         /// Initializes the logger library
-        /// Normally not called by consumming application, but automatically called
+        /// Normally not called by consuming application, but automatically called
         /// when a log entry is requested.  Can be called to prime the log system
         /// before it is used.
         /// </summary>
@@ -142,8 +133,8 @@ namespace Stack.Core.Logging
                 if (_config == null) _config = LoggingConfig.Current;
                 else return;
 
-                if (_loggers == null) _loggers = new List<ILogWriter>();
-                _loggers.Clear();
+                if (Loggers == null) Loggers = new List<ILogWriter>();
+                Loggers.Clear();
             
                 if (_config != null)
                 {
@@ -152,9 +143,9 @@ namespace Stack.Core.Logging
                     // load the loggers
                     foreach (LoggerConfig logger in _config.Loggers)
                     {
-                        var logwriter = DynamicInstance.CreateInstance<ILogWriter>(logger.Assembly, logger.Type);
-                        var obj = logwriter.Create(_config.ApplicationName, _config.LogName, logger);
-                        _loggers.Add((ILogWriter)obj);
+                        var logWriter = DynamicInstance.CreateInstance<ILogWriter>(logger.Assembly, logger.Type);
+                        var obj = logWriter.Create(_config.ApplicationName, _config.LogName, logger);
+                        Loggers.Add((ILogWriter)obj);
                     }
                 
                     foreach (ExceptionPolicyElement policy in _config.ExceptionPolicies)
@@ -175,10 +166,10 @@ namespace Stack.Core.Logging
         }
 
         /// <summary>
-        /// Add a ILogMessage to the loggin queue
+        /// Add a ILogMessage to the logging queue
         /// </summary>
         /// <param name="message2Log">The ILogMessage that needs to be logged</param>
-        /// <returns>true if it was added, false if it was suppressed because of the tracelevel</returns>
+        /// <returns>true if it was added, false if it was suppressed because of the trace-level</returns>
         public static bool Log(ILogMessage message2Log)
         {
             Init();
@@ -193,7 +184,6 @@ namespace Stack.Core.Logging
             
             if (message2Log.Extended == null) message2Log.Extended = new Dictionary<string, object>();
             if (_config != null && string.IsNullOrEmpty(message2Log.ApplicationName)) message2Log.ApplicationName = _config.ApplicationName;
-            if (_config != null && string.IsNullOrEmpty(message2Log.ClientCode)) message2Log.ClientCode = _config.ClientCode;
             if (_config != null && string.IsNullOrEmpty(message2Log.EnvironmentCode)) message2Log.EnvironmentCode = _config.EnvironmentCode;
             if (!message2Log.Extended.ContainsKey("FullName")) message2Log.Extended.Add("FullName", Assembly.GetExecutingAssembly().FullName);
             if (!message2Log.Extended.ContainsKey("AppDomainName")) message2Log.Extended.Add("AppDomainName", AppDomain.CurrentDomain.FriendlyName);
@@ -233,7 +223,7 @@ namespace Stack.Core.Logging
             try
             {
                 var current = WindowsIdentity.GetCurrent();
-                windowsIdentity = (current == null) ? string.Empty : current.Name;
+                windowsIdentity = current.Name;
             }
             catch (SecurityException)
             {
@@ -253,7 +243,7 @@ namespace Stack.Core.Logging
         }
 
         /// <summary>
-        /// Log event for recording informaiton messages
+        /// Log event for recording information messages
         /// </summary>
         public static bool LogInformation(LoggingBoundaries boundary, params object[] parameterValues)
         {
@@ -382,31 +372,29 @@ namespace Stack.Core.Logging
                 }
 
                 // Output log line
-                if (m != null)
+                if (m == null) continue;
+                try
                 {
-                    try
+                    var all = new List<Task>();
+
+                    foreach (ILogWriter iLog in Loggers)
                     {
-                        var all = new List<Task>();
-
-                        foreach (ILogWriter iLog in Loggers)
-                        {
-                            var task = iLog.Log(m);
-                            if (_config != null && _config.UseThread)
-                            {
-                                task.Start();
-                            }
-                            else task.RunSynchronously();
-
-                            all.Add(task);
-                        }
-
+                        var task = iLog.Log(m);
                         if (_config != null && _config.UseThread)
-                            Task.WaitAll(all.ToArray());
+                        {
+                            task.Start();
+                        }
+                        else task.RunSynchronously();
+
+                        all.Add(task);
                     }
-                    catch (Exception)
-                    {
-                        // INTENTIONALLY LEFT BLANK
-                    }
+
+                    if (_config != null && _config.UseThread)
+                        Task.WaitAll(all.ToArray());
+                }
+                catch (Exception)
+                {
+                    // INTENTIONALLY LEFT BLANK
                 }
             }
         }
