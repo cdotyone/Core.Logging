@@ -1,14 +1,14 @@
 using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using Stack.Core.Configuration;
-using Stack.Core.Logging.LogWriters;
+using Core.Configuration;
+using Core.Logging.LogWriters;
 
-namespace Stack.Core.Logging.Configuration {
+namespace Core.Logging.Configuration {
 
     public class LoggingConfig : NamedConfigurationElement
     {
-        private static CivicSection _coreConfig;
+        private static CoreSection _coreConfig;
         private static LoggingConfig _current;
         private List<LoggerConfig> _loggers;
         private List<ExceptionPolicyElement> _exceptionPoliciesOverride;
@@ -30,16 +30,16 @@ namespace Stack.Core.Logging.Configuration {
             Attributes = element.Attributes;
             Name = element.Name;
 
-            var civicSection = CivicSection.Current;
+            var coreSection = CoreSection.Current;
 
             _configChangeCheck = Attributes.ContainsKey(Constants.CONFIG_CONFIGCHECKMINUTES_PROP) ? int.Parse(Attributes[Constants.CONFIG_CONFIGCHECKMINUTES_PROP]) : Constants.CONFIG_CONFIGCHECKMINUTES_DEFAULT;
             _defaultRescanTime = Attributes.ContainsKey(Constants.CONFIG_RESCANTIME_PROP) ? int.Parse(Attributes[Constants.CONFIG_RESCANTIME_PROP]) : Constants.CONFIG_RESCANTIME_DEFAULT;
             _defaultRecoveryTime = Attributes.ContainsKey(Constants.CONFIG_RECOVERYTIME_PROP) ? int.Parse(Attributes[Constants.CONFIG_RECOVERYTIME_PROP]) : Constants.CONFIG_RECOVERYTIME_DEFAULT;
-            _applicationName = GetAttribute(Constants.CONFIG_APPNAME_PROP, civicSection.ApplicationName);
-            _clientCode = civicSection.ClientCode;
-            _environmentCode = civicSection.EnvironmentCode;
+            _applicationName = getAttribute(Constants.CONFIG_APPNAME_PROP, coreSection.ApplicationName);
+            _clientCode = coreSection.ClientCode;
+            _environmentCode = coreSection.EnvironmentCode;
             _logName = Attributes.ContainsKey(Constants.CONFIG_LOGNAME_PROP) ? Attributes[Constants.CONFIG_LOGNAME_PROP] : Constants.CONFIG_LOGNAME_DEFAULT;
-            _trace = bool.Parse(GetAttribute(Constants.CONFIG_TRACE_PROP, "false"));
+            _trace = bool.Parse(getAttribute(Constants.CONFIG_TRACE_PROP, "false"));
             _logTransmissions = Attributes.ContainsKey(Constants.CONFIG_TRANSMISSION_PROP) && bool.Parse(Attributes[Constants.CONFIG_TRANSMISSION_PROP]);
             _useThread = Attributes.ContainsKey(Constants.CONFIG_USETHREAD_PROP) && bool.Parse(Attributes[Constants.CONFIG_USETHREAD_PROP]);
         }
@@ -52,7 +52,7 @@ namespace Stack.Core.Logging.Configuration {
             get
             {
                 if (_current != null) return _current;
-                if (_coreConfig == null) _coreConfig = CivicSection.Current;
+                if (_coreConfig == null) _coreConfig = CoreSection.Current;
                 _current = new LoggingConfig(_coreConfig.Children.ContainsKey(SectionName) ? _coreConfig.Children[SectionName] : null);
                 return _current;
             }
@@ -224,7 +224,7 @@ namespace Stack.Core.Logging.Configuration {
         }
 
 
-        private string GetAttribute(string name, string defaultValue)
+        private string getAttribute(string name, string defaultValue)
         {
             if (Attributes.ContainsKey(name)) return Attributes[name];
             if (_coreConfig.Attributes.ContainsKey(name)) return _coreConfig.Attributes[name];

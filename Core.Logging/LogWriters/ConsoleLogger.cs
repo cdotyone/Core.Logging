@@ -1,22 +1,12 @@
-#region Copyright / Comments
-
-// <copyright file="ConsoleLogger.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
-// <author>Chris Doty</author>
-// <email>dotyc@civicinc.com</email>
-// <date>6/4/2013</date>
-// <summary></summary>
-
-#endregion Copyright / Comments
-
 #region References
 
 using System;
 using System.Threading.Tasks;
-using Stack.Core.Logging.Configuration;
+using Core.Logging.Configuration;
 
 #endregion References
 
-namespace Stack.Core.Logging.LogWriters
+namespace Core.Logging.LogWriters
 {
     public class ConsoleLogger : ILogWriter
     {
@@ -53,16 +43,16 @@ namespace Stack.Core.Logging.LogWriters
         /// <summary>
         /// Used by factory to create objects of this type
         /// </summary>
-        /// <param name="applicationname">application name given to this logger</param>
-        /// <param name="logname">log name given to this log</param>
+        /// <param name="applicationName">application name given to this logger</param>
+        /// <param name="logName">log name given to this log</param>
         /// <param name="config">The log writers configuration</param>
         /// <returns></returns>
-        public object Create(string applicationname, string logname, LoggerConfig config)
+        public object Create(string applicationName, string logName, LoggerConfig config)
         {
             var dl = new ConsoleLogger
                 {
-                    ApplicationName = applicationname, 
-                    LogName = logname
+                    ApplicationName = applicationName, 
+                    LogName = logName
                 };
 
             return dl;

@@ -1,17 +1,7 @@
-#region Copyright / Comments
-
-// <copyright file="log4net.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
-// <author>Chris Doty</author>
-// <email>dotyc@civicinc.com</email>
-// <date>6/4/2013</date>
-// <summary></summary>
-
-#endregion Copyright / Comments
-
 #region References
 
 using System;
-using Stack.Core.Logging;
+using Core.Logging;
 
 #endregion References
 
@@ -21,26 +11,17 @@ namespace log4net
 // ReSharper restore CheckNamespace
 {
     /// <summary>
-    /// this is used for log4net compatiblity
+    /// this is used for log4net compatibility
     /// </summary>
     public class Log4NetWrapper : ILog
     {
         #region Properties
 
-        public bool IsDebugEnabled
-        {
-            get { return Logger.IsTraceOn; }
-        }
+        public bool IsDebugEnabled => Logger.IsTraceOn;
 
-        public bool IsErrorEnabled
-        {
-            get { return true; }
-        }
+        public bool IsErrorEnabled => true;
 
-        public bool IsInfoEnabled
-        {
-            get { return true; }
-        }
+        public bool IsInfoEnabled => true;
 
         #endregion Properties
 
@@ -58,10 +39,9 @@ namespace log4net
 
         public void DebugFormat( string message, object ex )
         {
-            if ( ex is Exception )
-                Logger.Log(LogMessage.LogTrace(LoggingBoundaries.Unknown, message.Replace("{0}", ((Exception)ex).Message)));
-            else
-                Logger.Log(LogMessage.LogTrace(LoggingBoundaries.Unknown, message.Replace("{0}", ex.ToString())));
+            Logger.Log(ex is Exception exception
+                ? LogMessage.LogTrace(LoggingBoundaries.Unknown, message.Replace("{0}", exception.Message))
+                : LogMessage.LogTrace(LoggingBoundaries.Unknown, message.Replace("{0}", ex.ToString())));
         }
 
         public void DebugFormat( string message )

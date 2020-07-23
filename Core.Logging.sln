@@ -1,19 +1,21 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30309.148
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuget", "Nuget", "{F9CB147E-97DB-4899-93EC-95417286D356}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{F9CB147E-97DB-4899-93EC-95417286D356}"
 	ProjectSection(SolutionItems) = preProject
 		.gitignore = .gitignore
-		.gitlab-ci.yml = .gitlab-ci.yml
-		Nuget\Stack.Core.Logging.AppInsight.nuspec = Nuget\Stack.Core.Logging.AppInsight.nuspec
-		Nuget\Stack.Core.Logging.nuspec = Nuget\Stack.Core.Logging.nuspec
+		CHANGELOG.md = CHANGELOG.md
+		commitlint.config.js = commitlint.config.js
+		.github\workflows\dotnet-core.yml = .github\workflows\dotnet-core.yml
+		LICENSE = LICENSE
+		package.json = package.json
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stack.Core.Logging", "Core.Logging\Stack.Core.Logging.csproj", "{C793DAE5-1585-42B3-BF33-7A74164BFB99}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codigo.Core.Logging", "Core.Logging\Codigo.Core.Logging.csproj", "{C793DAE5-1585-42B3-BF33-7A74164BFB99}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Stack.Core.Logging.AppInsight", "Core.Logging.AppInsight\Stack.Core.Logging.AppInsight.csproj", "{199EFAD4-0A24-4E12-BF71-466CCAA25E94}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Codigo.Logging.AppInsight", "Core.Logging.AppInsight\Codigo.Logging.AppInsight.csproj", "{199EFAD4-0A24-4E12-BF71-466CCAA25E94}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,24 +1,14 @@
-#region Copyright / Comments
-
-// <copyright file="EventLogger.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
-// <author>Chris Doty</author>
-// <email>dotyc@civicinc.com</email>
-// <date>6/4/2013</date>
-// <summary></summary>
-
-#endregion Copyright / Comments
-
 #region References
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Civic.Core.Logging.Configuration;
+using Core.Core.Logging.Configuration;
 
 #endregion References
 
-namespace Civic.Core.Logging.LogWriters
+namespace Core.Core.Logging.LogWriters
 {
     [Serializable]
     public class EventLogger : ILogWriter

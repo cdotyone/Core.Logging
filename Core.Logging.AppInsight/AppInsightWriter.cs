@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using Core.Logging;
+using Core.Logging.Configuration;
 using Microsoft.ApplicationInsights;
 using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.ApplicationInsights.Extensibility;
 using Newtonsoft.Json;
-using Stack.Core.Logging.Configuration;
 
-namespace Stack.Core.Logging.AppInsight
+namespace Logging.AppInsight
 {
     public class AppInsightWriter : ILogWriter
     {
-        TelemetryClient _telemetry = new TelemetryClient();
+        private static readonly TelemetryConfiguration _config = TelemetryConfiguration.CreateDefault();
+        TelemetryClient _telemetry = new TelemetryClient(_config);
 
         #region Properties
 
@@ -43,12 +46,12 @@ namespace Stack.Core.Logging.AppInsight
 
         #endregion Properties
 
-        public object Create(string applicationname, string logname, LoggerConfig config)
+        public object Create(string applicationName, string logName, LoggerConfig config)
         {
             return new AppInsightWriter
             {
-                LogName = logname,
-                ApplicationName = applicationname
+                LogName = logName,
+                ApplicationName = applicationName
             };
         }
 

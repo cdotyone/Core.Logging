@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Stack.Core.Logging
+namespace Core.Logging
 {
     internal class PerformanceTracerDummy : IDisposable
     {

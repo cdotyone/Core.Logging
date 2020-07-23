@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Stack.Core.Logging.Configuration
+namespace Core.Logging.Configuration
 {
     internal static class Cloner
     {

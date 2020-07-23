@@ -6,13 +6,13 @@ using System.Configuration;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Core.Configuration.Framework;
+using Core.Logging.Configuration;
 using Newtonsoft.Json;
-using Stack.Core.Configuration.Framework;
-using Stack.Core.Logging.Configuration;
 
 #endregion References
 
-namespace Stack.Core.Logging
+namespace Core.Logging
 {
     /// <summary>
     /// Primary logging class.  This does all of the routing to the log writers
@@ -36,10 +36,7 @@ namespace Stack.Core.Logging
         /// <summary>
         /// The name of the directory where log write failures are logged
         /// </summary>
-        public static string RecoveryDirectory
-        {
-            get { return Path.Combine(Path.GetTempPath(),"Civic.Logging"); }
-        }
+        public static string RecoveryDirectory => Path.Combine(Path.GetTempPath(),"Core.Logging");
 
         #region Methods
 
@@ -70,8 +67,8 @@ namespace Stack.Core.Logging
                 // load the loggers
                 foreach (LoggerConfig logger in config.Writers)
                 {
-                    var logwriter = DynamicInstance.CreateInstance<ILogWriter>(logger.Assembly, logger.Type);
-                    var obj = logwriter.Create(config.ApplicationName, config.LogName, logger) as ILogWriter;
+                    var logWriter = DynamicInstance.CreateInstance<ILogWriter>(logger.Assembly, logger.Type);
+                    var obj = logWriter.Create(config.ApplicationName, config.LogName, logger) as ILogWriter;
                     logger.Writer = obj;
                     _logWriters.Add(logger);
                 }
@@ -153,20 +150,20 @@ namespace Stack.Core.Logging
                         
                         if (logger != null && (name==null || string.Compare(logger.Name,name, StringComparison.InvariantCultureIgnoreCase) ==0 ))
                         {
-                            GenerateLogFileName(parts[0], true);
+                            generateLogFileName(parts[0], true);
                             using (var file = File.Open(filename, FileMode.Open, FileAccess.ReadWrite, FileShare.None))
                             {
                                 using (var reader = new StreamReader(file))
                                 {
                                     while (!reader.EndOfStream)
                                     {
-                                        var entry = Base64Decode(reader.ReadLine());
+                                        var entry = base64Decode(reader.ReadLine());
                                         var logEntry = JsonConvert.DeserializeObject<LogMessage>(entry);
                                         if (logEntry == null) continue;
 
                                         var task = logger.Writer.Log(logEntry);
                                         task.Start();
-                                        Task.WaitAll(new Task[] {task});
+                                        Task.WaitAll(task);
                                     }
                                 }
                             }
@@ -196,25 +193,25 @@ namespace Stack.Core.Logging
             {
                 if (!Directory.Exists(RecoveryDirectory)) Directory.CreateDirectory(RecoveryDirectory);
 
-                var filename = GenerateLogFileName(name, count>0);
+                var filename = generateLogFileName(name, count>0);
                 count++;
-                var entry = Base64Encode(JsonConvert.SerializeObject(message, Formatting.None));
+                var entry = base64Encode(JsonConvert.SerializeObject(message, Formatting.None));
                 File.AppendAllLines(filename, new[] {entry});
             }
             catch
             {
                 if (count < 2) goto again;
-                else throw;
+                throw;
             }
         }
 
-        private static string Base64Encode(string plainText)
+        private static string base64Encode(string plainText)
         {
             var plainTextBytes = Encoding.UTF8.GetBytes(plainText);
             return Convert.ToBase64String(plainTextBytes);
         }
 
-        private static string Base64Decode(string base64EncodedData)
+        private static string base64Decode(string base64EncodedData)
         {
             var base64EncodedBytes = Convert.FromBase64String(base64EncodedData);
             return Encoding.UTF8.GetString(base64EncodedBytes);
@@ -226,7 +223,7 @@ namespace Stack.Core.Logging
         /// <param name="name">name of log writer we are creating a filename for</param>
         /// <param name="forceNew">true if a new filename should be force to be generated</param>
         /// <returns></returns>
-        private static string GenerateLogFileName(string name, bool forceNew)
+        private static string generateLogFileName(string name, bool forceNew)
         {
             name = name.ToUpperInvariant();
             lock (_filenameLock)

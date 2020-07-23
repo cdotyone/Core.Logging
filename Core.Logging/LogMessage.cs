@@ -1,13 +1,3 @@
-#region Copyright / Comments
-
-// <copyright file="LogMessage.cs" company="Civic Engineering & IT">Copyright © Civic Engineering & IT 2013</copyright>
-// <author>Chris Doty</author>
-// <email>dotyc@civicinc.com</email>
-// <date>6/4/2013</date>
-// <summary></summary>
-
-#endregion Copyright / Comments
-
 #region References
 
 using System;
@@ -17,7 +7,7 @@ using Newtonsoft.Json;
 
 #endregion References
 
-namespace Stack.Core.Logging
+namespace Core.Logging
 {
     [Serializable]
     public class LogMessage : ILogMessage
@@ -38,15 +28,14 @@ namespace Stack.Core.Logging
             Boundary = logMessage.Boundary;
             Created = logMessage.Created;
             ServerName = logMessage.ServerName;
-            ClientCode = logMessage.ClientCode;
             EnvironmentCode = logMessage.EnvironmentCode;
             Extended = logMessage.Extended;
         }
 
-        public LogMessage(LoggingBoundaries boundary, LogSeverity entrytype, params object[] parameterValues) : this()
+        public LogMessage(LoggingBoundaries boundary, LogSeverity entryType, params object[] parameterValues) : this()
         {
             Boundary = boundary;
-            Type = entrytype;
+            Type = entryType;
             var ofs = 0;
 
             if (parameterValues.Length > 0 && parameterValues[0] is string)
@@ -109,11 +98,6 @@ namespace Stack.Core.Logging
         public LogSeverity Type { get; set; }
 
         /// <summary>
-        /// gets/sets the name of the client, may be CIVIC for shared services
-        /// </summary>
-        public string ClientCode { get; set; }
-
-        /// <summary>
         /// gets/sets the name of the environment DEV,TEST,QA,STAGE,PROD
         /// </summary>
         public string EnvironmentCode { get; set; }
@@ -157,11 +141,10 @@ namespace Stack.Core.Logging
             {
                 return new LogMessage(boundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
             }
-            return null;
         }
 
         /// <summary>
-        /// Log event for recording informaiton messages
+        /// Log event for recording information messages
         /// </summary>
         public static LogMessage LogInformation(LoggingBoundaries boundary, params object[] parameterValues)
         {
@@ -175,7 +158,6 @@ namespace Stack.Core.Logging
             {
                 return new LogMessage(boundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
             }
-            return null;
         }
 
         /// <summary>
@@ -193,20 +175,18 @@ namespace Stack.Core.Logging
             {
                 return new LogMessage(boundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
             }
-            return null;
         }
 
 
         /// <summary>
-        /// Logs service tranmissions
+        /// Logs service transmission
         /// </summary>
         public static LogMessage LogTransmission(string trackingGUID, params object[] parameterValues)
         {
             try
             {
                 if (parameterValues.Length == 0) throw new Exception("must provide at least one parameter");
-                var message = new LogMessage(LoggingBoundaries.ServiceBoundary, LogSeverity.Transmission, parameterValues);
-                message.TrackingGUID = trackingGUID;
+                var message = new LogMessage(LoggingBoundaries.ServiceBoundary, LogSeverity.Transmission, parameterValues) {TrackingGUID = trackingGUID};
                 return message;
             }
             // ReSharper disable once EmptyGeneralCatchClause
@@ -214,7 +194,6 @@ namespace Stack.Core.Logging
             {
                 return new LogMessage(LoggingBoundaries.ServiceBoundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
             }
-            return null;
         }
 
         /// <summary>
@@ -232,8 +211,6 @@ namespace Stack.Core.Logging
             {
                 return new LogMessage(boundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
             }
-
-            return null;
         }
 
         /// <summary>
@@ -245,14 +222,14 @@ namespace Stack.Core.Logging
         {
             if ( ex == null ) return "";
 
-            string retval = ex.Message;
+            var returnVal = ex.Message;
 
-            if ( string.IsNullOrEmpty( ex.StackTrace ) ) retval += "\n---" + ex.StackTrace;
+            if ( string.IsNullOrEmpty( ex.StackTrace ) ) returnVal += "\n---" + ex.StackTrace;
 
             if(ex.InnerException != null)
-                retval += "\n\t" + ExpandException( ex.InnerException );
+                returnVal += "\n\t" + ExpandException( ex.InnerException );
 
-            return retval;
+            return returnVal;
         }
 
         public static string GetMachineName()
