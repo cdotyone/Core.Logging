@@ -26,11 +26,7 @@ namespace Core.Logging
         #endregion Fields
 
         /// <summary>
-        /// Default trace level for all of the loggers
-        /// If set to -1 the defaults for the loggers are used
-        /// The higher the number the more detail that is provided
-        /// 
-        /// this property should be from -1 to 5
+        /// Should we log trace messages
         /// </summary>
         public static bool IsTraceOn {
             get
