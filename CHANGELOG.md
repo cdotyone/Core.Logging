@@ -1,3 +1,17 @@
+# [3.0.0](https://github.com/cdotyone/Core.Logging/compare/v2.1.0...v3.0.0) (2020-08-24)
+
+
+### Performance Improvements
+
+* force build ([e7604ed](https://github.com/cdotyone/Core.Logging/commit/e7604ed08be3adc05d64d684e10ef543aaf4cb33))
+
+
+### BREAKING CHANGES
+
+* core optimized foot print
+
+
+
 # [2.1.0](https://github.com/cdotyone/Core.Logging/compare/v2.0.7...v2.1.0) (2020-08-24)
 
 
