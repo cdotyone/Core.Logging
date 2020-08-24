@@ -1,4 +1,13 @@
-## 2.0.7 (2020-07-23)
+# [2.1.0](https://github.com/cdotyone/Core.Logging/compare/v2.0.7...v2.1.0) (2020-08-24)
+
+
+### Features
+
+* strip down for core ([783197d](https://github.com/cdotyone/Core.Logging/commit/783197d8cc88842efea7a435c3491a6fc76c0454))
+
+
+
+## [2.0.7](https://github.com/cdotyone/Core.Logging/compare/998209da2035673095f8eea10c7d4c671d585761...v2.0.7) (2020-07-23)
 
 
 ### Bug Fixes
