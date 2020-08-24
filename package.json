@@ -1,6 +1,6 @@
 {
   "name": "logging",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "description": "logging",
   "devDependencies": {
     "@commitlint/cli": "^7.5.2",

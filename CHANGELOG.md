@@ -1,3 +1,12 @@
+## [3.0.1](https://github.com/cdotyone/Core.Logging/compare/v3.0.0...v3.0.1) (2020-08-24)
+
+
+### Bug Fixes
+
+* force build ([6c5364b](https://github.com/cdotyone/Core.Logging/commit/6c5364b53c79fde417c5e4675cd1275a91d4a621))
+
+
+
 # [3.0.0](https://github.com/cdotyone/Core.Logging/compare/v2.1.0...v3.0.0) (2020-08-24)
 
 
