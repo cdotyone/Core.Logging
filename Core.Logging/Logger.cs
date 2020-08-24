@@ -143,7 +143,7 @@ namespace Core.Logging
 
 
         /// <summary>
-        /// Log event for recording error messages
+        /// Log event for recording critical messages
         /// Log event for recording warning messages 
         /// </summary>
         public static bool LogCritical(LoggingBoundaries boundary, params object[] parameterValues)
