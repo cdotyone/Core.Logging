@@ -31,22 +31,9 @@ namespace Core.Logging
             }
             else
             {
-                //if (ex is FaultException<ReceiverFaultDetail>)
-                //{
-                //    ret = ((FaultException<ReceiverFaultDetail>)ex).Detail.ReferenceID;
-                //}
-                //else if (ex is FaultException<SenderFaultDetail>)
-                //{
-                //    ret = ((FaultException<SenderFaultDetail>)ex).Detail.ReferenceID;
-                //}
-                //else
-                //{
-                    //Recursively call down the inner exceptions to see if we
-                    //have a reference id in one of the inner exceptions.
-                    ret = GetReferenceID(ex.InnerException);
-                //}
-                //Add the referenceId to the data collection so it
-                //won't have to call recursively again.
+                //Recursively call down the inner exceptions to see if we
+                //have a reference id in one of the inner exceptions.
+                ret = GetReferenceID(ex.InnerException);
                 ex.Data.Add(refID, ret);
             }
             return ret;

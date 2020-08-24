@@ -2,6 +2,7 @@
 
 using System;
 using System.Collections.Generic;
+using Microsoft.Extensions.Logging;
 
 #endregion References
 
@@ -21,7 +22,7 @@ namespace Core.Logging
         /// <summary>
         /// gets/sets the tracking guid for the 
         /// </summary>
-        string TrackingGUID
+        string EventId
         {
             get; set;
         }
@@ -37,7 +38,7 @@ namespace Core.Logging
         /// <summary>
         /// gets/sets the message text for this message
         /// </summary>
-        LogSeverity Type
+        LogLevel Level
         {
             get; set;
         }
@@ -55,15 +56,6 @@ namespace Core.Logging
         /// gets/sets the name of the application
         /// </summary>
         string ApplicationName
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// gets/sets the name of the application internal identifier
-        /// </summary>
-        string ApplicationInternal
         {
             get;
             set;
@@ -96,6 +88,11 @@ namespace Core.Logging
         /// gets/sets the Layer Boundary
         /// </summary>
         LoggingBoundaries Boundary { get; set; }
+
+        /// <summary>
+        /// Exception if there is one
+        /// </summary>
+        Exception Exception { get; set; }
 
         #endregion Properties
     }

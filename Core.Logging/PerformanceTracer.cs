@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Security;
 using System.Security.Permissions;
+using Microsoft.Extensions.Logging;
 
 namespace Core.Logging
 {
@@ -116,11 +117,11 @@ namespace Core.Logging
                 var permissionSet = new PermissionSet(PermissionState.None);
                 permissionSet.AddPermission(new SecurityPermission(SecurityPermissionFlag.UnmanagedCode));
 
-                #if NETFULL
-                tracingAvailable = permissionSet.IsSubsetOf(AppDomain.CurrentDomain.PermissionSet);
-                #else
-                tracingAvailable = false; // not sure so we will turn it off for now
-                #endif
+#if NETSTANDARD2_0
+                tracingAvailable = false;
+#else
+				tracingAvailable = permissionSet.IsSubsetOf(AppDomain.CurrentDomain.PermissionSet);
+#endif
             }
 			catch (SecurityException)
 			{ }
@@ -162,7 +163,7 @@ namespace Core.Logging
 			                         		{"OperationName", _operation},
 			                         		{"OperationStack", peekLogicalOperationStack()}
 			                         	};
-            var entry = new LogMessage(_boundary, LogSeverity.Trace, message) { Extended = extendedProperties };
+            var entry = new LogMessage(_boundary, LogLevel.Trace, message) { Extended = extendedProperties };
 		    Logger.Log(entry);
 		}
 
@@ -174,13 +175,16 @@ namespace Core.Logging
 			for (int index = 0; index < trace.FrameCount; ++index)
 			{
 				StackFrame frame = trace.GetFrame(index);
-				MethodBase method = frame.GetMethod();
-				if (method.DeclaringType != GetType())
-				{
-					if (method.DeclaringType != null) result = string.Concat(method.DeclaringType.FullName, ".", method.Name);
-					break;
-				}
-			}
+                if (frame != null)
+                {
+                    MethodBase method = frame.GetMethod();
+                    if (method != null && method.DeclaringType != GetType())
+                    {
+                        if (method.DeclaringType != null) result = string.Concat(method.DeclaringType.FullName, ".", method.Name);
+                        break;
+                    }
+                }
+            }
 
 			return result;
 		}

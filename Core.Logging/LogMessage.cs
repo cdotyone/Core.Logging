@@ -3,6 +3,7 @@
 using System;
 using System.Collections.Generic;
 using System.Security;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 
 #endregion References
@@ -32,10 +33,10 @@ namespace Core.Logging
             Extended = logMessage.Extended;
         }
 
-        public LogMessage(LoggingBoundaries boundary, LogSeverity entryType, params object[] parameterValues) : this()
+        public LogMessage(LoggingBoundaries boundary, LogLevel entryType, params object[] parameterValues) : this()
         {
             Boundary = boundary;
-            Type = entryType;
+            Level = entryType;
             var ofs = 0;
 
             if (parameterValues.Length > 0 && parameterValues[0] is string)
@@ -54,11 +55,12 @@ namespace Core.Logging
                 if (parameterValues[i] is Exception)
                 {
                     var e = (Exception)parameterValues[i];
+                    Exception = e;
                     Message = (string.IsNullOrEmpty(Message) ? string.Empty : Message + "\n") + ExpandException(e);
                     if (parameterValues.Length - 1 > i) Message = "{" + (i + 1) + "}\n" + Message;
                     if(Extended==null) Extended = new Dictionary<string, object>();
                     Extended["StackTrace"] = e.StackTrace;
-                    TrackingGUID = e.GetReferenceID().ToString();
+                    EventId = e.GetReferenceID().ToString();
                     continue;
                 }
 
@@ -85,7 +87,7 @@ namespace Core.Logging
         /// <summary>
         /// gets/sets the tracking guid for the 
         /// </summary>
-        public string TrackingGUID { get; set; }
+        public string EventId { get; set; }
 
         /// <summary>
         /// gets/sets the message text for this message
@@ -95,7 +97,7 @@ namespace Core.Logging
         /// <summary>
         /// gets/sets the data packet for this message
         /// </summary>
-        public LogSeverity Type { get; set; }
+        public LogLevel Level { get; set; }
 
         /// <summary>
         /// gets/sets the name of the environment DEV,TEST,QA,STAGE,PROD
@@ -108,11 +110,6 @@ namespace Core.Logging
         public string ApplicationName { get; set; }
 
         /// <summary>
-        /// gets/sets the name of the application internal identifier
-        /// </summary>
-        public string ApplicationInternal { get; set; }
-
-        /// <summary>
         /// gets/sets the name of the server
         /// </summary>
         public string ServerName { get; set; }
@@ -122,9 +119,29 @@ namespace Core.Logging
         /// </summary>
         public LoggingBoundaries Boundary { get; set; }
 
+        public Exception Exception { get; set; }
+
         #endregion Properties
 
         #region Methods
+
+
+        /// <summary>
+        /// Log event for recording error messages
+        /// </summary>
+        public static LogMessage LogCritical(LoggingBoundaries boundary, params object[] parameterValues)
+        {
+            try
+            {
+                if (parameterValues.Length == 0) throw new Exception("must provide at least one parameter");
+                return new LogMessage(boundary, LogLevel.Critical, parameterValues);
+            }
+            // ReSharper disable once EmptyGeneralCatchClause
+            catch (Exception ex)
+            {
+                return new LogMessage(boundary, LogLevel.Critical, "Failed to create log message\n{0}", ex.Message);
+            }
+        }
 
         /// <summary>
         /// Log event for recording error messages
@@ -134,12 +151,12 @@ namespace Core.Logging
             try
             {
                 if (parameterValues.Length == 0) throw new Exception("must provide at least one parameter");
-                return new LogMessage(boundary, LogSeverity.Error, parameterValues);
+                return new LogMessage(boundary, LogLevel.Error, parameterValues);
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch (Exception ex)
             {
-                return new LogMessage(boundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
+                return new LogMessage(boundary, LogLevel.Critical, "Failed to create log message\n{0}", ex.Message);
             }
         }
 
@@ -151,12 +168,12 @@ namespace Core.Logging
             try
             {
                 if (parameterValues.Length == 0) throw new Exception("must provide at least one parameter");
-                return new LogMessage(boundary, LogSeverity.Information, parameterValues);
+                return new LogMessage(boundary, LogLevel.Information, parameterValues);
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch (Exception ex)
             {
-                return new LogMessage(boundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
+                return new LogMessage(boundary, LogLevel.Critical, "Failed to create log message\n{0}", ex.Message);
             }
         }
 
@@ -168,12 +185,12 @@ namespace Core.Logging
             try
             {
                 if (parameterValues.Length == 0) throw new Exception("must provide at least one parameter");
-                return new LogMessage(boundary, LogSeverity.Trace, parameterValues);
+                return new LogMessage(boundary, LogLevel.Trace, parameterValues);
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch (Exception ex)
             {
-                return new LogMessage(boundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
+                return new LogMessage(boundary, LogLevel.Critical, "Failed to create log message\n{0}", ex.Message);
             }
         }
 
@@ -186,13 +203,13 @@ namespace Core.Logging
             try
             {
                 if (parameterValues.Length == 0) throw new Exception("must provide at least one parameter");
-                var message = new LogMessage(LoggingBoundaries.ServiceBoundary, LogSeverity.Transmission, parameterValues) {TrackingGUID = trackingGUID};
+                var message = new LogMessage(LoggingBoundaries.ServiceBoundary, LogLevel.Debug, parameterValues) {EventId = trackingGUID};
                 return message;
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch (Exception ex)
             {
-                return new LogMessage(LoggingBoundaries.ServiceBoundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
+                return new LogMessage(LoggingBoundaries.ServiceBoundary, LogLevel.Critical, "Failed to create log message\n{0}", ex.Message);
             }
         }
 
@@ -204,12 +221,12 @@ namespace Core.Logging
             try
             {
                 if (parameterValues.Length == 0) throw new Exception("must provide at least one parameter");
-                return new LogMessage(boundary, LogSeverity.Warning, parameterValues);
+                return new LogMessage(boundary, LogLevel.Warning, parameterValues);
             }
             // ReSharper disable once EmptyGeneralCatchClause
             catch (Exception ex)
             {
-                return new LogMessage(boundary, LogSeverity.Exception, "Failed to create log message\n{0}", ex.Message);
+                return new LogMessage(boundary, LogLevel.Critical, "Failed to create log message\n{0}", ex.Message);
             }
         }
 
