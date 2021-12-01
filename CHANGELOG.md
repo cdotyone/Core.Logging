@@ -1,3 +1,12 @@
+# [3.1.0](https://github.com/cdotyone/Core.Logging/compare/v3.0.1...v3.1.0) (2021-12-01)
+
+
+### Features
+
+* add 5.0 and 6.0 support drop 3.1 ([4c7ab75](https://github.com/cdotyone/Core.Logging/commit/4c7ab75f6ee91798593106d3cd40e6891b9bc660))
+
+
+
 ## [3.0.1](https://github.com/cdotyone/Core.Logging/compare/v3.0.0...v3.0.1) (2020-08-24)
 
 
