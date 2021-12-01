@@ -1,3 +1,12 @@
+## [3.1.2](https://github.com/cdotyone/Core.Logging/compare/v3.1.1...v3.1.2) (2021-12-01)
+
+
+### Bug Fixes
+
+* update nuget packages ([f181a04](https://github.com/cdotyone/Core.Logging/commit/f181a042d8f56903e52165ba22f9c69122758b94))
+
+
+
 ## [3.1.1](https://github.com/cdotyone/Core.Logging/compare/v3.1.0...v3.1.1) (2021-12-01)
 
 
