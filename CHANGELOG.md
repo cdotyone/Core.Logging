@@ -1,3 +1,12 @@
+## [3.1.1](https://github.com/cdotyone/Core.Logging/compare/v3.1.0...v3.1.1) (2021-12-01)
+
+
+### Bug Fixes
+
+* bad project assembly name and namespace ([939008f](https://github.com/cdotyone/Core.Logging/commit/939008f1015949b650dd324243942ad64b55d60e))
+
+
+
 # [3.1.0](https://github.com/cdotyone/Core.Logging/compare/v3.0.1...v3.1.0) (2021-12-01)
 
 
